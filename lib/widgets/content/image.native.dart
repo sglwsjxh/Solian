@@ -1,33 +1,26 @@
-import 'dart:io';
-
-import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 
 class UniversalImage extends StatelessWidget {
   final String uri;
   final String? blurHash;
-  const UniversalImage({super.key, required this.uri, this.blurHash});
+  final BoxFit fit;
+  const UniversalImage({
+    super.key,
+    required this.uri,
+    this.blurHash,
+    this.fit = BoxFit.cover,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final params = {'src': uri, 'blur': blurHash};
-    if (Platform.isAndroid) {
-      return AndroidView(
-        viewType: 'native-image',
-        layoutDirection: TextDirection.ltr,
-        creationParams: params,
-        creationParamsCodec: const StandardMessageCodec(),
-      );
-    }
-    if (Platform.isIOS) {
-      // For iOS: Use UiKitView to embed a native iOS image view
-      return UiKitView(
-        viewType: 'native-image',
-        layoutDirection: TextDirection.ltr,
-        creationParams: params,
-        creationParamsCodec: const StandardMessageCodec(),
-      );
-    }
-    return Image.network(uri);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        if (blurHash != null) BlurHash(hash: blurHash!),
+        CachedNetworkImage(imageUrl: uri, fit: fit),
+      ],
+    );
   }
 }

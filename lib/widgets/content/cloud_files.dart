@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:island/models/file.dart';
 import 'package:island/pods/config.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'image.dart';
 import 'video.dart';
 
 class CloudFileWidget extends ConsumerWidget {
   final SnCloudFile item;
-  const CloudFileWidget({super.key, required this.item});
+  final BoxFit fit;
+  const CloudFileWidget({
+    super.key,
+    required this.item,
+    this.fit = BoxFit.cover,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,10 +29,36 @@ class CloudFileWidget extends ConsumerWidget {
       case "video":
         return AspectRatio(
           aspectRatio: (item.fileMeta?['ratio'] ?? 16 / 9).toDouble(),
-          child: UniversalVideo(uri: uri),
+          child: UniversalVideo(
+            uri: uri,
+            aspectRatio: (item.fileMeta?['ratio'] ?? 16 / 9).toDouble(),
+          ),
         );
       default:
         return Placeholder();
     }
+  }
+}
+
+class ProfilePictureWidget extends ConsumerWidget {
+  final SnCloudFile? item;
+  final double radius;
+  const ProfilePictureWidget({super.key, required this.item, this.radius = 24});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (item == null) return const SizedBox.shrink();
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(radius)),
+      child: Container(
+        width: radius * 2,
+        height: radius * 2,
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child:
+            item == null
+                ? Icon(MdiIcons.account)
+                : CloudFileWidget(item: item!),
+      ),
+    );
   }
 }

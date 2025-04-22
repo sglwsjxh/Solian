@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 
 class UniversalImage extends StatelessWidget {
   final String uri;
-  const UniversalImage({super.key, required this.uri});
+  final String? blurHash;
+  const UniversalImage({super.key, required this.uri, this.blurHash});
 
   @override
   Widget build(BuildContext context) {
-    return HtmlElementView(
-      viewType: 'native-image',
-      onPlatformViewCreated: (int viewId) {
-        final element = web.HTMLImageElement()..src = uri;
-        web.document.body!.append(element);
+    return HtmlElementView.fromTagName(
+      tagName: 'img',
+      onElementCreated: (element) {
+        element as web.HTMLImageElement;
+        element.src = uri;
+        element.style.width = '100%';
+        element.style.height = '100%';
       },
     );
   }

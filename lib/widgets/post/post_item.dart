@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:island/models/post.dart';
+import 'package:island/widgets/content/cloud_file_collection.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/content/markdown.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -17,15 +18,18 @@ class PostItem extends StatelessWidget {
     return Padding(
       padding: renderingPadding,
       child: Column(
+        spacing: 8,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12,
             children: [
-              // Avatar...
+              ProfilePictureWidget(item: item.publisher.picture),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.publisher.name).bold(),
+                    Text(item.publisher.nick).bold(),
                     if (item.content.isNotEmpty)
                       MarkdownTextContent(content: item.content),
                   ],
@@ -33,8 +37,8 @@ class PostItem extends StatelessWidget {
               ),
             ],
           ),
-          for (final attachment in item.attachments)
-            CloudFileWidget(item: attachment),
+          if (item.attachments.isNotEmpty)
+            CloudFileList(files: item.attachments),
         ],
       ),
     );

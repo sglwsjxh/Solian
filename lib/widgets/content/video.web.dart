@@ -7,12 +7,14 @@ class UniversalVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HtmlElementView(
-      viewType: 'native-video',
-      onPlatformViewCreated: (int viewId) {
-        final element = web.HTMLVideoElement()..src = uri;
+    return HtmlElementView.fromTagName(
+      tagName: 'video',
+      onElementCreated: (element) {
+        element as web.HTMLVideoElement;
+        element.src = uri;
+        element.style.width = '100%';
+        element.style.height = '100%';
         element.controls = true;
-        web.document.body!.append(element);
       },
     );
   }

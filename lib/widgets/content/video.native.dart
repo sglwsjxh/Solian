@@ -1,65 +1,88 @@
+import 'dart:developer';
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:native_video_player/native_video_player.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:island/widgets/alert.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 class UniversalVideo extends StatefulWidget {
   final String uri;
-  const UniversalVideo({super.key, required this.uri});
+  final double aspectRatio;
+  const UniversalVideo({
+    super.key,
+    required this.uri,
+    this.aspectRatio = 16 / 9,
+  });
 
   @override
   State<UniversalVideo> createState() => _UniversalVideoState();
 }
 
 class _UniversalVideoState extends State<UniversalVideo> {
-  NativeVideoPlayerController? _controller;
-  bool _isPlaying = false;
+  Player? _player;
+  VideoController? _videoController;
 
-  Future<void> _togglePlayback() async {
-    final controller = _controller;
-    if (controller == null) return;
+  void _openVideo() async {
+    final url = widget.uri;
+    MediaKit.ensureInitialized();
 
-    if (_isPlaying) {
-      await controller.pause();
+    _player = Player();
+    _videoController = VideoController(_player!);
+
+    String? uri;
+    final inCacheInfo = await DefaultCacheManager().getFileFromCache(url);
+    if (inCacheInfo == null) {
+      log('[MediaPlayer] Miss cache: $url');
+      final fileStream = DefaultCacheManager().getFileStream(
+        url,
+        // headers: {'Authorization': 'Bearer ${await ua.atk}'},
+        withProgress: true,
+      );
+      await for (var fileInfo in fileStream) {
+        if (fileInfo is FileInfo) {
+          uri = fileInfo.file.path;
+          break;
+        }
+      }
     } else {
-      await controller.play();
+      uri = inCacheInfo.file.path;
+      log('[MediaPlayer] Hit cache: $url');
+    }
+    if (uri == null) {
+      showErrorAlert('Failed to open media... $url');
+      return;
     }
 
-    final isPlaying = await controller.isPlaying();
-    setState(() {
-      _isPlaying = isPlaying;
-    });
+    _player!.open(Media(uri));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _openVideo();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _player?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS) {
-      return Stack(
-        children: [
-          NativeVideoPlayerView(
-            onViewReady: (controller) async {
-              _controller = controller;
-              await controller.loadVideo(
-                VideoSource(path: widget.uri, type: VideoSourceType.network),
-              );
-            },
-          ),
-          Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: _togglePlayback,
-              child: Center(
-                child: Icon(
-                  _isPlaying ? Icons.pause : Icons.play_arrow,
-                  size: 64,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
+    if (_videoController == null) {
+      return Center(child: CircularProgressIndicator());
     }
-    return Image.network(widget.uri);
+
+    return Video(
+      controller: _videoController!,
+      aspectRatio: widget.aspectRatio,
+      controls:
+          !kIsWeb && (Platform.isAndroid || Platform.isIOS)
+              ? MaterialVideoControls
+              : MaterialDesktopVideoControls,
+    );
   }
 }

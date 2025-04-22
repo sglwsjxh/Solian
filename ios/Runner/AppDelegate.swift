@@ -7,12 +7,7 @@ import UIKit
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        GeneratedPluginRegistrant.register(with: self)
-        
-        guard let pluginRegistrar = self.registrar(forPlugin: "plugin-name") else { return false }
-        
-        pluginRegistrar.register(FLNativeImageFactory(messenger: pluginRegistrar.messenger()), withId: "native-image")
-        
+        GeneratedPluginRegistrant.register(with: self)        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 }
