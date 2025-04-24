@@ -70,6 +70,7 @@ dependencies:
   package_info_plus: ^8.3.0
   device_info_plus: ^11.4.0
   lucide_icons: ^0.257.0
+  tus_client_dart: ^2.5.0
 
 dev_dependencies:
   flutter_test:

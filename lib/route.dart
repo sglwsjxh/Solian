@@ -9,15 +9,13 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(
-      page: ExploreRoute.page,
+      page: TabsRoute.page,
       path: '/',
-      meta: {'bottomNav': true},
       initial: true,
-    ),
-    AutoRoute(
-      page: AccountRoute.page,
-      path: '/account',
-      meta: {'bottomNav': true},
+      children: [
+        AutoRoute(page: ExploreRoute.page, path: 'explore'),
+        AutoRoute(page: AccountRoute.page, path: 'account'),
+      ],
     ),
     AutoRoute(page: LoginRoute.page, path: '/auth/login'),
     AutoRoute(page: CreateAccountRoute.page, path: '/auth/create-account'),
