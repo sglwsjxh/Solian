@@ -10,6 +10,7 @@
   "loginSuccess": "Logged in as {}",
   "loginGreeting": "Welcome back!",
   "username": "Username",
+  "usernameCannotChangeHint": "Username cannot be updated after created.",
   "usernameLookupHint": "We also take your email address.",
   "unknown": "Unknown",
   "termAcceptNextWithAgree": "By continuing, you agree to our terms of services and other terms and conditions.",
@@ -20,7 +21,12 @@
   "createAccount": "Create an Account", 
   "nickname": "Nickname",
   "email": "Email",
+  "bio": "Bio",
   "fieldCannotBeEmpty": "This field cannot be empty.",
   "fieldEmailAddressMustBeValid": "The email address must be valid.",
-  "logout": "Logout"
+  "logout": "Logout",
+  "updateYourProfile": "Edit Profile",
+  "accountBasicInfo": "Basic Info",
+  "accountProfile": "Profile",
+  "saveChanges": "Save Changes"
 }

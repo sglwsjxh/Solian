@@ -70,7 +70,11 @@ dependencies:
   package_info_plus: ^8.3.0
   device_info_plus: ^11.4.0
   lucide_icons: ^0.257.0
-  tus_client_dart: ^2.5.0
+  tus_client_dart:
+    git: https://github.com/LittleSheep2Code/tus_client.git
+  cross_file: ^0.3.4+2
+  image_picker: ^1.1.2
+  file_picker: ^10.1.2
 
 dev_dependencies:
   flutter_test:

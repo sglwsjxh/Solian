@@ -73,6 +73,16 @@ class AccountScreen extends HookConsumerWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(LucideIcons.edit),
+              trailing: const Icon(LucideIcons.chevronRight),
+              contentPadding: EdgeInsets.symmetric(horizontal: 24),
+              title: Text('accountProfile').tr(),
+              subtitle: Text('Update your profile.'),
+              onTap: () {
+                context.router.push(UpdateProfileRoute());
+              },
+            ),
+            ListTile(
               leading: const Icon(LucideIcons.logOut),
               trailing: const Icon(LucideIcons.chevronRight),
               contentPadding: EdgeInsets.symmetric(horizontal: 24),

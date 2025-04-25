@@ -60,7 +60,6 @@ class IslandApp extends HookConsumerWidget {
       final userNotifier = ref.read(userInfoProvider.notifier);
       Future(() {
         userNotifier.fetchUser();
-        print('user fetched');
       });
       return null;
     }, []);

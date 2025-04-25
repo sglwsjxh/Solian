@@ -6,12 +6,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:island/models/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
+
+final imagePickerProvider = Provider((ref) => ImagePicker());
 
 final userAgentProvider = FutureProvider<String>((ref) async {
   final String platformInfo;
@@ -64,7 +67,14 @@ final apiClientProvider = Provider<Dio>((ref) {
         RequestOptions options,
         RequestInterceptorHandler handler,
       ) async {
-        final atk = await getFreshAtk(ref);
+        final atk = await getFreshAtk(
+          ref.watch(tokenPairProvider),
+          ref.watch(serverUrlProvider),
+          onRefreshed: (atk, rtk) {
+            setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
+            ref.invalidate(tokenPairProvider);
+          },
+        );
         if (atk != null) {
           options.headers['Authorization'] = 'Bearer $atk';
         }
@@ -87,10 +97,8 @@ final tokenPairProvider = Provider<AppTokenPair?>((ref) {
   return AppTokenPair.fromJson(jsonDecode(tkPairString));
 });
 
-Future<(String, String)?> refreshToken(Ref ref, String? rtk) async {
+Future<(String, String)?> refreshToken(String baseUrl, String? rtk) async {
   if (rtk == null) return null;
-
-  final baseUrl = ref.watch(serverUrlProvider);
 
   final dio = Dio();
   dio.options.baseUrl = baseUrl;
@@ -102,16 +110,17 @@ Future<(String, String)?> refreshToken(Ref ref, String? rtk) async {
 
   final String atk = resp.data['access_token'];
   final String nRtk = resp.data['refresh_token'];
-  setTokenPair(ref.watch(sharedPreferencesProvider), atk, nRtk);
-  ref.invalidate(tokenPairProvider);
 
   return (atk, nRtk);
 }
 
 Completer<String?>? _refreshCompleter;
 
-Future<String?> getFreshAtk(Ref ref) async {
-  final tkPair = ref.watch(tokenPairProvider);
+Future<String?> getFreshAtk(
+  AppTokenPair? tkPair,
+  String baseUrl, {
+  Function(String, String)? onRefreshed,
+}) async {
   var atk = tkPair?.accessToken;
   var rtk = tkPair?.refreshToken;
 
@@ -147,10 +156,11 @@ Future<String?> getFreshAtk(Ref ref) async {
       final exp = jsonDecode(payload)['exp'];
       if (exp <= DateTime.now().millisecondsSinceEpoch ~/ 1000) {
         log('[Auth] Access token need refresh, doing it at ${DateTime.now()}');
-        final result = await refreshToken(ref, rtk);
+        final result = await refreshToken(baseUrl, rtk);
         if (result == null) {
           atk = null;
         } else {
+          onRefreshed?.call(result.$1, result.$2);
           atk = result.$1;
         }
       }

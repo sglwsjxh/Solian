@@ -15,7 +15,6 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<SnAccount?>> {
   }
 
   Future<void> fetchUser() async {
-    state = const AsyncValue.loading();
     try {
       final client = _ref.read(apiClientProvider);
       final response = await client.get('/accounts/me');
