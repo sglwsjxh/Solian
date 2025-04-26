@@ -48,7 +48,12 @@ class ExploreScreen extends ConsumerWidget {
                 onFetchData: controller.fetchMore,
                 itemBuilder: (context, index) {
                   final post = controller.posts[index];
-                  return PostItem(item: post);
+                  return PostItem(
+                    item: post,
+                    onRefresh: (_) {
+                      ref.invalidate(postListProvider);
+                    },
+                  );
                 },
                 separatorBuilder: (_, __) => const Divider(height: 1),
               ),

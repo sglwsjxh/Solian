@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:island/pods/config.dart';
+import 'package:island/pods/network.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-class UniversalVideo extends StatefulWidget {
+class UniversalVideo extends ConsumerStatefulWidget {
   final String uri;
   final double aspectRatio;
   const UniversalVideo({
@@ -17,10 +20,10 @@ class UniversalVideo extends StatefulWidget {
   });
 
   @override
-  State<UniversalVideo> createState() => _UniversalVideoState();
+  ConsumerState<UniversalVideo> createState() => _UniversalVideoState();
 }
 
-class _UniversalVideoState extends State<UniversalVideo> {
+class _UniversalVideoState extends ConsumerState<UniversalVideo> {
   Player? _player;
   VideoController? _videoController;
 
@@ -35,9 +38,18 @@ class _UniversalVideoState extends State<UniversalVideo> {
     final inCacheInfo = await DefaultCacheManager().getFileFromCache(url);
     if (inCacheInfo == null) {
       log('[MediaPlayer] Miss cache: $url');
+      final baseUrl = ref.watch(serverUrlProvider);
+      final atk = await getFreshAtk(
+        ref.watch(tokenPairProvider),
+        baseUrl,
+        onRefreshed: (atk, rtk) {
+          setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
+          ref.invalidate(tokenPairProvider);
+        },
+      );
       final fileStream = DefaultCacheManager().getFileStream(
         url,
-        // headers: {'Authorization': 'Bearer ${await ua.atk}'},
+        headers: {'Authorization': 'Bearer $atk'},
         withProgress: true,
       );
       await for (var fileInfo in fileStream) {
@@ -55,7 +67,7 @@ class _UniversalVideoState extends State<UniversalVideo> {
       return;
     }
 
-    _player!.open(Media(uri));
+    _player!.open(Media(uri), play: false);
   }
 
   @override

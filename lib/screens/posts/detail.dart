@@ -38,7 +38,7 @@ class PostDetailScreen extends HookConsumerWidget {
               children: [
                 Column(
                   children: [
-                    PostItem(item: post!),
+                    PostItem(item: post!, isOpenable: false),
                     const Divider(height: 1),
                     Expanded(child: PostRepliesList(postId: id)),
                     Gap(MediaQuery.of(context).padding.bottom),
