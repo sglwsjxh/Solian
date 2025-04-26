@@ -38,9 +38,7 @@ void main() async {
           path: 'assets/i18n',
           fallbackLocale: Locale('en', 'US'),
           useFallbackTranslations: true,
-          child: Overlay(
-            initialEntries: [OverlayEntry(builder: (_) => IslandApp())],
-          ),
+          child: IslandApp(),
         ),
       ),
     ),
@@ -70,12 +68,21 @@ class IslandApp extends HookConsumerWidget {
       themeMode: ThemeMode.system,
       routerConfig: _appRouter.config(),
       supportedLocales: context.supportedLocales,
-      localizationsDelegates: [...context.localizationDelegates],
+      localizationsDelegates: [
+        ...context.localizationDelegates,
+      ], // this contains the cupertino one
       locale: context.locale,
       builder: (context, child) {
-        return WindowScaffold(
-          router: _appRouter,
-          child: child ?? const SizedBox.shrink(),
+        return Overlay(
+          initialEntries: [
+            OverlayEntry(
+              builder:
+                  (_) => WindowScaffold(
+                    router: _appRouter,
+                    child: child ?? const SizedBox.shrink(),
+                  ),
+            ),
+          ],
         );
       },
     );
