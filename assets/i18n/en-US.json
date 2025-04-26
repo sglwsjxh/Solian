@@ -38,5 +38,8 @@
   "delete": "Delete",
   "deletePublisher": "Delete Publisher {}",
   "deletePublisherHint": "Are you sure to delete this publisher? This will also deleted all the post and collections under this publisher.",
-  "somethingWentWrong": "Something went wrong..."
+  "somethingWentWrong": "Something went wrong...",
+  "deletePost": "Delete Post",
+  "deletePostHint": "Are you sure to delete this post?",
+  "copyLink": "Copy Link"
 }

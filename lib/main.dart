@@ -65,6 +65,7 @@ class IslandApp extends HookConsumerWidget {
     final theme = ref.watch(themeProvider);
 
     useEffect(() {
+      // Load userinfo
       final userNotifier = ref.read(userInfoProvider.notifier);
       Future(() {
         userNotifier.fetchUser();
