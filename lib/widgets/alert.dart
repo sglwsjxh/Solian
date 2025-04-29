@@ -1,10 +1,11 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 String _parseRemoteError(DioException err) {
+  log('${err.requestOptions.method} ${err.requestOptions.uri} ${err.message}');
   if (err.response?.data is String) return err.response?.data;
   if (err.response?.data?['errors'] != null) {
     final errors = err.response?.data['errors'] as Map<String, dynamic>;
@@ -15,7 +16,7 @@ String _parseRemoteError(DioException err) {
         )
         .join('\n');
   }
-  return jsonEncode(err.response?.data);
+  return err.message ?? err.toString();
 }
 
 void showErrorAlert(dynamic err) async {

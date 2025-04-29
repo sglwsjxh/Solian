@@ -7,7 +7,9 @@ import 'package:island/pods/network.dart';
 import 'package:island/screens/account/me/publishers.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/content/cloud_files.dart';
+import 'package:island/widgets/post/publishers_modal.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class PostQuickReply extends HookConsumerWidget {
@@ -62,9 +64,19 @@ class PostQuickReply extends HookConsumerWidget {
           (data) => Row(
             spacing: 8,
             children: [
-              ProfilePictureWidget(
-                item: currentPublisher.value?.picture,
-                radius: 16,
+              GestureDetector(
+                child: ProfilePictureWidget(
+                  item: currentPublisher.value?.picture,
+                  radius: 16,
+                ),
+                onTap: () {
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => PublisherModal(),
+                  ).then((value) {
+                    if (value is SnPublisher) currentPublisher.value = value;
+                  });
+                },
               ).padding(right: 4),
               Expanded(
                 child: TextField(

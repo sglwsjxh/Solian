@@ -18,7 +18,9 @@ import 'package:island/services/file.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_files.dart';
+import 'package:island/widgets/post/publishers_modal.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 @RoutePage()
@@ -94,6 +96,7 @@ class PostComposeScreen extends HookConsumerWidget {
       final result = await ref
           .watch(imagePickerProvider)
           .pickMultiImage(requestFullMetadata: true);
+      if (result.isEmpty) return;
       attachments.value = [
         ...attachments.value,
         ...result.map(
@@ -106,6 +109,7 @@ class PostComposeScreen extends HookConsumerWidget {
       final result = await ref
           .watch(imagePickerProvider)
           .pickVideo(source: ImageSource.gallery);
+      if (result == null) return;
       attachments.value = [
         ...attachments.value,
         UniversalFile(data: result, type: UniversalFileType.video),
@@ -241,9 +245,19 @@ class PostComposeScreen extends HookConsumerWidget {
               spacing: 12,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProfilePictureWidget(
-                  item: currentPublisher.value?.picture,
-                  radius: 24,
+                GestureDetector(
+                  child: ProfilePictureWidget(
+                    item: currentPublisher.value?.picture,
+                    radius: 24,
+                  ),
+                  onTap: () {
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => PublisherModal(),
+                    ).then((value) {
+                      if (value is SnPublisher) currentPublisher.value = value;
+                    });
+                  },
                 ).padding(top: 16),
                 Expanded(
                   child: SingleChildScrollView(

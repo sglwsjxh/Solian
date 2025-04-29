@@ -46,5 +46,7 @@
   "postCreateAccountTitle": "Thanks for joining!",
   "postCreateAccountNext": "What's next?",
   "postCreateAccountNext1": "Go to your email inbox and receive the account activation email.",
-  "postCreateAccountNext2": "Log in to your account and start exploring the Solar Network!"
+  "postCreateAccountNext2": "Log in to your account and start exploring the Solar Network!",
+  "publishersEmpty": "No publishers yet",
+  "publishersEmptyDescription": "You can need to create a publisher to start publishing your posts."
 }
