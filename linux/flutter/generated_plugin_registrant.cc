@@ -9,6 +9,7 @@
 #include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
 #include <file_selector_linux/file_selector_plugin.h>
 #include <flutter_platform_alert/flutter_platform_alert_plugin.h>
+#include <flutter_udid/flutter_udid_plugin.h>
 #include <irondash_engine_context/irondash_engine_context_plugin.h>
 #include <media_kit_libs_linux/media_kit_libs_linux_plugin.h>
 #include <media_kit_video/media_kit_video_plugin.h>
@@ -25,6 +26,9 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) flutter_platform_alert_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterPlatformAlertPlugin");
   flutter_platform_alert_plugin_register_with_registrar(flutter_platform_alert_registrar);
+  g_autoptr(FlPluginRegistrar) flutter_udid_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterUdidPlugin");
+  flutter_udid_plugin_register_with_registrar(flutter_udid_registrar);
   g_autoptr(FlPluginRegistrar) irondash_engine_context_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "IrondashEngineContextPlugin");
   irondash_engine_context_plugin_register_with_registrar(irondash_engine_context_registrar);

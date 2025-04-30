@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   file_selector_linux
   flutter_platform_alert
+  flutter_udid
   irondash_engine_context
   media_kit_libs_linux
   media_kit_video

@@ -5,8 +5,10 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   file_selector_windows
+  firebase_core
   flutter_inappwebview_windows
   flutter_platform_alert
+  flutter_udid
   irondash_engine_context
   media_kit_libs_windows_video
   media_kit_video

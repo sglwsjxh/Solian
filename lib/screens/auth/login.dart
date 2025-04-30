@@ -1,14 +1,17 @@
 import 'package:animations/animations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_udid/flutter_udid.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:island/models/auth.dart';
 import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/pods/userinfo.dart';
+import 'package:island/services/notify.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -130,7 +133,10 @@ class _LoginCheckScreen extends HookConsumerWidget {
         ref.invalidate(tokenPairProvider);
         if (!context.mounted) return;
         final userNotifier = ref.read(userInfoProvider.notifier);
-        userNotifier.fetchUser();
+        userNotifier.fetchUser().then((_) {
+          final apiClient = ref.read(apiClientProvider);
+          subscribePushNotification(apiClient);
+        });
         Navigator.pop(context, true);
       } catch (err) {
         showErrorAlert(err);
@@ -355,7 +361,18 @@ class _LoginLookupScreen extends HookConsumerWidget {
         final client = ref.watch(apiClientProvider);
         final resp = await client.post(
           '/auth/challenge',
-          data: {'account': uname},
+          data: {
+            'account': uname,
+            'device_id': await FlutterUdid.consistentUdid,
+            'platform': switch (defaultTargetPlatform) {
+              TargetPlatform.iOS => 2,
+              TargetPlatform.android => 3,
+              TargetPlatform.macOS => 4,
+              TargetPlatform.windows => 5,
+              TargetPlatform.linux => 6,
+              _ => 1,
+            },
+          },
         );
         final result = SnAuthChallenge.fromJson(resp.data);
         onChallenge(result);

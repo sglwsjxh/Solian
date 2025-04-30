@@ -1,16 +1,20 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker_android/image_picker_android.dart';
+import 'package:island/firebase_options.dart';
 import 'package:island/pods/config.dart';
+import 'package:island/pods/network.dart';
 import 'package:island/pods/theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:island/pods/userinfo.dart';
 import 'package:island/route.dart';
+import 'package:island/services/notify.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
@@ -18,6 +22,8 @@ import 'package:image_picker_platform_interface/image_picker_platform_interface.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   final prefs = await SharedPreferences.getInstance();
 
   if (!kIsWeb && (Platform.isMacOS || Platform.isLinux || Platform.isWindows)) {
@@ -68,7 +74,13 @@ class IslandApp extends HookConsumerWidget {
       // Load userinfo
       final userNotifier = ref.read(userInfoProvider.notifier);
       Future(() {
-        userNotifier.fetchUser();
+        userNotifier.fetchUser().then((_) {
+          final user = ref.watch(userInfoProvider);
+          if (user.hasValue) {
+            final apiClient = ref.read(apiClientProvider);
+            subscribePushNotification(apiClient);
+          }
+        });
       });
       return null;
     }, []);
