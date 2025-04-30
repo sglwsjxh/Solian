@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -13,6 +14,7 @@ import 'package:island/pods/network.dart';
 import 'package:island/pods/theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:island/pods/userinfo.dart';
+import 'package:island/pods/websocket.dart';
 import 'package:island/route.dart';
 import 'package:island/services/notify.dart';
 import 'package:island/widgets/app_scaffold.dart';
@@ -73,12 +75,17 @@ class IslandApp extends HookConsumerWidget {
     useEffect(() {
       // Load userinfo
       final userNotifier = ref.read(userInfoProvider.notifier);
+      ref.listen(websocketStateProvider, (_, state) {
+        log('[WebSocket] $state');
+      });
       Future(() {
         userNotifier.fetchUser().then((_) {
           final user = ref.watch(userInfoProvider);
           if (user.hasValue) {
             final apiClient = ref.read(apiClientProvider);
             subscribePushNotification(apiClient);
+            final wsNotifier = ref.read(websocketStateProvider.notifier);
+            wsNotifier.connect();
           }
         });
       });

@@ -11,6 +11,7 @@ import 'package:island/models/auth.dart';
 import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/pods/userinfo.dart';
+import 'package:island/pods/websocket.dart';
 import 'package:island/services/notify.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
@@ -136,6 +137,8 @@ class _LoginCheckScreen extends HookConsumerWidget {
         userNotifier.fetchUser().then((_) {
           final apiClient = ref.read(apiClientProvider);
           subscribePushNotification(apiClient);
+          final wsNotifier = ref.read(websocketStateProvider.notifier);
+          wsNotifier.connect();
         });
         Navigator.pop(context, true);
       } catch (err) {
