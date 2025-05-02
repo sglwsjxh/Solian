@@ -16,6 +16,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ExploreRoute.page, path: 'explore'),
         AutoRoute(page: AccountRoute.page, path: 'account'),
         AutoRoute(page: RealmListRoute.page, path: 'realms'),
+        AutoRoute(page: ChatListRoute.page, path: 'chat'),
       ],
     ),
     AutoRoute(page: LoginRoute.page, path: '/auth/login'),
@@ -33,5 +34,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: PostEditRoute.page, path: '/posts/:id/edit'),
     AutoRoute(page: NewRealmRoute.page, path: '/realms/new'),
     AutoRoute(page: EditRealmRoute.page, path: '/realms/:slug/edit'),
+    AutoRoute(page: NewChatRoute.page, path: '/chat/new'),
+    AutoRoute(page: EditChatRoute.page, path: '/chat/:id/edit'),
+    AutoRoute(page: ChatRoomRoute.page, path: '/chat/:id'),
   ];
 }

@@ -11,7 +11,12 @@ class TabsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter.pageView(
-      routes: const [ExploreRoute(), RealmListRoute(), AccountRoute()],
+      routes: const [
+        ExploreRoute(),
+        ChatListRoute(),
+        RealmListRoute(),
+        AccountRoute(),
+      ],
       builder: (context, child, _) {
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(
@@ -25,6 +30,10 @@ class TabsScreen extends StatelessWidget {
               NavigationDestination(
                 label: 'explore'.tr(),
                 icon: const Icon(Symbols.explore),
+              ),
+              NavigationDestination(
+                label: 'chat'.tr(),
+                icon: const Icon(Symbols.chat),
               ),
               NavigationDestination(
                 label: 'realms'.tr(),

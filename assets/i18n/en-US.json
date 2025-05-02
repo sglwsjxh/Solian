@@ -70,5 +70,10 @@
   "name": "Name",
   "description": "Description",
   "slug": "Slug",
-  "slugHint": "The slug will be used in the URL to access this resource, it should be unique and URL safe."
+  "slugHint": "The slug will be used in the URL to access this resource, it should be unique and URL safe.",
+  "createChatRoom": "Create a Room",
+  "editChatRoom": "Edit a Room",
+  "chat": "Chat",
+  "chatMessageHint": "Message in {}",
+  "chatDirectMessageHint": "Message to {}"
 }
