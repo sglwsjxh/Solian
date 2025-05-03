@@ -33,7 +33,7 @@
   "managedPublisher": "Managed Publishers",
   "createPublisher": "Create a Publisher",
   "createPublisherHint": "To create posts, collections, etc.",
-  "editPublisher": "Edit a Publisher",
+  "editPublisher": "Edit Publisher",
   "syncPublisher": "Use Account Data",
   "create": "Create",
   "edit": "Edit",
@@ -62,7 +62,7 @@
   "realms": "Realms",
   "createRealm": "Create a Realm",
   "createRealmHint": "Meet friends with same interests, build communities, and more.",
-  "editRealm": "Edit a Realm",
+  "editRealm": "Edit Realm",
   "deleteRealm": "Delete Realm {}",
   "deleteRealmHint": "Are you sure to delete this realm? This will also deleted all the channels, publishers, and posts under this realm.",
   "explore": "Explore",
@@ -72,9 +72,20 @@
   "slug": "Slug",
   "slugHint": "The slug will be used in the URL to access this resource, it should be unique and URL safe.",
   "createChatRoom": "Create a Room",
-  "editChatRoom": "Edit a Room",
+  "editChatRoom": "Edit Room",
+  "deleteChatRoom": "Delete Room",
   "chat": "Chat",
   "chatMessageHint": "Message in {}",
   "chatDirectMessageHint": "Message to {}",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "descriptionNone": "No description yet.",
+  "invites": "Invites",
+  "invitesEmpty": "No invites yet, such a lonely person...",
+  "chatMembers": {
+    "one": "{} member",
+    "other": "{} members"
+  },
+  "permissionOwner": "Owner",
+  "permissionModerator": "Moderator",
+  "permissionMember": "Member"
 }

@@ -22,7 +22,9 @@ class AccountScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userInfoProvider);
 
-    if (!user.hasValue) return _UnauthorizedAccountScreen();
+    if (!user.hasValue || user.value == null) {
+      return _UnauthorizedAccountScreen();
+    }
 
     return AppScaffold(
       appBar: AppBar(title: const Text('Account')),
@@ -52,7 +54,7 @@ class AccountScreen extends HookConsumerWidget {
                     spacing: 16,
                     children: [
                       ProfilePictureWidget(
-                        fileId: user.value!.profile.pictureId,
+                        fileId: user.value?.profile.pictureId,
                         radius: 24,
                       ),
                       Column(

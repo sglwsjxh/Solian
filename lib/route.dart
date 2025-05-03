@@ -37,5 +37,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: NewChatRoute.page, path: '/chat/new'),
     AutoRoute(page: EditChatRoute.page, path: '/chat/:id/edit'),
     AutoRoute(page: ChatRoomRoute.page, path: '/chat/:id'),
+    AutoRoute(page: ChatDetailRoute.page, path: '/chat/:id/detail'),
   ];
 }

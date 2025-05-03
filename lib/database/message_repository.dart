@@ -7,30 +7,13 @@ import 'package:uuid/uuid.dart';
 
 class MessageRepository {
   final SnChat room;
+  final SnChatMember identity;
   final Dio _apiClient;
   final AppDatabase _database;
 
-  SnChatMember? _identity;
-
   final Map<String, LocalChatMessage> pendingMessages = {};
 
-  MessageRepository(this.room, this._apiClient, this._database) {
-    initialize();
-  }
-
-  bool initialized = false;
-
-  Future<void> initialize() async {
-    if (initialized) return;
-
-    try {
-      final response = await _apiClient.get('/chat/${room.id}/members/me');
-      _identity = SnChatMember.fromJson(response.data);
-      initialized = true;
-    } catch (e) {
-      rethrow;
-    }
-  }
+  MessageRepository(this.room, this.identity, this._apiClient, this._database);
 
   Future<List<LocalChatMessage>> listMessages({
     int offset = 0,
@@ -143,12 +126,6 @@ class MessageRepository {
     List<SnCloudFile>? attachments,
     Map<String, dynamic>? meta,
   }) async {
-    if (!initialized || _identity == null) {
-      throw UnsupportedError(
-        "The message repository is not ready for send message.",
-      );
-    }
-
     // Generate a unique nonce for this message
     final nonce = const Uuid().v4();
 
@@ -156,12 +133,12 @@ class MessageRepository {
     final mockMessage = SnChatMessage(
       id: 'pending_$nonce',
       chatRoomId: roomId,
-      senderId: _identity!.id,
+      senderId: identity.id,
       content: content,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       nonce: nonce,
-      sender: _identity!,
+      sender: identity,
     );
 
     final localMessage = LocalChatMessage.fromRemoteMessage(

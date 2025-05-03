@@ -81,6 +81,7 @@ abstract class SnChatMember with _$SnChatMember {
     required DateTime? deletedAt,
     required String id,
     required int chatRoomId,
+    required SnChat? chatRoom,
     required int accountId,
     required SnAccount account,
     required String? nick,

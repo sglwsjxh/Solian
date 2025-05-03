@@ -204,4 +204,151 @@ as String,
 
 }
 
+
+/// @nodoc
+mixin _$WebSocketPacket {
+
+ String get type; Map<String, dynamic>? get data; String? get errorMessage;
+/// Create a copy of WebSocketPacket
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$WebSocketPacketCopyWith<WebSocketPacket> get copyWith => _$WebSocketPacketCopyWithImpl<WebSocketPacket>(this as WebSocketPacket, _$identity);
+
+  /// Serializes this WebSocketPacket to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WebSocketPacket&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(data),errorMessage);
+
+@override
+String toString() {
+  return 'WebSocketPacket(type: $type, data: $data, errorMessage: $errorMessage)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $WebSocketPacketCopyWith<$Res>  {
+  factory $WebSocketPacketCopyWith(WebSocketPacket value, $Res Function(WebSocketPacket) _then) = _$WebSocketPacketCopyWithImpl;
+@useResult
+$Res call({
+ String type, Map<String, dynamic>? data, String? errorMessage
+});
+
+
+
+
+}
+/// @nodoc
+class _$WebSocketPacketCopyWithImpl<$Res>
+    implements $WebSocketPacketCopyWith<$Res> {
+  _$WebSocketPacketCopyWithImpl(this._self, this._then);
+
+  final WebSocketPacket _self;
+  final $Res Function(WebSocketPacket) _then;
+
+/// Create a copy of WebSocketPacket
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? data = freezed,Object? errorMessage = freezed,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class _WebSocketPacket implements WebSocketPacket {
+  const _WebSocketPacket({required this.type, required final  Map<String, dynamic>? data, required this.errorMessage}): _data = data;
+  factory _WebSocketPacket.fromJson(Map<String, dynamic> json) => _$WebSocketPacketFromJson(json);
+
+@override final  String type;
+ final  Map<String, dynamic>? _data;
+@override Map<String, dynamic>? get data {
+  final value = _data;
+  if (value == null) return null;
+  if (_data is EqualUnmodifiableMapView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
+@override final  String? errorMessage;
+
+/// Create a copy of WebSocketPacket
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$WebSocketPacketCopyWith<_WebSocketPacket> get copyWith => __$WebSocketPacketCopyWithImpl<_WebSocketPacket>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$WebSocketPacketToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WebSocketPacket&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(_data),errorMessage);
+
+@override
+String toString() {
+  return 'WebSocketPacket(type: $type, data: $data, errorMessage: $errorMessage)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$WebSocketPacketCopyWith<$Res> implements $WebSocketPacketCopyWith<$Res> {
+  factory _$WebSocketPacketCopyWith(_WebSocketPacket value, $Res Function(_WebSocketPacket) _then) = __$WebSocketPacketCopyWithImpl;
+@override @useResult
+$Res call({
+ String type, Map<String, dynamic>? data, String? errorMessage
+});
+
+
+
+
+}
+/// @nodoc
+class __$WebSocketPacketCopyWithImpl<$Res>
+    implements _$WebSocketPacketCopyWith<$Res> {
+  __$WebSocketPacketCopyWithImpl(this._self, this._then);
+
+  final _WebSocketPacket _self;
+  final $Res Function(_WebSocketPacket) _then;
+
+/// Create a copy of WebSocketPacket
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? data = freezed,Object? errorMessage = freezed,}) {
+  return _then(_WebSocketPacket(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
 // dart format on

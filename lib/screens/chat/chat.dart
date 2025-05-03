@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:island/models/chat.dart';
@@ -15,6 +16,7 @@ import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -36,9 +38,23 @@ class ChatListScreen extends HookConsumerWidget {
     final chats = ref.watch(chatroomsJoinedProvider);
 
     return AppScaffold(
-      appBar: AppBar(title: Text('chat').tr()),
+      appBar: AppBar(
+        title: Text('chat').tr(),
+        actions: [
+          IconButton(
+            icon: const Icon(Symbols.email),
+            onPressed: () {
+              showCupertinoModalBottomSheet(
+                context: context,
+                builder: (context) => _ChatInvitesSheet(),
+              );
+            },
+          ),
+          const Gap(8),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-        key: Key("chat-page-fab"),
+        heroTag: Key("chat-page-fab"),
         onPressed: () {
           context.pushRoute(NewChatRoute());
         },
@@ -58,7 +74,7 @@ class ChatListScreen extends HookConsumerWidget {
                   final item = items[index];
                   return ListTile(
                     leading:
-                        item.picture == null
+                        item.pictureId == null
                             ? CircleAvatar(
                               child: Text(item.name[0].toUpperCase()),
                             )
@@ -85,6 +101,14 @@ Future<SnChat?> chatroom(Ref ref, int? identifier) async {
   final client = ref.watch(apiClientProvider);
   final resp = await client.get('/chat/$identifier');
   return SnChat.fromJson(resp.data);
+}
+
+@riverpod
+Future<SnChatMember?> chatroomIdentity(Ref ref, int? identifier) async {
+  if (identifier == null) return null;
+  final client = ref.watch(apiClientProvider);
+  final resp = await client.get('/chat/$identifier/members/me');
+  return SnChatMember.fromJson(resp.data);
 }
 
 @RoutePage()
@@ -271,6 +295,149 @@ class EditChatScreen extends HookConsumerWidget {
             ).padding(all: 24),
           ),
         ],
+      ),
+    );
+  }
+}
+
+@riverpod
+Future<List<SnChatMember>> chatroomInvites(Ref ref) async {
+  final client = ref.watch(apiClientProvider);
+  final resp = await client.get('/chat/invites');
+  return resp.data
+      .map((e) => SnChatMember.fromJson(e))
+      .cast<SnChatMember>()
+      .toList();
+}
+
+class _ChatInvitesSheet extends HookConsumerWidget {
+  const _ChatInvitesSheet();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final invites = ref.watch(chatroomInvitesProvider);
+
+    Future<void> acceptInvite(SnChatMember invite) async {
+      try {
+        final client = ref.read(apiClientProvider);
+        await client.post('/chat/invites/${invite.chatRoom!.id}/accept');
+        ref.invalidate(chatroomInvitesProvider);
+        ref.invalidate(chatroomsJoinedProvider);
+      } catch (err) {
+        showErrorAlert(err);
+      }
+    }
+
+    Future<void> declineInvite(SnChatMember invite) async {
+      try {
+        final client = ref.read(apiClientProvider);
+        await client.post('/chat/invites/${invite.chatRoom!.id}/decline');
+        ref.invalidate(chatroomInvitesProvider);
+      } catch (err) {
+        showErrorAlert(err);
+      }
+    }
+
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 16,
+                left: 20,
+                right: 16,
+                bottom: 12,
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'invites'.tr(),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Symbols.refresh),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(36, 36),
+                    ),
+                    onPressed: () {
+                      ref.refresh(chatroomInvitesProvider.future);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Symbols.close),
+                    onPressed: () => Navigator.pop(context),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(36, 36),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: invites.when(
+                data:
+                    (items) =>
+                        items.isEmpty
+                            ? Center(
+                              child:
+                                  Text(
+                                    'invitesEmpty',
+                                    textAlign: TextAlign.center,
+                                  ).tr(),
+                            )
+                            : ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: items.length,
+                              itemBuilder: (context, index) {
+                                final invite = items[index];
+                                return ListTile(
+                                  leading: ProfilePictureWidget(
+                                    fileId: invite.chatRoom!.pictureId,
+                                    radius: 24,
+                                    fallbackIcon: Symbols.group,
+                                  ),
+                                  title: Text(invite.chatRoom!.name),
+                                  subtitle:
+                                      Text(
+                                        invite.role >= 100
+                                            ? 'permissionOwner'
+                                            : invite.role >= 50
+                                            ? 'permissionModerator'
+                                            : 'permissionMember',
+                                      ).tr(),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Symbols.check),
+                                        onPressed: () => acceptInvite(invite),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Symbols.close),
+                                        onPressed: () => declineInvite(invite),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => Center(child: Text('Error: $error')),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

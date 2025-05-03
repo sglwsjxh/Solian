@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/route.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -157,14 +158,21 @@ class AppScaffold extends StatelessWidget {
 }
 
 class PageBackButton extends StatelessWidget {
-  const PageBackButton({super.key});
+  final List<Shadow>? shadows;
+  const PageBackButton({super.key, this.shadows});
 
   @override
   Widget build(BuildContext context) {
-    return BackButton(
+    return IconButton(
       onPressed: () {
         context.router.maybePop();
       },
+      icon: Icon(
+        (!kIsWeb && (Platform.isMacOS || Platform.isIOS))
+            ? Symbols.arrow_back_ios_new
+            : Symbols.arrow_back,
+        shadows: shadows,
+      ),
     );
   }
 }

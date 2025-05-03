@@ -163,6 +163,10 @@ _SnChatMember _$SnChatMemberFromJson(Map<String, dynamic> json) =>
               : DateTime.parse(json['deleted_at'] as String),
       id: json['id'] as String,
       chatRoomId: (json['chat_room_id'] as num).toInt(),
+      chatRoom:
+          json['chat_room'] == null
+              ? null
+              : SnChat.fromJson(json['chat_room'] as Map<String, dynamic>),
       accountId: (json['account_id'] as num).toInt(),
       account: SnAccount.fromJson(json['account'] as Map<String, dynamic>),
       nick: json['nick'] as String?,
@@ -182,6 +186,7 @@ Map<String, dynamic> _$SnChatMemberToJson(_SnChatMember instance) =>
       'deleted_at': instance.deletedAt?.toIso8601String(),
       'id': instance.id,
       'chat_room_id': instance.chatRoomId,
+      'chat_room': instance.chatRoom?.toJson(),
       'account_id': instance.accountId,
       'account': instance.account.toJson(),
       'nick': instance.nick,

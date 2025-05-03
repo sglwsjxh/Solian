@@ -39,7 +39,7 @@ class RealmListScreen extends HookConsumerWidget {
     return AppScaffold(
       appBar: AppBar(title: const Text('realms').tr()),
       floatingActionButton: FloatingActionButton(
-        key: Key("realms-page-fab"),
+        heroTag: Key("realms-page-fab"),
         child: const Icon(Symbols.add),
         onPressed: () {
           context.router.push(NewRealmRoute());

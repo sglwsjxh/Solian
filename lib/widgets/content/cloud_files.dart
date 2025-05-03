@@ -42,6 +42,30 @@ class CloudFileWidget extends ConsumerWidget {
   }
 }
 
+class CloudImageWidget extends ConsumerWidget {
+  final String fileId;
+  final BoxFit fit;
+  final double aspectRatio;
+  final String? blurHash;
+  const CloudImageWidget({
+    super.key,
+    required this.fileId,
+    this.aspectRatio = 1,
+    this.fit = BoxFit.cover,
+    this.blurHash,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final serverUrl = ref.watch(serverUrlProvider);
+    final uri = '$serverUrl/files/$fileId';
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: UniversalImage(uri: uri, blurHash: blurHash),
+    );
+  }
+}
+
 class ProfilePictureWidget extends ConsumerWidget {
   final String? fileId;
   final double radius;

@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -8,6 +11,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 part 'websocket.freezed.dart';
+part 'websocket.g.dart';
 
 @freezed
 class WebSocketState with _$WebSocketState {
@@ -17,15 +21,35 @@ class WebSocketState with _$WebSocketState {
   const factory WebSocketState.error(String message) = _Error;
 }
 
+@freezed
+abstract class WebSocketPacket with _$WebSocketPacket {
+  const factory WebSocketPacket({
+    required String type,
+    required Map<String, dynamic>? data,
+    required String? errorMessage,
+  }) = _WebSocketPacket;
+
+  factory WebSocketPacket.fromJson(Map<String, dynamic> json) =>
+      _$WebSocketPacketFromJson(json);
+}
+
 final websocketProvider = Provider<WebSocketService>((ref) {
   return WebSocketService();
 });
 
 class WebSocketService {
   WebSocketChannel? _channel;
-  Stream<dynamic>? _broadcastStream;
+  final StreamController<WebSocketPacket> _streamController =
+      StreamController<WebSocketPacket>.broadcast();
+  String? _lastUrl;
+  String? _lastAtk;
+  Timer? _reconnectTimer;
+
+  Stream<WebSocketPacket> get dataStream => _streamController.stream;
 
   Future<void> connect(String url, String atk) async {
+    _lastUrl = url;
+    _lastAtk = atk;
     log('[WebSocket] Trying connecting to $url');
     try {
       _channel = IOWebSocketChannel.connect(
@@ -33,20 +57,48 @@ class WebSocketService {
         headers: {'Authorization': 'Bearer $atk'},
       );
       await _channel!.ready;
-      _broadcastStream = _channel!.stream.asBroadcastStream();
+      _channel!.stream.listen(
+        (data) {
+          final dataStr =
+              data is Uint8List ? utf8.decode(data) : data.toString();
+          final packet = WebSocketPacket.fromJson(jsonDecode(dataStr));
+          _streamController.sink.add(packet);
+          log("[WebSocket] Received packet: ${packet.type}");
+        },
+        onDone: () {
+          log('[WebSocket] Connection closed, attempting to reconnect...');
+          _scheduleReconnect();
+        },
+        onError: (error) {
+          log('[WebSocket] Error occurred: $error, attempting to reconnect...');
+          _scheduleReconnect();
+        },
+      );
     } catch (err) {
       log('[WebSocket] Failed to connect: $err');
+      _scheduleReconnect();
     }
   }
 
+  void _scheduleReconnect() {
+    _reconnectTimer?.cancel();
+    _reconnectTimer = Timer(const Duration(milliseconds: 500), () {
+      if (_lastUrl != null && _lastAtk != null) {
+        connect(_lastUrl!, _lastAtk!);
+      }
+    });
+  }
+
   WebSocketChannel? get ws => _channel;
-  Stream<dynamic> get stream => _broadcastStream!;
 
   void sendMessage(String message) {
     _channel!.sink.add(message);
   }
 
   void close() {
+    _reconnectTimer?.cancel();
+    _lastUrl = null;
+    _lastAtk = null;
     _channel?.sink.close();
   }
 }

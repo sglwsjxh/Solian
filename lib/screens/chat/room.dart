@@ -1,4 +1,4 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:island/database/message.dart';
 import 'package:island/database/message_repository.dart';
 import 'package:island/pods/message.dart';
 import 'package:island/pods/network.dart';
+import 'package:island/route.gr.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -19,9 +20,10 @@ import 'chat.dart';
 final messageRepositoryProvider = FutureProvider.family<MessageRepository, int>(
   (ref, roomId) async {
     final room = await ref.watch(chatroomProvider(roomId).future);
+    final identity = await ref.watch(chatroomIdentityProvider(roomId).future);
     final apiClient = ref.watch(apiClientProvider);
     final database = ref.watch(databaseProvider);
-    return MessageRepository(room!, apiClient, database);
+    return MessageRepository(room!, identity!, apiClient, database);
   },
 );
 
@@ -153,8 +155,10 @@ class ChatRoomScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chatRoom = ref.watch(chatroomProvider(id));
+    final chatIdentity = ref.watch(chatroomIdentityProvider(id));
     final messages = ref.watch(messagesProvider(id));
     final messagesNotifier = ref.read(messagesProvider(id).notifier);
+    final messagesRepo = ref.watch(messageRepositoryProvider(id));
 
     final messageController = useTextEditingController();
     final scrollController = useScrollController();
@@ -185,7 +189,7 @@ class ChatRoomScreen extends HookConsumerWidget {
                     height: 26,
                     width: 26,
                     child:
-                        room?.picture != null
+                        room?.pictureId != null
                             ? ProfilePictureWidget(
                               fileId: room?.pictureId,
                               fallbackIcon: Symbols.chat,
@@ -197,14 +201,19 @@ class ChatRoomScreen extends HookConsumerWidget {
                               ),
                             ),
                   ),
-                  Text(room?.name ?? 'unknown').fontSize(19).tr(),
+                  Text(room?.name ?? 'unknown'.tr()).fontSize(19),
                 ],
               ),
           loading: () => const Text('Loading...'),
           error: (_, __) => const Text('Error'),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              context.router.push(ChatDetailRoute(id: id));
+            },
+          ),
           const Gap(8),
         ],
       ),
@@ -217,12 +226,27 @@ class ChatRoomScreen extends HookConsumerWidget {
                       messageList.isEmpty
                           ? Center(child: Text('No messages yet'.tr()))
                           : ListView.builder(
+                            padding: EdgeInsets.symmetric(vertical: 16),
                             controller: scrollController,
                             reverse: true, // Show newest messages at the bottom
                             itemCount: messageList.length,
                             itemBuilder: (context, index) {
                               final message = messageList[index];
-                              return MessageBubble(message: message);
+                              return chatIdentity.when(
+                                skipError: true,
+                                data:
+                                    (identity) => MessageBubble(
+                                      message: message,
+                                      isCurrentUser:
+                                          identity?.id == message.senderId,
+                                    ),
+                                loading:
+                                    () => MessageBubble(
+                                      message: message,
+                                      isCurrentUser: false,
+                                    ),
+                                error: (_, __) => const SizedBox.shrink(),
+                              );
                             },
                           ),
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -302,14 +326,16 @@ class ChatRoomScreen extends HookConsumerWidget {
 
 class MessageBubble extends StatelessWidget {
   final LocalChatMessage message;
+  final bool isCurrentUser;
 
-  const MessageBubble({Key? key, required this.message}) : super(key: key);
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.isCurrentUser,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isCurrentUser =
-        message.senderId == 'current_user_id'; // Replace with actual check
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Row(
@@ -365,7 +391,11 @@ class MessageBubble extends StatelessWidget {
           ),
           const Gap(8),
           if (isCurrentUser)
-            const SizedBox(width: 32), // Balance with avatar on the other side
+            ProfilePictureWidget(
+              fileId:
+                  message.toRemoteMessage().sender.account.profile.pictureId,
+              radius: 16,
+            ),
         ],
       ),
     );

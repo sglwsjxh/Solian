@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/models/user.dart';
@@ -21,6 +23,7 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<SnAccount?>> {
       final user = SnAccount.fromJson(response.data);
       state = AsyncValue.data(user);
     } catch (error, stackTrace) {
+      log("[UserInfo] Failed to fetch user info: $error");
       state = AsyncValue.error(error, stackTrace);
     }
   }
@@ -29,6 +32,7 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<SnAccount?>> {
     state = const AsyncValue.data(null);
     final prefs = _ref.read(sharedPreferencesProvider);
     await prefs.remove(kTokenPairStoreKey);
+    _ref.refresh(userInfoProvider.notifier);
   }
 }
 
