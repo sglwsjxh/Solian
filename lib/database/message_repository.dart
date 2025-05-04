@@ -8,7 +8,7 @@ import 'package:island/widgets/alert.dart';
 import 'package:uuid/uuid.dart';
 
 class MessageRepository {
-  final SnChat room;
+  final SnChatRoom room;
   final SnChatMember identity;
   final Dio _apiClient;
   final AppDatabase _database;

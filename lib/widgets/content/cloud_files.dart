@@ -70,11 +70,13 @@ class ProfilePictureWidget extends ConsumerWidget {
   final String? fileId;
   final double radius;
   final IconData? fallbackIcon;
+  final Color? fallbackColor;
   const ProfilePictureWidget({
     super.key,
     required this.fileId,
     this.radius = 20,
     this.fallbackIcon,
+    this.fallbackColor,
   });
 
   @override
@@ -93,6 +95,9 @@ class ProfilePictureWidget extends ConsumerWidget {
                 ? Icon(
                   fallbackIcon ?? Symbols.account_circle,
                   size: radius,
+                  color:
+                      fallbackColor ??
+                      Theme.of(context).colorScheme.onPrimaryContainer,
                 ).center()
                 : CachedNetworkImage(imageUrl: uri, fit: BoxFit.cover),
       ),

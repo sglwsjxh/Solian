@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,6 +15,7 @@ import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/services/file.dart';
+import 'package:island/widgets/account/account_picker.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_files.dart';
@@ -23,10 +27,13 @@ import 'package:styled_widget/styled_widget.dart';
 part 'chat.g.dart';
 
 @riverpod
-Future<List<SnChat>> chatroomsJoined(Ref ref) async {
+Future<List<SnChatRoom>> chatroomsJoined(Ref ref) async {
   final client = ref.watch(apiClientProvider);
   final resp = await client.get('/chat');
-  return resp.data.map((e) => SnChat.fromJson(e)).cast<SnChat>().toList();
+  return resp.data
+      .map((e) => SnChatRoom.fromJson(e))
+      .cast<SnChatRoom>()
+      .toList();
 }
 
 @RoutePage()
@@ -36,6 +43,23 @@ class ChatListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chats = ref.watch(chatroomsJoinedProvider);
+
+    final fabKey = useMemoized(() => GlobalKey<ExpandableFabState>(), []);
+
+    Future<void> createDirectMessage() async {
+      final result = await showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => AccountPickerSheet(),
+      );
+      if (result == null) return;
+      final client = ref.read(apiClientProvider);
+      try {
+        await client.post('/chat/direct', data: {'related_user_id': result.id});
+        ref.refresh(chatroomsJoinedProvider.future);
+      } catch (err) {
+        showErrorAlert(err);
+      }
+    }
 
     return AppScaffold(
       appBar: AppBar(
@@ -53,12 +77,66 @@ class ChatListScreen extends HookConsumerWidget {
           const Gap(8),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: Key("chat-page-fab"),
-        onPressed: () {
-          context.pushRoute(NewChatRoute());
-        },
-        child: const Icon(Symbols.add),
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: ExpandableFab(
+        key: fabKey,
+        distance: 75,
+        type: ExpandableFabType.up,
+        childrenAnimation: ExpandableFabAnimation.none,
+        overlayStyle: ExpandableFabOverlayStyle(
+          color: Theme.of(
+            context,
+          ).colorScheme.surface.withAlpha((255 * 0.5).round()),
+        ),
+        openButtonBuilder: RotateFloatingActionButtonBuilder(
+          child: const Icon(Symbols.add, size: 28),
+          fabSize: ExpandableFabSize.regular,
+          foregroundColor:
+              Theme.of(context).floatingActionButtonTheme.foregroundColor,
+          backgroundColor:
+              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+        ),
+        closeButtonBuilder: DefaultFloatingActionButtonBuilder(
+          heroTag: Key("chat-page-fab"),
+          child: const Icon(Symbols.close, size: 28),
+          fabSize: ExpandableFabSize.regular,
+          foregroundColor:
+              Theme.of(context).floatingActionButtonTheme.foregroundColor,
+          backgroundColor:
+              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+        ),
+        children: [
+          Row(
+            children: [
+              Text('createChatRoom').tr(),
+              const Gap(20),
+              FloatingActionButton(
+                heroTag: null,
+                tooltip: 'createChatRoom'.tr(),
+                onPressed: () {
+                  context.pushRoute(NewChatRoute()).then((value) {
+                    if (value != null) {
+                      ref.refresh(chatroomsJoinedProvider.future);
+                    }
+                  });
+                },
+                child: const Icon(Symbols.chat_add_on),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text('createDirectMessage').tr(),
+              const Gap(20),
+              FloatingActionButton(
+                heroTag: null,
+                tooltip: 'createDirectMessage'.tr(),
+                onPressed: createDirectMessage,
+                child: const Icon(Symbols.communication),
+              ),
+            ],
+          ),
+        ],
       ),
       body: chats.when(
         data:
@@ -72,6 +150,18 @@ class ChatListScreen extends HookConsumerWidget {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final item = items[index];
+                  if (item.type == 1) {
+                    return ListTile(
+                      leading: ProfilePictureWidget(
+                        fileId: item.members!.first.account.profile.pictureId,
+                      ),
+                      title: Text(item.members!.first.account.nick),
+                      subtitle: Text("An direct message"),
+                      onTap: () {
+                        context.pushRoute(ChatRoomRoute(id: item.id));
+                      },
+                    );
+                  }
                   return ListTile(
                     leading:
                         item.pictureId == null
@@ -89,18 +179,24 @@ class ChatListScreen extends HookConsumerWidget {
               ),
             ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        error:
+            (error, stack) => GestureDetector(
+              child: Center(child: Text('Error: $error')),
+              onTap: () {
+                ref.invalidate(chatroomsJoinedProvider);
+              },
+            ),
       ),
     );
   }
 }
 
 @riverpod
-Future<SnChat?> chatroom(Ref ref, int? identifier) async {
+Future<SnChatRoom?> chatroom(Ref ref, int? identifier) async {
   if (identifier == null) return null;
   final client = ref.watch(apiClientProvider);
   final resp = await client.get('/chat/$identifier');
-  return SnChat.fromJson(resp.data);
+  return SnChatRoom.fromJson(resp.data);
 }
 
 @riverpod
@@ -208,7 +304,7 @@ class EditChatScreen extends HookConsumerWidget {
           options: Options(method: id == null ? 'POST' : 'PATCH'),
         );
         if (context.mounted) {
-          context.maybePop(SnChat.fromJson(resp.data));
+          context.maybePop(SnChatRoom.fromJson(resp.data));
         }
       } catch (err) {
         showErrorAlert(err);

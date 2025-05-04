@@ -6,7 +6,7 @@ part of 'chat.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_SnChat _$SnChatFromJson(Map<String, dynamic> json) => _SnChat(
+_SnChatRoom _$SnChatRoomFromJson(Map<String, dynamic> json) => _SnChatRoom(
   id: (json['id'] as num).toInt(),
   name: json['name'] as String,
   description: json['description'] as String,
@@ -33,24 +33,30 @@ _SnChat _$SnChatFromJson(Map<String, dynamic> json) => _SnChat(
       json['deleted_at'] == null
           ? null
           : DateTime.parse(json['deleted_at'] as String),
+  members:
+      (json['members'] as List<dynamic>?)
+          ?.map((e) => SnChatMember.fromJson(e as Map<String, dynamic>))
+          .toList(),
 );
 
-Map<String, dynamic> _$SnChatToJson(_SnChat instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'description': instance.description,
-  'type': instance.type,
-  'is_public': instance.isPublic,
-  'picture_id': instance.pictureId,
-  'picture': instance.picture?.toJson(),
-  'background_id': instance.backgroundId,
-  'background': instance.background?.toJson(),
-  'realm_id': instance.realmId,
-  'realm': instance.realm?.toJson(),
-  'created_at': instance.createdAt.toIso8601String(),
-  'updated_at': instance.updatedAt.toIso8601String(),
-  'deleted_at': instance.deletedAt?.toIso8601String(),
-};
+Map<String, dynamic> _$SnChatRoomToJson(_SnChatRoom instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'description': instance.description,
+      'type': instance.type,
+      'is_public': instance.isPublic,
+      'picture_id': instance.pictureId,
+      'picture': instance.picture?.toJson(),
+      'background_id': instance.backgroundId,
+      'background': instance.background?.toJson(),
+      'realm_id': instance.realmId,
+      'realm': instance.realm?.toJson(),
+      'created_at': instance.createdAt.toIso8601String(),
+      'updated_at': instance.updatedAt.toIso8601String(),
+      'deleted_at': instance.deletedAt?.toIso8601String(),
+      'members': instance.members?.map((e) => e.toJson()).toList(),
+    };
 
 _SnChatMessage _$SnChatMessageFromJson(Map<String, dynamic> json) =>
     _SnChatMessage(
@@ -152,7 +158,7 @@ _SnChatMember _$SnChatMemberFromJson(Map<String, dynamic> json) =>
       chatRoom:
           json['chat_room'] == null
               ? null
-              : SnChat.fromJson(json['chat_room'] as Map<String, dynamic>),
+              : SnChatRoom.fromJson(json['chat_room'] as Map<String, dynamic>),
       accountId: (json['account_id'] as num).toInt(),
       account: SnAccount.fromJson(json['account'] as Map<String, dynamic>),
       nick: json['nick'] as String?,

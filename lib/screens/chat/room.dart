@@ -443,19 +443,28 @@ class ChatRoomScreen extends HookConsumerWidget {
                     height: 26,
                     width: 26,
                     child:
-                        room?.pictureId != null
+                        room!.type == 1
                             ? ProfilePictureWidget(
-                              fileId: room?.pictureId,
+                              fileId:
+                                  room.members!.first.account.profile.pictureId,
+                            )
+                            : room.pictureId != null
+                            ? ProfilePictureWidget(
+                              fileId: room.pictureId,
                               fallbackIcon: Symbols.chat,
                             )
                             : CircleAvatar(
                               child: Text(
-                                room?.name[0].toUpperCase() ?? '',
+                                room.name[0].toUpperCase(),
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),
                   ),
-                  Text(room?.name ?? 'unknown'.tr()).fontSize(19),
+                  Text(
+                    room!.type == 1
+                        ? room.members!.first.account.nick
+                        : room.name,
+                  ).fontSize(19),
                 ],
               ),
           loading: () => const Text('Loading...'),
@@ -613,7 +622,7 @@ class ChatRoomScreen extends HookConsumerWidget {
 
 class _ChatInput extends StatelessWidget {
   final TextEditingController messageController;
-  final SnChat chatRoom;
+  final SnChatRoom chatRoom;
   final VoidCallback onSend;
   final VoidCallback onClear;
   final Function(bool isPhoto) onPickFile;
@@ -744,7 +753,12 @@ class _ChatInput extends StatelessWidget {
                   child: TextField(
                     controller: messageController,
                     decoration: InputDecoration(
-                      hintText: 'chatMessageHint'.tr(args: [chatRoom.name]),
+                      hintText:
+                          chatRoom.type == 1
+                              ? 'chatDirectMessageHint'.tr(
+                                args: [chatRoom.members!.first.account.nick],
+                              )
+                              : 'chatMessageHint'.tr(args: [chatRoom.name]),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: const EdgeInsets.symmetric(

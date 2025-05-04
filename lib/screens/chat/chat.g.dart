@@ -6,12 +6,12 @@ part of 'chat.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatroomsJoinedHash() => r'3a2db4159663c54dfd7bc40519e2faa6df69b41f';
+String _$chatroomsJoinedHash() => r'0c93fd3cb8fe5c87626836ced4f244bfa7598582';
 
 /// See also [chatroomsJoined].
 @ProviderFor(chatroomsJoined)
 final chatroomsJoinedProvider =
-    AutoDisposeFutureProvider<List<SnChat>>.internal(
+    AutoDisposeFutureProvider<List<SnChatRoom>>.internal(
       chatroomsJoined,
       name: r'chatroomsJoinedProvider',
       debugGetCreateSourceHash:
@@ -24,8 +24,8 @@ final chatroomsJoinedProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ChatroomsJoinedRef = AutoDisposeFutureProviderRef<List<SnChat>>;
-String _$chatroomHash() => r'27bd4cb49326bb2f2eac7d7db9db7f610e21afb2';
+typedef ChatroomsJoinedRef = AutoDisposeFutureProviderRef<List<SnChatRoom>>;
+String _$chatroomHash() => r'3a945a61ea434f860fbeae9d40778fbfceddc5db';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -53,7 +53,7 @@ class _SystemHash {
 const chatroomProvider = ChatroomFamily();
 
 /// See also [chatroom].
-class ChatroomFamily extends Family<AsyncValue<SnChat?>> {
+class ChatroomFamily extends Family<AsyncValue<SnChatRoom?>> {
   /// See also [chatroom].
   const ChatroomFamily();
 
@@ -83,7 +83,7 @@ class ChatroomFamily extends Family<AsyncValue<SnChat?>> {
 }
 
 /// See also [chatroom].
-class ChatroomProvider extends AutoDisposeFutureProvider<SnChat?> {
+class ChatroomProvider extends AutoDisposeFutureProvider<SnChatRoom?> {
   /// See also [chatroom].
   ChatroomProvider(int? identifier)
     : this._internal(
@@ -113,7 +113,7 @@ class ChatroomProvider extends AutoDisposeFutureProvider<SnChat?> {
 
   @override
   Override overrideWith(
-    FutureOr<SnChat?> Function(ChatroomRef provider) create,
+    FutureOr<SnChatRoom?> Function(ChatroomRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -130,7 +130,7 @@ class ChatroomProvider extends AutoDisposeFutureProvider<SnChat?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<SnChat?> createElement() {
+  AutoDisposeFutureProviderElement<SnChatRoom?> createElement() {
     return _ChatroomProviderElement(this);
   }
 
@@ -150,12 +150,13 @@ class ChatroomProvider extends AutoDisposeFutureProvider<SnChat?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChatroomRef on AutoDisposeFutureProviderRef<SnChat?> {
+mixin ChatroomRef on AutoDisposeFutureProviderRef<SnChatRoom?> {
   /// The parameter `identifier` of this provider.
   int? get identifier;
 }
 
-class _ChatroomProviderElement extends AutoDisposeFutureProviderElement<SnChat?>
+class _ChatroomProviderElement
+    extends AutoDisposeFutureProviderElement<SnChatRoom?>
     with ChatroomRef {
   _ChatroomProviderElement(super.provider);
 

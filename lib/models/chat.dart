@@ -7,8 +7,8 @@ part 'chat.freezed.dart';
 part 'chat.g.dart';
 
 @freezed
-abstract class SnChat with _$SnChat {
-  const factory SnChat({
+abstract class SnChatRoom with _$SnChatRoom {
+  const factory SnChatRoom({
     required int id,
     required String name,
     required String description,
@@ -23,9 +23,11 @@ abstract class SnChat with _$SnChat {
     required DateTime createdAt,
     required DateTime updatedAt,
     required DateTime? deletedAt,
-  }) = _SnChat;
+    required List<SnChatMember>? members,
+  }) = _SnChatRoom;
 
-  factory SnChat.fromJson(Map<String, dynamic> json) => _$SnChatFromJson(json);
+  factory SnChatRoom.fromJson(Map<String, dynamic> json) =>
+      _$SnChatRoomFromJson(json);
 }
 
 @freezed
@@ -79,7 +81,7 @@ abstract class SnChatMember with _$SnChatMember {
     required DateTime? deletedAt,
     required String id,
     required int chatRoomId,
-    required SnChat? chatRoom,
+    required SnChatRoom? chatRoom,
     required int accountId,
     required SnAccount account,
     required String? nick,

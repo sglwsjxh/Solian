@@ -14,42 +14,42 @@ part of 'chat.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$SnChat {
+mixin _$SnChatRoom {
 
- int get id; String get name; String get description; int get type; bool get isPublic; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; int? get realmId; SnRealm? get realm; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
-/// Create a copy of SnChat
+ int get id; String get name; String get description; int get type; bool get isPublic; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; int? get realmId; SnRealm? get realm; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; List<SnChatMember>? get members;
+/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$SnChatCopyWith<SnChat> get copyWith => _$SnChatCopyWithImpl<SnChat>(this as SnChat, _$identity);
+$SnChatRoomCopyWith<SnChatRoom> get copyWith => _$SnChatRoomCopyWithImpl<SnChatRoom>(this as SnChatRoom, _$identity);
 
-  /// Serializes this SnChat to a JSON map.
+  /// Serializes this SnChatRoom to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SnChat&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.pictureId, pictureId) || other.pictureId == pictureId)&&(identical(other.picture, picture) || other.picture == picture)&&(identical(other.backgroundId, backgroundId) || other.backgroundId == backgroundId)&&(identical(other.background, background) || other.background == background)&&(identical(other.realmId, realmId) || other.realmId == realmId)&&(identical(other.realm, realm) || other.realm == realm)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SnChatRoom&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.pictureId, pictureId) || other.pictureId == pictureId)&&(identical(other.picture, picture) || other.picture == picture)&&(identical(other.backgroundId, backgroundId) || other.backgroundId == backgroundId)&&(identical(other.background, background) || other.background == background)&&(identical(other.realmId, realmId) || other.realmId == realmId)&&(identical(other.realm, realm) || other.realm == realm)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&const DeepCollectionEquality().equals(other.members, members));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,type,isPublic,pictureId,picture,backgroundId,background,realmId,realm,createdAt,updatedAt,deletedAt);
+int get hashCode => Object.hash(runtimeType,id,name,description,type,isPublic,pictureId,picture,backgroundId,background,realmId,realm,createdAt,updatedAt,deletedAt,const DeepCollectionEquality().hash(members));
 
 @override
 String toString() {
-  return 'SnChat(id: $id, name: $name, description: $description, type: $type, isPublic: $isPublic, pictureId: $pictureId, picture: $picture, backgroundId: $backgroundId, background: $background, realmId: $realmId, realm: $realm, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+  return 'SnChatRoom(id: $id, name: $name, description: $description, type: $type, isPublic: $isPublic, pictureId: $pictureId, picture: $picture, backgroundId: $backgroundId, background: $background, realmId: $realmId, realm: $realm, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, members: $members)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $SnChatCopyWith<$Res>  {
-  factory $SnChatCopyWith(SnChat value, $Res Function(SnChat) _then) = _$SnChatCopyWithImpl;
+abstract mixin class $SnChatRoomCopyWith<$Res>  {
+  factory $SnChatRoomCopyWith(SnChatRoom value, $Res Function(SnChatRoom) _then) = _$SnChatRoomCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ int id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, List<SnChatMember>? members
 });
 
 
@@ -57,16 +57,16 @@ $SnCloudFileCopyWith<$Res>? get picture;$SnCloudFileCopyWith<$Res>? get backgrou
 
 }
 /// @nodoc
-class _$SnChatCopyWithImpl<$Res>
-    implements $SnChatCopyWith<$Res> {
-  _$SnChatCopyWithImpl(this._self, this._then);
+class _$SnChatRoomCopyWithImpl<$Res>
+    implements $SnChatRoomCopyWith<$Res> {
+  _$SnChatRoomCopyWithImpl(this._self, this._then);
 
-  final SnChat _self;
-  final $Res Function(SnChat) _then;
+  final SnChatRoom _self;
+  final $Res Function(SnChatRoom) _then;
 
-/// Create a copy of SnChat
+/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? type = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? realmId = freezed,Object? realm = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? type = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? realmId = freezed,Object? realm = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,Object? members = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -82,10 +82,11 @@ as int?,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_t
 as SnRealm?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,members: freezed == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
+as List<SnChatMember>?,
   ));
 }
-/// Create a copy of SnChat
+/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -97,7 +98,7 @@ $SnCloudFileCopyWith<$Res>? get picture {
   return $SnCloudFileCopyWith<$Res>(_self.picture!, (value) {
     return _then(_self.copyWith(picture: value));
   });
-}/// Create a copy of SnChat
+}/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -109,7 +110,7 @@ $SnCloudFileCopyWith<$Res>? get background {
   return $SnCloudFileCopyWith<$Res>(_self.background!, (value) {
     return _then(_self.copyWith(background: value));
   });
-}/// Create a copy of SnChat
+}/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -128,9 +129,9 @@ $SnRealmCopyWith<$Res>? get realm {
 /// @nodoc
 @JsonSerializable()
 
-class _SnChat implements SnChat {
-  const _SnChat({required this.id, required this.name, required this.description, required this.type, required this.isPublic, required this.pictureId, required this.picture, required this.backgroundId, required this.background, required this.realmId, required this.realm, required this.createdAt, required this.updatedAt, required this.deletedAt});
-  factory _SnChat.fromJson(Map<String, dynamic> json) => _$SnChatFromJson(json);
+class _SnChatRoom implements SnChatRoom {
+  const _SnChatRoom({required this.id, required this.name, required this.description, required this.type, required this.isPublic, required this.pictureId, required this.picture, required this.backgroundId, required this.background, required this.realmId, required this.realm, required this.createdAt, required this.updatedAt, required this.deletedAt, required final  List<SnChatMember>? members}): _members = members;
+  factory _SnChatRoom.fromJson(Map<String, dynamic> json) => _$SnChatRoomFromJson(json);
 
 @override final  int id;
 @override final  String name;
@@ -146,41 +147,50 @@ class _SnChat implements SnChat {
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  DateTime? deletedAt;
+ final  List<SnChatMember>? _members;
+@override List<SnChatMember>? get members {
+  final value = _members;
+  if (value == null) return null;
+  if (_members is EqualUnmodifiableListView) return _members;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
 
-/// Create a copy of SnChat
+
+/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$SnChatCopyWith<_SnChat> get copyWith => __$SnChatCopyWithImpl<_SnChat>(this, _$identity);
+_$SnChatRoomCopyWith<_SnChatRoom> get copyWith => __$SnChatRoomCopyWithImpl<_SnChatRoom>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$SnChatToJson(this, );
+  return _$SnChatRoomToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SnChat&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.pictureId, pictureId) || other.pictureId == pictureId)&&(identical(other.picture, picture) || other.picture == picture)&&(identical(other.backgroundId, backgroundId) || other.backgroundId == backgroundId)&&(identical(other.background, background) || other.background == background)&&(identical(other.realmId, realmId) || other.realmId == realmId)&&(identical(other.realm, realm) || other.realm == realm)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SnChatRoom&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.pictureId, pictureId) || other.pictureId == pictureId)&&(identical(other.picture, picture) || other.picture == picture)&&(identical(other.backgroundId, backgroundId) || other.backgroundId == backgroundId)&&(identical(other.background, background) || other.background == background)&&(identical(other.realmId, realmId) || other.realmId == realmId)&&(identical(other.realm, realm) || other.realm == realm)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&const DeepCollectionEquality().equals(other._members, _members));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,type,isPublic,pictureId,picture,backgroundId,background,realmId,realm,createdAt,updatedAt,deletedAt);
+int get hashCode => Object.hash(runtimeType,id,name,description,type,isPublic,pictureId,picture,backgroundId,background,realmId,realm,createdAt,updatedAt,deletedAt,const DeepCollectionEquality().hash(_members));
 
 @override
 String toString() {
-  return 'SnChat(id: $id, name: $name, description: $description, type: $type, isPublic: $isPublic, pictureId: $pictureId, picture: $picture, backgroundId: $backgroundId, background: $background, realmId: $realmId, realm: $realm, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+  return 'SnChatRoom(id: $id, name: $name, description: $description, type: $type, isPublic: $isPublic, pictureId: $pictureId, picture: $picture, backgroundId: $backgroundId, background: $background, realmId: $realmId, realm: $realm, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, members: $members)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$SnChatCopyWith<$Res> implements $SnChatCopyWith<$Res> {
-  factory _$SnChatCopyWith(_SnChat value, $Res Function(_SnChat) _then) = __$SnChatCopyWithImpl;
+abstract mixin class _$SnChatRoomCopyWith<$Res> implements $SnChatRoomCopyWith<$Res> {
+  factory _$SnChatRoomCopyWith(_SnChatRoom value, $Res Function(_SnChatRoom) _then) = __$SnChatRoomCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ int id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, List<SnChatMember>? members
 });
 
 
@@ -188,17 +198,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$SnChatCopyWithImpl<$Res>
-    implements _$SnChatCopyWith<$Res> {
-  __$SnChatCopyWithImpl(this._self, this._then);
+class __$SnChatRoomCopyWithImpl<$Res>
+    implements _$SnChatRoomCopyWith<$Res> {
+  __$SnChatRoomCopyWithImpl(this._self, this._then);
 
-  final _SnChat _self;
-  final $Res Function(_SnChat) _then;
+  final _SnChatRoom _self;
+  final $Res Function(_SnChatRoom) _then;
 
-/// Create a copy of SnChat
+/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? type = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? realmId = freezed,Object? realm = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
-  return _then(_SnChat(
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? type = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? realmId = freezed,Object? realm = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,Object? members = freezed,}) {
+  return _then(_SnChatRoom(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -213,11 +223,12 @@ as int?,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_t
 as SnRealm?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,members: freezed == members ? _self._members : members // ignore: cast_nullable_to_non_nullable
+as List<SnChatMember>?,
   ));
 }
 
-/// Create a copy of SnChat
+/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -229,7 +240,7 @@ $SnCloudFileCopyWith<$Res>? get picture {
   return $SnCloudFileCopyWith<$Res>(_self.picture!, (value) {
     return _then(_self.copyWith(picture: value));
   });
-}/// Create a copy of SnChat
+}/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -241,7 +252,7 @@ $SnCloudFileCopyWith<$Res>? get background {
   return $SnCloudFileCopyWith<$Res>(_self.background!, (value) {
     return _then(_self.copyWith(background: value));
   });
-}/// Create a copy of SnChat
+}/// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -655,7 +666,7 @@ $SnChatMemberCopyWith<$Res> get sender {
 /// @nodoc
 mixin _$SnChatMember {
 
- DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; String get id; int get chatRoomId; SnChat? get chatRoom; int get accountId; SnAccount get account; String? get nick; int get role; int get notify; DateTime? get joinedAt; bool get isBot;
+ DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; String get id; int get chatRoomId; SnChatRoom? get chatRoom; int get accountId; SnAccount get account; String? get nick; int get role; int get notify; DateTime? get joinedAt; bool get isBot;
 /// Create a copy of SnChatMember
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -688,11 +699,11 @@ abstract mixin class $SnChatMemberCopyWith<$Res>  {
   factory $SnChatMemberCopyWith(SnChatMember value, $Res Function(SnChatMember) _then) = _$SnChatMemberCopyWithImpl;
 @useResult
 $Res call({
- DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, int chatRoomId, SnChat? chatRoom, int accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
+ DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, int chatRoomId, SnChatRoom? chatRoom, int accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
 });
 
 
-$SnChatCopyWith<$Res>? get chatRoom;$SnAccountCopyWith<$Res> get account;
+$SnChatRoomCopyWith<$Res>? get chatRoom;$SnAccountCopyWith<$Res> get account;
 
 }
 /// @nodoc
@@ -713,7 +724,7 @@ as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ign
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,chatRoomId: null == chatRoomId ? _self.chatRoomId : chatRoomId // ignore: cast_nullable_to_non_nullable
 as int,chatRoom: freezed == chatRoom ? _self.chatRoom : chatRoom // ignore: cast_nullable_to_non_nullable
-as SnChat?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as SnChatRoom?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount,nick: freezed == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -727,12 +738,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$SnChatCopyWith<$Res>? get chatRoom {
+$SnChatRoomCopyWith<$Res>? get chatRoom {
     if (_self.chatRoom == null) {
     return null;
   }
 
-  return $SnChatCopyWith<$Res>(_self.chatRoom!, (value) {
+  return $SnChatRoomCopyWith<$Res>(_self.chatRoom!, (value) {
     return _then(_self.copyWith(chatRoom: value));
   });
 }/// Create a copy of SnChatMember
@@ -760,7 +771,7 @@ class _SnChatMember implements SnChatMember {
 @override final  DateTime? deletedAt;
 @override final  String id;
 @override final  int chatRoomId;
-@override final  SnChat? chatRoom;
+@override final  SnChatRoom? chatRoom;
 @override final  int accountId;
 @override final  SnAccount account;
 @override final  String? nick;
@@ -802,11 +813,11 @@ abstract mixin class _$SnChatMemberCopyWith<$Res> implements $SnChatMemberCopyWi
   factory _$SnChatMemberCopyWith(_SnChatMember value, $Res Function(_SnChatMember) _then) = __$SnChatMemberCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, int chatRoomId, SnChat? chatRoom, int accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
+ DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, int chatRoomId, SnChatRoom? chatRoom, int accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
 });
 
 
-@override $SnChatCopyWith<$Res>? get chatRoom;@override $SnAccountCopyWith<$Res> get account;
+@override $SnChatRoomCopyWith<$Res>? get chatRoom;@override $SnAccountCopyWith<$Res> get account;
 
 }
 /// @nodoc
@@ -827,7 +838,7 @@ as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ign
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,chatRoomId: null == chatRoomId ? _self.chatRoomId : chatRoomId // ignore: cast_nullable_to_non_nullable
 as int,chatRoom: freezed == chatRoom ? _self.chatRoom : chatRoom // ignore: cast_nullable_to_non_nullable
-as SnChat?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as SnChatRoom?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount,nick: freezed == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -842,12 +853,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$SnChatCopyWith<$Res>? get chatRoom {
+$SnChatRoomCopyWith<$Res>? get chatRoom {
     if (_self.chatRoom == null) {
     return null;
   }
 
-  return $SnChatCopyWith<$Res>(_self.chatRoom!, (value) {
+  return $SnChatRoomCopyWith<$Res>(_self.chatRoom!, (value) {
     return _then(_self.copyWith(chatRoom: value));
   });
 }/// Create a copy of SnChatMember

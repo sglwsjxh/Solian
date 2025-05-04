@@ -55,9 +55,26 @@ class ChatDetailScreen extends HookConsumerWidget {
                   leading: PageBackButton(shadows: [iconShadow]),
                   flexibleSpace: FlexibleSpaceBar(
                     background:
-                        currentRoom?.backgroundId != null
+                        currentRoom!.type == 1 &&
+                                currentRoom
+                                        .members!
+                                        .first
+                                        .account
+                                        .profile
+                                        .backgroundId !=
+                                    null
                             ? CloudImageWidget(
-                              fileId: currentRoom!.backgroundId!,
+                              fileId:
+                                  currentRoom
+                                      .members!
+                                      .first
+                                      .account
+                                      .profile
+                                      .backgroundId!,
+                            )
+                            : currentRoom.backgroundId != null
+                            ? CloudImageWidget(
+                              fileId: currentRoom.backgroundId!,
                               fit: BoxFit.cover,
                             )
                             : Container(
@@ -65,7 +82,9 @@ class ChatDetailScreen extends HookConsumerWidget {
                                   Theme.of(context).appBarTheme.backgroundColor,
                             ),
                     title: Text(
-                      currentRoom?.name ?? 'unknown'.tr(),
+                      currentRoom.type == 1
+                          ? currentRoom.members!.first.account.nick
+                          : currentRoom.name,
                     ).textColor(Theme.of(context).appBarTheme.foregroundColor),
                   ),
                   actions: [
