@@ -2,23 +2,24 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:island/pods/websocket.dart';
 import 'package:island/route.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class WindowScaffold extends StatelessWidget {
+class WindowScaffold extends HookConsumerWidget {
   final Widget child;
   final AppRouter router;
   const WindowScaffold({super.key, required this.child, required this.router});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (!kIsWeb &&
         (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
@@ -31,56 +32,65 @@ class WindowScaffold extends StatelessWidget {
       );
 
       return Material(
-        child: Column(
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            WindowTitleBarBox(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 1 / devicePixelRatio,
+            Column(
+              children: [
+                WindowTitleBarBox(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Theme.of(context).dividerColor,
+                          width: 1 / devicePixelRatio,
+                        ),
+                      ),
+                    ),
+                    child: MoveWindow(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment:
+                            Platform.isMacOS
+                                ? MainAxisAlignment.center
+                                : MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Solar Network',
+                              textAlign:
+                                  Platform.isMacOS
+                                      ? TextAlign.center
+                                      : TextAlign.start,
+                            ).padding(horizontal: 12, vertical: 5),
+                          ),
+                          if (!Platform.isMacOS)
+                            MinimizeWindowButton(colors: windowButtonColor),
+                          if (!Platform.isMacOS)
+                            MaximizeWindowButton(colors: windowButtonColor),
+                          if (!Platform.isMacOS)
+                            CloseWindowButton(
+                              colors: windowButtonColor,
+                              onPressed: () => appWindow.hide(),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                child: MoveWindow(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment:
-                        Platform.isMacOS
-                            ? MainAxisAlignment.center
-                            : MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Solar Network',
-                          textAlign:
-                              Platform.isMacOS
-                                  ? TextAlign.center
-                                  : TextAlign.start,
-                        ).padding(horizontal: 12, vertical: 5),
-                      ),
-                      if (!Platform.isMacOS)
-                        MinimizeWindowButton(colors: windowButtonColor),
-                      if (!Platform.isMacOS)
-                        MaximizeWindowButton(colors: windowButtonColor),
-                      if (!Platform.isMacOS)
-                        CloseWindowButton(
-                          colors: windowButtonColor,
-                          onPressed: () => appWindow.hide(),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
+                Expanded(child: child),
+              ],
             ),
-            Expanded(child: child),
+            _WebSocketIndicator(),
           ],
         ),
       );
     }
 
-    return child;
+    return Stack(
+      fit: StackFit.expand,
+      children: [child, _WebSocketIndicator()],
+    );
   }
 }
 
@@ -240,5 +250,52 @@ class AppBackground extends ConsumerWidget {
     }
 
     return Material(color: Colors.transparent, child: child);
+  }
+}
+
+class _WebSocketIndicator extends HookConsumerWidget {
+  const _WebSocketIndicator();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final websocketState = ref.watch(websocketStateProvider);
+    final indicatorHeight = MediaQuery.of(context).padding.top + 60;
+
+    Color indicatorColor;
+    String indicatorText;
+
+    if (websocketState == WebSocketState.connected()) {
+      indicatorColor = Colors.green;
+      indicatorText = 'connectionConnected';
+    } else if (websocketState == WebSocketState.connecting()) {
+      indicatorColor = Colors.teal;
+      indicatorText = 'connectionReconnecting';
+    } else {
+      indicatorColor = Colors.orange;
+      indicatorText = 'connectionDisconnected';
+    }
+
+    return AnimatedPositioned(
+      duration: Duration(milliseconds: 1850),
+      top: websocketState == WebSocketState.connected() ? -indicatorHeight : 0,
+      curve: Curves.fastLinearToSlowEaseIn,
+      left: 0,
+      right: 0,
+      height: indicatorHeight,
+      child: Material(
+        elevation: 4,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          color: indicatorColor,
+          child: Center(
+            child:
+                Text(
+                  indicatorText,
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ).tr(),
+          ).padding(top: MediaQuery.of(context).padding.top),
+        ),
+      ),
+    );
   }
 }

@@ -10,7 +10,6 @@ import 'package:island/route.gr.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

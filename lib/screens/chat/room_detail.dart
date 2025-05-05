@@ -15,7 +15,6 @@ import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 part 'room_detail.freezed.dart';
@@ -42,7 +41,7 @@ class ChatDetailScreen extends HookConsumerWidget {
       offset: Offset(1.0, 1.0),
     );
 
-    return Scaffold(
+    return AppScaffold(
       body: roomState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(child: Text('Error: $error')),

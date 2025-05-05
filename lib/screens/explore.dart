@@ -85,27 +85,34 @@ class _PostListController extends StateNotifier<List<SnPost>> {
     if (isLoading || hasReachedMax) return;
     isLoading = true;
 
-    final response = await _dio.get(
-      '/posts',
-      queryParameters: {'offset': offset, 'take': take},
-    );
+    try {
+      final response = await _dio.get(
+        '/posts',
+        queryParameters: {'offset': offset, 'take': take},
+      );
 
-    final List<SnPost> fetched =
-        (response.data as List)
-            .map((e) => SnPost.fromJson(e as Map<String, dynamic>))
-            .toList();
+      final List<SnPost> fetched =
+          (response.data as List)
+              .map((e) => SnPost.fromJson(e as Map<String, dynamic>))
+              .toList();
 
-    final headerTotal = int.tryParse(response.headers['x-total']?.first ?? '');
-    if (headerTotal != null) total = headerTotal;
+      final headerTotal = int.tryParse(response.headers['x-total']?.first ?? '');
+      if (headerTotal != null) total = headerTotal;
 
-    state = [...state, ...fetched];
-    offset += fetched.length;
-    if (state.length >= total) hasReachedMax = true;
+      if (!mounted) return; // Check if the notifier is still mounted
 
-    isLoading = false;
+      state = [...state, ...fetched];
+      offset += fetched.length;
+      if (state.length >= total) hasReachedMax = true;
+    } finally {
+      if (mounted) {
+        isLoading = false;
+      }
+    }
   }
 
   void updateOne(int index, SnPost post) {
+    if (!mounted) return; // Check if the notifier is still mounted
     final updatedPosts = [...state];
     updatedPosts[index] = post;
     state = updatedPosts;

@@ -41,11 +41,14 @@ class WebSocketService {
   WebSocketChannel? _channel;
   final StreamController<WebSocketPacket> _streamController =
       StreamController<WebSocketPacket>.broadcast();
+  final StreamController<WebSocketState> _statusStreamController =
+      StreamController<WebSocketState>.broadcast();
   String? _lastUrl;
   String? _lastAtk;
   Timer? _reconnectTimer;
 
   Stream<WebSocketPacket> get dataStream => _streamController.stream;
+  Stream<WebSocketState> get statusStream => _statusStreamController.stream;
 
   Future<void> connect(String url, String atk) async {
     _lastUrl = url;
@@ -57,6 +60,7 @@ class WebSocketService {
         headers: {'Authorization': 'Bearer $atk'},
       );
       await _channel!.ready;
+      _statusStreamController.sink.add(WebSocketState.connected());
       _channel!.stream.listen(
         (data) {
           final dataStr =
@@ -68,10 +72,14 @@ class WebSocketService {
         onDone: () {
           log('[WebSocket] Connection closed, attempting to reconnect...');
           _scheduleReconnect();
+          _statusStreamController.sink.add(WebSocketState.disconnected());
         },
         onError: (error) {
           log('[WebSocket] Error occurred: $error, attempting to reconnect...');
           _scheduleReconnect();
+          _statusStreamController.sink.add(
+            WebSocketState.error(error.toString()),
+          );
         },
       );
     } catch (err) {
@@ -84,6 +92,7 @@ class WebSocketService {
     _reconnectTimer?.cancel();
     _reconnectTimer = Timer(const Duration(milliseconds: 500), () {
       if (_lastUrl != null && _lastAtk != null) {
+        _statusStreamController.sink.add(WebSocketState.connecting());
         connect(_lastUrl!, _lastAtk!);
       }
     });
@@ -110,6 +119,7 @@ final websocketStateProvider =
 
 class WebSocketStateNotifier extends StateNotifier<WebSocketState> {
   final Ref ref;
+  Timer? _reconnectTimer;
 
   WebSocketStateNotifier(this.ref) : super(const WebSocketState.disconnected());
 
@@ -132,9 +142,20 @@ class WebSocketStateNotifier extends StateNotifier<WebSocketState> {
       }
       await service.connect('$baseUrl/ws'.replaceFirst('http', 'ws'), atk);
       state = const WebSocketState.connected();
+      service.statusStream.listen((event) {
+        state = event;
+      });
     } catch (err) {
       state = WebSocketState.error('Failed to connect: $err');
+      _scheduleReconnect();
     }
+  }
+
+  void _scheduleReconnect() {
+    _reconnectTimer?.cancel();
+    _reconnectTimer = Timer(const Duration(milliseconds: 500), () {
+      connect();
+    });
   }
 
   void sendMessage(String message) {
@@ -145,6 +166,7 @@ class WebSocketStateNotifier extends StateNotifier<WebSocketState> {
   void close() {
     final service = ref.read(websocketProvider);
     service.close();
+    _reconnectTimer?.cancel();
     state = const WebSocketState.disconnected();
   }
 }

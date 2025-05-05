@@ -103,5 +103,8 @@
   },
   "reactionPositive": "Postive",
   "reactionNegative": "Negative",
-  "reactionNeutral": "Neutral"
+  "reactionNeutral": "Neutral",
+  "connectionConnected": "Connected",
+  "connectionDisconnected": "Disconnected",
+  "connectionReconnecting": "Reconnecting"
 }
