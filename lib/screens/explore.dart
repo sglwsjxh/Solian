@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
+import 'package:island/models/activity.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/models/post.dart';
@@ -16,8 +18,8 @@ class ExploreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(postListProvider);
-    final postsNotifier = ref.watch(postListProvider.notifier);
+    final posts = ref.watch(activityListProvider);
+    final postsNotifier = ref.watch(activityListProvider.notifier);
 
     return AppScaffold(
       appBar: AppBar(title: const Text('Explore')),
@@ -26,7 +28,7 @@ class ExploreScreen extends ConsumerWidget {
         onPressed: () {
           context.router.push(PostComposeRoute()).then((value) {
             if (value != null) {
-              ref.invalidate(postListProvider);
+              ref.invalidate(activityListProvider);
             }
           });
         },
@@ -34,45 +36,52 @@ class ExploreScreen extends ConsumerWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: RefreshIndicator(
-        onRefresh:
-            () => Future.sync((() {
-              ref.invalidate(postListProvider);
-            })),
-        child: InfiniteList(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom,
-          ),
-          itemCount: posts.length,
-          isLoading: postsNotifier.isLoading,
-          hasReachedMax: postsNotifier.hasReachedMax,
-          onFetchData: postsNotifier.fetchMore,
-          itemBuilder: (context, index) {
-            final post = posts[index];
-            return PostItem(
-              item: post,
-              onRefresh: (_) {
-                ref.invalidate(postListProvider);
+        onRefresh: () => postsNotifier.refresh(),
+        child: CustomScrollView(
+          slivers: [
+            SliverInfiniteList(
+              itemCount: posts.length,
+              isLoading: postsNotifier.isLoading,
+              hasReachedMax: postsNotifier.hasReachedMax,
+              onFetchData: postsNotifier.fetchMore,
+              itemBuilder: (context, index) {
+                final item = posts[index];
+                switch (item.type) {
+                  case 'posts.new':
+                    return PostItem(
+                      item: SnPost.fromJson(item.data),
+                      onRefresh: (_) {
+                        ref.invalidate(activityListProvider);
+                      },
+                      onUpdate: (post) {
+                        postsNotifier.updateOne(
+                          index,
+                          item.copyWith(data: post.toJson()),
+                        );
+                      },
+                    );
+                  default:
+                    return Placeholder();
+                }
               },
-              onUpdate: (post) {
-                postsNotifier.updateOne(index, post);
-              },
-            );
-          },
-          separatorBuilder: (_, __) => const Divider(height: 1),
+              separatorBuilder: (_, __) => const Divider(height: 1),
+            ),
+            SliverGap(MediaQuery.of(context).padding.bottom + 16),
+          ],
         ),
       ),
     );
   }
 }
 
-final postListProvider =
-    StateNotifierProvider<_PostListController, List<SnPost>>((ref) {
+final activityListProvider =
+    StateNotifierProvider<_ActivityListController, List<SnActivity>>((ref) {
       final client = ref.watch(apiClientProvider);
-      return _PostListController(client);
+      return _ActivityListController(client);
     });
 
-class _PostListController extends StateNotifier<List<SnPost>> {
-  _PostListController(this._dio) : super([]);
+class _ActivityListController extends StateNotifier<List<SnActivity>> {
+  _ActivityListController(this._dio) : super([]);
 
   final Dio _dio;
   bool isLoading = false;
@@ -87,16 +96,18 @@ class _PostListController extends StateNotifier<List<SnPost>> {
 
     try {
       final response = await _dio.get(
-        '/posts',
+        '/activities',
         queryParameters: {'offset': offset, 'take': take},
       );
 
-      final List<SnPost> fetched =
+      final List<SnActivity> fetched =
           (response.data as List)
-              .map((e) => SnPost.fromJson(e as Map<String, dynamic>))
+              .map((e) => SnActivity.fromJson(e as Map<String, dynamic>))
               .toList();
 
-      final headerTotal = int.tryParse(response.headers['x-total']?.first ?? '');
+      final headerTotal = int.tryParse(
+        response.headers['x-total']?.first ?? '',
+      );
       if (headerTotal != null) total = headerTotal;
 
       if (!mounted) return; // Check if the notifier is still mounted
@@ -111,7 +122,14 @@ class _PostListController extends StateNotifier<List<SnPost>> {
     }
   }
 
-  void updateOne(int index, SnPost post) {
+  Future<void> refresh() async {
+    offset = 0;
+    state = [];
+    hasReachedMax = false;
+    await fetchMore();
+  }
+
+  void updateOne(int index, SnActivity post) {
     if (!mounted) return; // Check if the notifier is still mounted
     final updatedPosts = [...state];
     updatedPosts[index] = post;
