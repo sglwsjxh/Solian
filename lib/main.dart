@@ -19,6 +19,7 @@ import 'package:island/pods/websocket.dart';
 import 'package:island/route.dart';
 import 'package:island/services/notify.dart';
 import 'package:island/widgets/app_scaffold.dart';
+import 'package:relative_time/relative_time.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
@@ -102,6 +103,7 @@ class IslandApp extends HookConsumerWidget {
       localizationsDelegates: [
         ...context.localizationDelegates,
         CroppyLocalizations.delegate,
+        RelativeTimeLocalizations.delegate,
       ], // this contains the cupertino one
       locale: context.locale,
       builder: (context, child) {

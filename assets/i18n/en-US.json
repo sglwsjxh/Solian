@@ -138,5 +138,8 @@
   "statusClearTime": "Cleared At",
   "statusNoAutoClear": "Do not auto clear",
   "online": "Online",
-  "offline": "Offline"
+  "offline": "Offline",
+  "status": "Status",
+  "statusActivityTitle": "{} is {} {}",
+  "statusActivityEndedTitle": "{} is {} {} until {}"
 }

@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:island/models/activity.dart';
 import 'package:island/pods/userinfo.dart';
 import 'package:island/route.gr.dart';
+import 'package:island/widgets/account/status.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/models/post.dart';
 import 'package:island/widgets/check_in.dart';
@@ -66,6 +67,8 @@ class ExploreScreen extends ConsumerWidget {
                     );
                   case 'accounts.check-in':
                     return CheckInActivityWidget(item: item);
+                  case 'accounts.status':
+                    return StatusActivityWidget(item: item);
                   default:
                     return Placeholder();
                 }

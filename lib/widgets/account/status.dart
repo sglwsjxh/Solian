@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:island/models/activity.dart';
 import 'package:island/models/user.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/widgets/account/status_creation.dart';
+import 'package:island/widgets/content/cloud_files.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:relative_time/relative_time.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -126,5 +130,56 @@ class AccountStatusWidget extends HookConsumerWidget {
         ],
       ),
     ).opacity((userStatus.value?.isCustomized ?? false) ? 1 : 0.85);
+  }
+}
+
+class StatusActivityWidget extends StatelessWidget {
+  final SnActivity item;
+  const StatusActivityWidget({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final result = SnAccountStatus.fromJson(item.data);
+    return Row(
+      spacing: 12,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProfilePictureWidget(
+          fileId: item.account.profile.pictureId,
+          radius: 12,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Symbols.circle, size: 12).padding(top: 1, left: 2),
+                  const Gap(4),
+                  Text('status').fontSize(11).tr(),
+                ],
+              ).opacity(0.85),
+              Text(
+                    result.clearedAt == null
+                        ? 'statusActivityTitle'
+                        : 'statusActivityEndedTitle',
+                  )
+                  .tr(
+                    args: [
+                      item.account.nick,
+                      result.label,
+                      RelativeTime(context).format(result.createdAt),
+                      if (result.clearedAt != null)
+                        RelativeTime(context).format(result.clearedAt!),
+                    ],
+                  )
+                  .fontSize(13)
+                  .padding(left: 2),
+            ],
+          ),
+        ),
+      ],
+    ).padding(horizontal: 16, vertical: 12);
   }
 }
