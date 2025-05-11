@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gap/gap.dart';
@@ -157,6 +158,19 @@ class StickerPackDetailScreen extends HookConsumerWidget {
                                 menuProvider: (_) {
                                   return Menu(
                                     children: [
+                                      MenuAction(
+                                        title: 'stickerCopyPlaceholder'.tr(),
+                                        image: MenuImage.icon(Symbols.copy_all),
+                                        callback: () {
+                                          Clipboard.setData(
+                                            ClipboardData(
+                                              text:
+                                                  ':${pack.prefix}${sticker.slug}:',
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      MenuSeparator(),
                                       MenuAction(
                                         title: 'edit'.tr(),
                                         image: MenuImage.icon(Symbols.edit),

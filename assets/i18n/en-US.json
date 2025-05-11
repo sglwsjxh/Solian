@@ -178,5 +178,6 @@
   "pickFile": "Pick a file",
   "uploading": "Uploading",
   "uploadingProgress": "Uploading {} of {}",
-  "uploadAll": "Upload All"
+  "uploadAll": "Upload All",
+  "stickerCopyPlaceholder": "Copy Placeholder"
 }
