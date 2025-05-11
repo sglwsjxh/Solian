@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/theme_map.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:island/pods/config.dart';
 import 'package:markdown/markdown.dart' as markdown;
 import 'package:url_launcher/url_launcher_string.dart';
 
-class MarkdownTextContent extends StatelessWidget {
+import 'image.dart';
+
+class MarkdownTextContent extends HookConsumerWidget {
   final String content;
   final bool isAutoWarp;
-  final bool isEnlargeSticker;
   final TextScaler? textScaler;
   final Color? textColor;
 
@@ -18,13 +22,24 @@ class MarkdownTextContent extends StatelessWidget {
     super.key,
     required this.content,
     this.isAutoWarp = false,
-    this.isEnlargeSticker = false,
     this.textScaler,
     this.textColor,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final baseUrl = ref.watch(serverUrlProvider);
+    final doesEnlargeSticker = useMemoized(() {
+      // Check if content only contains one sticker by matching the sticker pattern
+      final stickerPattern = RegExp(r':([-\w]+):');
+      final matches = stickerPattern.allMatches(content);
+
+      // Content should only contain one sticker and nothing else (except whitespace)
+      final contentWithoutStickers =
+          content.replaceAll(stickerPattern, '').trim();
+      return matches.length == 1 && contentWithoutStickers.isEmpty;
+    }, [content]);
+
     return Markdown(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -70,6 +85,7 @@ class MarkdownTextContent extends StatelessWidget {
           ...markdown.ExtensionSet.gitHubFlavored.inlineSyntaxes,
           if (isAutoWarp) markdown.LineBreakSyntax(),
           _UserNameCardInlineSyntax(),
+          _StickerInlineSyntax(ref.read(serverUrlProvider)),
           markdown.AutolinkSyntax(),
           markdown.AutolinkExtensionSyntax(),
           markdown.CodeSyntax(),
@@ -79,6 +95,35 @@ class MarkdownTextContent extends StatelessWidget {
       onTapLink: (text, href, title) async {
         if (href == null) return;
         await launchUrlString(href, mode: LaunchMode.externalApplication);
+      },
+      imageBuilder: (uri, title, alt) {
+        if (uri.scheme == 'solink') {
+          switch (uri.host) {
+            case 'stickers':
+              final size = doesEnlargeSticker ? 96.0 : 24.0;
+              return ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: UniversalImage(
+                    uri: '$baseUrl/stickers/lookup/${uri.pathSegments[0]}/open',
+                    width: size,
+                    height: size,
+                    fit: BoxFit.cover,
+                    noCacheOptimization: true,
+                  ),
+                ),
+              );
+          }
+        }
+        final content = UniversalImage(uri: uri.toString(), fit: BoxFit.cover);
+        if (alt != null) {
+          return Tooltip(message: alt, child: content);
+        }
+        return content;
       },
     );
   }
@@ -95,6 +140,21 @@ class _UserNameCardInlineSyntax extends markdown.InlineSyntax {
         'solink://accounts/${alias.substring(1)}',
       );
     parser.addNode(anchor);
+
+    return true;
+  }
+}
+
+class _StickerInlineSyntax extends markdown.InlineSyntax {
+  final String baseUrl;
+  _StickerInlineSyntax(this.baseUrl) : super(r':([-\w]+):');
+
+  @override
+  bool onMatch(markdown.InlineParser parser, Match match) {
+    final placeholder = match[1]!;
+    final image = markdown.Element.text('img', '')
+      ..attributes['src'] = Uri.encodeFull('solink://stickers/$placeholder');
+    parser.addNode(image);
 
     return true;
   }

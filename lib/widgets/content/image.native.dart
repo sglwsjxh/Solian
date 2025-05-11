@@ -6,21 +6,48 @@ class UniversalImage extends StatelessWidget {
   final String uri;
   final String? blurHash;
   final BoxFit fit;
+  final double? width;
+  final double? height;
+  final bool noCacheOptimization;
+
   const UniversalImage({
     super.key,
     required this.uri,
     this.blurHash,
     this.fit = BoxFit.cover,
+    this.width,
+    this.height,
+    this.noCacheOptimization = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        if (blurHash != null) BlurHash(hash: blurHash!),
-        CachedNetworkImage(imageUrl: uri, fit: fit),
-      ],
+    int? cacheWidth;
+    int? cacheHeight;
+    if (width != null && height != null && !noCacheOptimization) {
+      final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+      cacheWidth = width != null ? (width! * devicePixelRatio).round() : null;
+      cacheHeight =
+          height != null ? (height! * devicePixelRatio).round() : null;
+    }
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (blurHash != null) BlurHash(hash: blurHash!),
+          CachedNetworkImage(
+            imageUrl: uri,
+            fit: fit,
+            width: width,
+            height: height,
+            memCacheHeight: cacheHeight,
+            memCacheWidth: cacheWidth,
+          ),
+        ],
+      ),
     );
   }
 }

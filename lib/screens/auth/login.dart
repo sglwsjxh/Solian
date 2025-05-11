@@ -380,14 +380,17 @@ class _LoginLookupScreen extends HookConsumerWidget {
           data: {
             'account': uname,
             'device_id': await FlutterUdid.consistentUdid,
-            'platform': switch (defaultTargetPlatform) {
-              TargetPlatform.iOS => 2,
-              TargetPlatform.android => 3,
-              TargetPlatform.macOS => 4,
-              TargetPlatform.windows => 5,
-              TargetPlatform.linux => 6,
-              _ => 1,
-            },
+            'platform':
+                kIsWeb
+                    ? 1
+                    : switch (defaultTargetPlatform) {
+                      TargetPlatform.iOS => 2,
+                      TargetPlatform.android => 3,
+                      TargetPlatform.macOS => 4,
+                      TargetPlatform.windows => 5,
+                      TargetPlatform.linux => 6,
+                      _ => 0,
+                    },
           },
         );
         final result = SnAuthChallenge.fromJson(resp.data);

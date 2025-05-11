@@ -5,11 +5,16 @@ class UniversalImage extends StatelessWidget {
   final String uri;
   final String? blurHash;
   final BoxFit fit;
+  final double? width;
+  final double? height;
+
   const UniversalImage({
     super.key,
     required this.uri,
     this.blurHash,
     this.fit = BoxFit.cover,
+    this.width,
+    this.height,
   });
 
   @override
@@ -19,8 +24,8 @@ class UniversalImage extends StatelessWidget {
       onElementCreated: (element) {
         element as web.HTMLImageElement;
         element.src = uri;
-        element.style.width = '100%';
-        element.style.height = '100%';
+        element.style.width = width?.toString() ?? '100%';
+        element.style.height = height?.toString() ?? '100%';
         element.style.objectFit = switch (fit) {
           BoxFit.cover || BoxFit.fitWidth || BoxFit.fitHeight => 'cover',
           BoxFit.fill => 'fill',

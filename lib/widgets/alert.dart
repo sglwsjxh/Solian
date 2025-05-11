@@ -7,6 +7,8 @@ import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:gap/gap.dart';
 import 'package:styled_widget/styled_widget.dart';
 
+// TODO support web here
+
 String _parseRemoteError(DioException err) {
   log('${err.requestOptions.method} ${err.requestOptions.uri} ${err.message}');
   if (err.response?.data is String) return err.response?.data;
