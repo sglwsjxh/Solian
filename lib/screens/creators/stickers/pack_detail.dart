@@ -84,6 +84,11 @@ class StickerPackDetailScreen extends HookConsumerWidget {
               });
             },
           ),
+          _StickerPackActionMenu(
+            pubName: pubName,
+            packId: id,
+            iconShadow: Shadow(),
+          ),
           const Gap(8),
         ],
       ),
@@ -222,6 +227,70 @@ class StickerPackDetailScreen extends HookConsumerWidget {
                 Text('Error: $err').textAlignment(TextAlign.center).center(),
         loading: () => const CircularProgressIndicator().center(),
       ),
+    );
+  }
+}
+
+class _StickerPackActionMenu extends HookConsumerWidget {
+  final String pubName;
+  final String packId;
+  final Shadow iconShadow;
+
+  const _StickerPackActionMenu({
+    required this.pubName,
+    required this.packId,
+    required this.iconShadow,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton(
+      icon: Icon(Icons.more_vert, shadows: [iconShadow]),
+      itemBuilder:
+          (context) => [
+            PopupMenuItem(
+              onTap: () {
+                context.router.push(
+                  EditStickerPacksRoute(pubName: pubName, packId: packId),
+                );
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.edit,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                  const Gap(12),
+                  const Text('editStickerPack').tr(),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              child: Row(
+                children: [
+                  const Icon(Icons.delete, color: Colors.red),
+                  const Gap(12),
+                  const Text(
+                    'deleteStickerPack',
+                    style: TextStyle(color: Colors.red),
+                  ).tr(),
+                ],
+              ),
+              onTap: () {
+                showConfirmAlert(
+                  'deleteStickerPackHint'.tr(),
+                  'deleteStickerPack'.tr(),
+                ).then((confirm) {
+                  if (confirm) {
+                    final client = ref.watch(apiClientProvider);
+                    client.delete('/stickers/$packId');
+                    ref.invalidate(stickerPacksProvider);
+                    if (context.mounted) context.router.maybePop(true);
+                  }
+                });
+              },
+            ),
+          ],
     );
   }
 }
