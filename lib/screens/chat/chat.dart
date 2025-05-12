@@ -254,7 +254,7 @@ class EditChatScreen extends HookConsumerWidget {
         return;
       }
       if (!context.mounted) return;
-
+      hideLoadingModal(context);
       result = await cropImage(
         context,
         image: result,
@@ -267,6 +267,7 @@ class EditChatScreen extends HookConsumerWidget {
       );
       if (result == null) return;
       if (!context.mounted) return;
+      showLoadingModal(context);
 
       submitting.value = true;
       try {

@@ -1,17 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:croppy/croppy.dart' hide cropImage;
 import 'package:dio/dio.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:island/models/file.dart';
 import 'package:island/models/post.dart';
+import 'package:island/models/realm.dart';
 import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/pods/userinfo.dart';
 import 'package:island/route.gr.dart';
+import 'package:island/screens/realm/realms.dart';
 import 'package:island/services/file.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
@@ -173,15 +175,20 @@ class EditPublisherScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final submitting = useState(false);
 
-    final picture = useState<SnCloudFile?>(null);
-    final background = useState<SnCloudFile?>(null);
+    final picture = useState<String?>(null);
+    final background = useState<String?>(null);
 
     void setPicture(String position) async {
+      showLoadingModal(context);
       var result = await ref
           .read(imagePickerProvider)
           .pickImage(source: ImageSource.gallery);
-      if (result == null) return;
+      if (result == null) {
+        if (context.mounted) hideLoadingModal(context);
+        return;
+      }
       if (!context.mounted) return;
+      hideLoadingModal(context);
       result = await cropImage(
         context,
         image: result,
@@ -194,6 +201,7 @@ class EditPublisherScreen extends HookConsumerWidget {
       );
       if (result == null) return;
       if (!context.mounted) return;
+      showLoadingModal(context);
 
       submitting.value = true;
       try {
@@ -220,14 +228,15 @@ class EditPublisherScreen extends HookConsumerWidget {
         }
         switch (position) {
           case 'picture':
-            picture.value = cloudFile;
+            picture.value = cloudFile.id;
           case 'background':
-            background.value = cloudFile;
+            background.value = cloudFile.id;
         }
       } catch (err) {
         showErrorAlert(err);
       } finally {
         submitting.value = false;
+        if (context.mounted) hideLoadingModal(context);
       }
     }
 
@@ -242,10 +251,13 @@ class EditPublisherScreen extends HookConsumerWidget {
     );
     final bioController = useTextEditingController(text: publisher.value?.bio);
 
+    final joinedRealms = ref.watch(realmsJoinedProvider);
+    final currentRealm = useState<SnRealm?>(null);
+
     useEffect(() {
       if (publisher.value != null) {
-        picture.value = publisher.value!.picture;
-        background.value = publisher.value!.background;
+        picture.value = publisher.value!.pictureId;
+        background.value = publisher.value!.backgroundId;
         nameController.text = publisher.value!.name;
         nickController.text = publisher.value!.nick;
         bioController.text = publisher.value!.bio;
@@ -265,8 +277,8 @@ class EditPublisherScreen extends HookConsumerWidget {
             'name': nameController.text,
             'nick': nickController.text,
             'bio': bioController.text,
-            'picture_id': picture.value?.id,
-            'background_id': background.value?.id,
+            'picture_id': picture.value,
+            'background_id': background.value,
           },
           options: Options(method: name == null ? 'POST' : 'PATCH'),
         );
@@ -287,6 +299,55 @@ class EditPublisherScreen extends HookConsumerWidget {
       ),
       body: Column(
         children: [
+          DropdownButtonHideUnderline(
+            child: DropdownButton2<SnRealm?>(
+              isExpanded: true,
+              hint: Text('realmSelection').tr(),
+              value: currentRealm.value,
+              items: [
+                DropdownMenuItem<SnRealm?>(
+                  value: null,
+                  child: Row(
+                    spacing: 12,
+                    children: [
+                      CircleAvatar(radius: 16, child: Icon(Symbols.person)),
+                      Text('publisherIndividual').tr(),
+                    ],
+                  ),
+                ),
+                ...joinedRealms.when(
+                  data:
+                      (realms) =>
+                          realms
+                              .map(
+                                (realm) => DropdownMenuItem<SnRealm?>(
+                                  value: realm,
+                                  child: Row(
+                                    spacing: 12,
+                                    children: [
+                                      ProfilePictureWidget(
+                                        fileId: realm.pictureId,
+                                        fallbackIcon: Symbols.workspaces,
+                                        radius: 16,
+                                      ),
+                                      Text(realm.name),
+                                    ],
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                  loading: () => [],
+                  error: (_, __) => [],
+                ),
+              ],
+              onChanged: (SnRealm? value) {
+                currentRealm.value = value;
+              },
+              buttonStyleData: ButtonStyleData(
+                padding: const EdgeInsets.only(left: 4, right: 16),
+              ),
+            ),
+          ),
           AspectRatio(
             aspectRatio: 16 / 7,
             child: Stack(
@@ -298,8 +359,8 @@ class EditPublisherScreen extends HookConsumerWidget {
                     color: Theme.of(context).colorScheme.surfaceContainerHigh,
                     child:
                         background.value != null
-                            ? CloudFileWidget(
-                              item: background.value!,
+                            ? CloudImageWidget(
+                              fileId: background.value!,
                               fit: BoxFit.cover,
                             )
                             : const SizedBox.shrink(),
@@ -313,7 +374,7 @@ class EditPublisherScreen extends HookConsumerWidget {
                   bottom: -32,
                   child: GestureDetector(
                     child: ProfilePictureWidget(
-                      fileId: picture.value?.id,
+                      fileId: picture.value,
                       radius: 40,
                     ),
                     onTap: () {
@@ -360,19 +421,32 @@ class EditPublisherScreen extends HookConsumerWidget {
                   children: [
                     TextButton.icon(
                       onPressed: () {
-                        final user = ref.watch(userInfoProvider);
-                        nameController.text = user.value!.name;
-                        nickController.text = user.value!.nick;
-                        bioController.text = user.value!.profile.bio ?? '';
-                        picture.value = user.value!.profile.picture;
-                        background.value = user.value!.profile.background;
+                        if (currentRealm.value == null) {
+                          final user = ref.watch(userInfoProvider);
+                          nameController.text = user.value!.name;
+                          nickController.text = user.value!.nick;
+                          bioController.text = user.value!.profile.bio ?? '';
+                          picture.value = user.value!.profile.pictureId;
+                          background.value = user.value!.profile.backgroundId;
+                        } else {
+                          nameController.text = currentRealm.value!.slug;
+                          nickController.text = currentRealm.value!.name;
+                          bioController.text = currentRealm.value!.description;
+                          picture.value = currentRealm.value!.pictureId;
+                          background.value = currentRealm.value!.backgroundId;
+                        }
                       },
-                      label: Text('syncPublisher'.tr()),
+                      label:
+                          Text(
+                            currentRealm.value == null
+                                ? 'syncPublisher'
+                                : 'syncPublisherRealm',
+                          ).tr(),
                       icon: const Icon(Symbols.link),
                     ),
                     TextButton.icon(
                       onPressed: submitting.value ? null : performAction,
-                      label: Text('saveChanges'.tr()),
+                      label: Text(name == null ? 'create' : 'saveChanges').tr(),
                       icon: const Icon(Symbols.save),
                     ),
                   ],

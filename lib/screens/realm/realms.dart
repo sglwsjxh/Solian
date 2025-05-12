@@ -165,6 +165,7 @@ class EditRealmScreen extends HookConsumerWidget {
           .pickImage(source: ImageSource.gallery);
       if (result == null) return;
       if (!context.mounted) return;
+      hideLoadingModal(context);
       result = await cropImage(
         context,
         image: result,
@@ -180,7 +181,7 @@ class EditRealmScreen extends HookConsumerWidget {
         return;
       }
       if (!context.mounted) return;
-
+      showLoadingModal(context);
       submitting.value = true;
       try {
         final baseUrl = ref.watch(serverUrlProvider);

@@ -83,7 +83,7 @@ final apiClientProvider = Provider<Dio>((ref) {
           // ignore
         }
 
-        final userAgent = ref.watch(userAgentProvider);
+        final userAgent = ref.read(userAgentProvider);
         if (userAgent.value != null) {
           options.headers['User-Agent'] = userAgent.value;
         }
