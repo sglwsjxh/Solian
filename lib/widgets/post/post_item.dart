@@ -169,7 +169,7 @@ class PostItem extends HookConsumerWidget {
 }
 
 class PostReactionList extends HookConsumerWidget {
-  final int parentId;
+  final String parentId;
   final Map<String, int> reactions;
   final Function(String symbol, int attitude, int delta) onReact;
   final EdgeInsets? padding;

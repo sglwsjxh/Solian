@@ -7,7 +7,7 @@ part of 'user.dart';
 // **************************************************************************
 
 _SnAccount _$SnAccountFromJson(Map<String, dynamic> json) => _SnAccount(
-  id: (json['id'] as num).toInt(),
+  id: json['id'] as String,
   name: json['name'] as String,
   nick: json['nick'] as String,
   language: json['language'] as String,
@@ -42,7 +42,7 @@ Map<String, dynamic> _$SnAccountToJson(_SnAccount instance) =>
 
 _SnAccountProfile _$SnAccountProfileFromJson(Map<String, dynamic> json) =>
     _SnAccountProfile(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as String,
       firstName: json['first_name'] as String?,
       middleName: json['middle_name'] as String?,
       lastName: json['last_name'] as String?,
@@ -96,7 +96,7 @@ _SnAccountStatus _$SnAccountStatusFromJson(Map<String, dynamic> json) =>
           json['cleared_at'] == null
               ? null
               : DateTime.parse(json['cleared_at'] as String),
-      accountId: (json['account_id'] as num).toInt(),
+      accountId: json['account_id'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       deletedAt:
@@ -132,7 +132,7 @@ _SnAccountBadge _$SnAccountBadgeFromJson(Map<String, dynamic> json) =>
           json['expired_at'] == null
               ? null
               : DateTime.parse(json['expired_at'] as String),
-      accountId: (json['account_id'] as num).toInt(),
+      accountId: json['account_id'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       deletedAt:

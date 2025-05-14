@@ -27,7 +27,7 @@ import 'package:styled_widget/styled_widget.dart';
 
 @RoutePage()
 class PostEditScreen extends HookConsumerWidget {
-  final int id;
+  final String id;
   const PostEditScreen({super.key, @PathParam('id') required this.id});
 
   @override

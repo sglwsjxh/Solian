@@ -25,7 +25,7 @@ final chatroomsJoinedProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ChatroomsJoinedRef = AutoDisposeFutureProviderRef<List<SnChatRoom>>;
-String _$chatroomHash() => r'3a945a61ea434f860fbeae9d40778fbfceddc5db';
+String _$chatroomHash() => r'dce3c0fc407f178bb7c306a08b9fa545795a9205';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -58,7 +58,7 @@ class ChatroomFamily extends Family<AsyncValue<SnChatRoom?>> {
   const ChatroomFamily();
 
   /// See also [chatroom].
-  ChatroomProvider call(int? identifier) {
+  ChatroomProvider call(String? identifier) {
     return ChatroomProvider(identifier);
   }
 
@@ -85,7 +85,7 @@ class ChatroomFamily extends Family<AsyncValue<SnChatRoom?>> {
 /// See also [chatroom].
 class ChatroomProvider extends AutoDisposeFutureProvider<SnChatRoom?> {
   /// See also [chatroom].
-  ChatroomProvider(int? identifier)
+  ChatroomProvider(String? identifier)
     : this._internal(
         (ref) => chatroom(ref as ChatroomRef, identifier),
         from: chatroomProvider,
@@ -109,7 +109,7 @@ class ChatroomProvider extends AutoDisposeFutureProvider<SnChatRoom?> {
     required this.identifier,
   }) : super.internal();
 
-  final int? identifier;
+  final String? identifier;
 
   @override
   Override overrideWith(
@@ -152,7 +152,7 @@ class ChatroomProvider extends AutoDisposeFutureProvider<SnChatRoom?> {
 // ignore: unused_element
 mixin ChatroomRef on AutoDisposeFutureProviderRef<SnChatRoom?> {
   /// The parameter `identifier` of this provider.
-  int? get identifier;
+  String? get identifier;
 }
 
 class _ChatroomProviderElement
@@ -161,10 +161,10 @@ class _ChatroomProviderElement
   _ChatroomProviderElement(super.provider);
 
   @override
-  int? get identifier => (origin as ChatroomProvider).identifier;
+  String? get identifier => (origin as ChatroomProvider).identifier;
 }
 
-String _$chatroomIdentityHash() => r'b20322591279d0336f2f309729e7e0cb9809063f';
+String _$chatroomIdentityHash() => r'4c349ea4265df7b0498cf26c82dbaabe3d868727';
 
 /// See also [chatroomIdentity].
 @ProviderFor(chatroomIdentity)
@@ -176,7 +176,7 @@ class ChatroomIdentityFamily extends Family<AsyncValue<SnChatMember?>> {
   const ChatroomIdentityFamily();
 
   /// See also [chatroomIdentity].
-  ChatroomIdentityProvider call(int? identifier) {
+  ChatroomIdentityProvider call(String? identifier) {
     return ChatroomIdentityProvider(identifier);
   }
 
@@ -206,7 +206,7 @@ class ChatroomIdentityFamily extends Family<AsyncValue<SnChatMember?>> {
 class ChatroomIdentityProvider
     extends AutoDisposeFutureProvider<SnChatMember?> {
   /// See also [chatroomIdentity].
-  ChatroomIdentityProvider(int? identifier)
+  ChatroomIdentityProvider(String? identifier)
     : this._internal(
         (ref) => chatroomIdentity(ref as ChatroomIdentityRef, identifier),
         from: chatroomIdentityProvider,
@@ -231,7 +231,7 @@ class ChatroomIdentityProvider
     required this.identifier,
   }) : super.internal();
 
-  final int? identifier;
+  final String? identifier;
 
   @override
   Override overrideWith(
@@ -274,7 +274,7 @@ class ChatroomIdentityProvider
 // ignore: unused_element
 mixin ChatroomIdentityRef on AutoDisposeFutureProviderRef<SnChatMember?> {
   /// The parameter `identifier` of this provider.
-  int? get identifier;
+  String? get identifier;
 }
 
 class _ChatroomIdentityProviderElement
@@ -283,7 +283,7 @@ class _ChatroomIdentityProviderElement
   _ChatroomIdentityProviderElement(super.provider);
 
   @override
-  int? get identifier => (origin as ChatroomIdentityProvider).identifier;
+  String? get identifier => (origin as ChatroomIdentityProvider).identifier;
 }
 
 String _$chatroomInvitesHash() => r'c15f06c1e9c6074e6159d9d1f4404f31250ce523';

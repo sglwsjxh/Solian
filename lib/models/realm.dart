@@ -8,7 +8,7 @@ part 'realm.g.dart';
 @freezed
 abstract class SnRealm with _$SnRealm {
   const factory SnRealm({
-    required int id,
+    required String id,
     required String slug,
     required String name,
     required String description,
@@ -20,7 +20,7 @@ abstract class SnRealm with _$SnRealm {
     required SnCloudFile? picture,
     required String? backgroundId,
     required SnCloudFile? background,
-    required int accountId,
+    required String accountId,
     required DateTime createdAt,
     required DateTime updatedAt,
     required DateTime? deletedAt,
@@ -33,9 +33,9 @@ abstract class SnRealm with _$SnRealm {
 @freezed
 abstract class SnRealmMember with _$SnRealmMember {
   const factory SnRealmMember({
-    required int realmId,
+    required String realmId,
     required SnRealm? realm,
-    required int accountId,
+    required String accountId,
     required SnAccount? account,
     required int role,
     required DateTime? joinedAt,

@@ -191,7 +191,7 @@ class ChatListScreen extends HookConsumerWidget {
 }
 
 @riverpod
-Future<SnChatRoom?> chatroom(Ref ref, int? identifier) async {
+Future<SnChatRoom?> chatroom(Ref ref, String? identifier) async {
   if (identifier == null) return null;
   final client = ref.watch(apiClientProvider);
   final resp = await client.get('/chat/$identifier');
@@ -199,7 +199,7 @@ Future<SnChatRoom?> chatroom(Ref ref, int? identifier) async {
 }
 
 @riverpod
-Future<SnChatMember?> chatroomIdentity(Ref ref, int? identifier) async {
+Future<SnChatMember?> chatroomIdentity(Ref ref, String? identifier) async {
   if (identifier == null) return null;
   final client = ref.watch(apiClientProvider);
   final resp = await client.get('/chat/$identifier/members/me');
@@ -218,7 +218,7 @@ class NewChatScreen extends StatelessWidget {
 
 @RoutePage()
 class EditChatScreen extends HookConsumerWidget {
-  final int? id;
+  final String? id;
   const EditChatScreen({super.key, @PathParam("id") this.id});
 
   @override

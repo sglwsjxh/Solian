@@ -98,7 +98,7 @@ class AccountRoute extends _i23.PageRouteInfo<void> {
 class ChatDetailRoute extends _i23.PageRouteInfo<ChatDetailRouteArgs> {
   ChatDetailRoute({
     _i24.Key? key,
-    required int id,
+    required String id,
     List<_i23.PageRouteInfo>? children,
   }) : super(
          ChatDetailRoute.name,
@@ -114,7 +114,7 @@ class ChatDetailRoute extends _i23.PageRouteInfo<ChatDetailRouteArgs> {
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<ChatDetailRouteArgs>(
-        orElse: () => ChatDetailRouteArgs(id: pathParams.getInt('id')),
+        orElse: () => ChatDetailRouteArgs(id: pathParams.getString('id')),
       );
       return _i3.ChatDetailScreen(key: args.key, id: args.id);
     },
@@ -126,7 +126,7 @@ class ChatDetailRouteArgs {
 
   final _i24.Key? key;
 
-  final int id;
+  final String id;
 
   @override
   String toString() {
@@ -155,7 +155,7 @@ class ChatListRoute extends _i23.PageRouteInfo<void> {
 class ChatRoomRoute extends _i23.PageRouteInfo<ChatRoomRouteArgs> {
   ChatRoomRoute({
     _i24.Key? key,
-    required int id,
+    required String id,
     List<_i23.PageRouteInfo>? children,
   }) : super(
          ChatRoomRoute.name,
@@ -171,7 +171,7 @@ class ChatRoomRoute extends _i23.PageRouteInfo<ChatRoomRouteArgs> {
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<ChatRoomRouteArgs>(
-        orElse: () => ChatRoomRouteArgs(id: pathParams.getInt('id')),
+        orElse: () => ChatRoomRouteArgs(id: pathParams.getString('id')),
       );
       return _i5.ChatRoomScreen(key: args.key, id: args.id);
     },
@@ -183,7 +183,7 @@ class ChatRoomRouteArgs {
 
   final _i24.Key? key;
 
-  final int id;
+  final String id;
 
   @override
   String toString() {
@@ -226,7 +226,7 @@ class CreatorHubRoute extends _i23.PageRouteInfo<void> {
 /// generated route for
 /// [_i4.EditChatScreen]
 class EditChatRoute extends _i23.PageRouteInfo<EditChatRouteArgs> {
-  EditChatRoute({_i24.Key? key, int? id, List<_i23.PageRouteInfo>? children})
+  EditChatRoute({_i24.Key? key, String? id, List<_i23.PageRouteInfo>? children})
     : super(
         EditChatRoute.name,
         args: EditChatRouteArgs(key: key, id: id),
@@ -241,7 +241,7 @@ class EditChatRoute extends _i23.PageRouteInfo<EditChatRouteArgs> {
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<EditChatRouteArgs>(
-        orElse: () => EditChatRouteArgs(id: pathParams.optInt('id')),
+        orElse: () => EditChatRouteArgs(id: pathParams.optString('id')),
       );
       return _i4.EditChatScreen(key: args.key, id: args.id);
     },
@@ -253,7 +253,7 @@ class EditChatRouteArgs {
 
   final _i24.Key? key;
 
-  final int? id;
+  final String? id;
 
   @override
   String toString() {
@@ -721,7 +721,7 @@ class PostComposeRouteArgs {
 class PostDetailRoute extends _i23.PageRouteInfo<PostDetailRouteArgs> {
   PostDetailRoute({
     _i24.Key? key,
-    required int id,
+    required String id,
     List<_i23.PageRouteInfo>? children,
   }) : super(
          PostDetailRoute.name,
@@ -737,7 +737,7 @@ class PostDetailRoute extends _i23.PageRouteInfo<PostDetailRouteArgs> {
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<PostDetailRouteArgs>(
-        orElse: () => PostDetailRouteArgs(id: pathParams.getInt('id')),
+        orElse: () => PostDetailRouteArgs(id: pathParams.getString('id')),
       );
       return _i17.PostDetailScreen(key: args.key, id: args.id);
     },
@@ -749,7 +749,7 @@ class PostDetailRouteArgs {
 
   final _i24.Key? key;
 
-  final int id;
+  final String id;
 
   @override
   String toString() {
@@ -762,7 +762,7 @@ class PostDetailRouteArgs {
 class PostEditRoute extends _i23.PageRouteInfo<PostEditRouteArgs> {
   PostEditRoute({
     _i24.Key? key,
-    required int id,
+    required String id,
     List<_i23.PageRouteInfo>? children,
   }) : super(
          PostEditRoute.name,
@@ -778,7 +778,7 @@ class PostEditRoute extends _i23.PageRouteInfo<PostEditRouteArgs> {
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<PostEditRouteArgs>(
-        orElse: () => PostEditRouteArgs(id: pathParams.getInt('id')),
+        orElse: () => PostEditRouteArgs(id: pathParams.getString('id')),
       );
       return _i16.PostEditScreen(key: args.key, id: args.id);
     },
@@ -790,7 +790,7 @@ class PostEditRouteArgs {
 
   final _i24.Key? key;
 
-  final int id;
+  final String id;
 
   @override
   String toString() {

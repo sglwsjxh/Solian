@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SnChatRoom {
 
- int get id; String get name; String get description; int get type; bool get isPublic; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; int? get realmId; SnRealm? get realm; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; List<SnChatMember>? get members;
+ String get id; String get name; String get description; int get type; bool get isPublic; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; String? get realmId; SnRealm? get realm; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; List<SnChatMember>? get members;
 /// Create a copy of SnChatRoom
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $SnChatRoomCopyWith<$Res>  {
   factory $SnChatRoomCopyWith(SnChatRoom value, $Res Function(SnChatRoom) _then) = _$SnChatRoomCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, List<SnChatMember>? members
+ String id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, String? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, List<SnChatMember>? members
 });
 
 
@@ -69,7 +69,7 @@ class _$SnChatRoomCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? type = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? realmId = freezed,Object? realm = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,Object? members = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as int,isPublic: null == isPublic ? _self.isPublic : isPublic // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,7 @@ as String?,picture: freezed == picture ? _self.picture : picture // ignore: cast
 as SnCloudFile?,backgroundId: freezed == backgroundId ? _self.backgroundId : backgroundId // ignore: cast_nullable_to_non_nullable
 as String?,background: freezed == background ? _self.background : background // ignore: cast_nullable_to_non_nullable
 as SnCloudFile?,realmId: freezed == realmId ? _self.realmId : realmId // ignore: cast_nullable_to_non_nullable
-as int?,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
+as String?,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
 as SnRealm?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -133,7 +133,7 @@ class _SnChatRoom implements SnChatRoom {
   const _SnChatRoom({required this.id, required this.name, required this.description, required this.type, required this.isPublic, required this.pictureId, required this.picture, required this.backgroundId, required this.background, required this.realmId, required this.realm, required this.createdAt, required this.updatedAt, required this.deletedAt, required final  List<SnChatMember>? members}): _members = members;
   factory _SnChatRoom.fromJson(Map<String, dynamic> json) => _$SnChatRoomFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  String name;
 @override final  String description;
 @override final  int type;
@@ -142,7 +142,7 @@ class _SnChatRoom implements SnChatRoom {
 @override final  SnCloudFile? picture;
 @override final  String? backgroundId;
 @override final  SnCloudFile? background;
-@override final  int? realmId;
+@override final  String? realmId;
 @override final  SnRealm? realm;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
@@ -190,7 +190,7 @@ abstract mixin class _$SnChatRoomCopyWith<$Res> implements $SnChatRoomCopyWith<$
   factory _$SnChatRoomCopyWith(_SnChatRoom value, $Res Function(_SnChatRoom) _then) = __$SnChatRoomCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, List<SnChatMember>? members
+ String id, String name, String description, int type, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, String? realmId, SnRealm? realm, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, List<SnChatMember>? members
 });
 
 
@@ -210,7 +210,7 @@ class __$SnChatRoomCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? type = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? realmId = freezed,Object? realm = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,Object? members = freezed,}) {
   return _then(_SnChatRoom(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as int,isPublic: null == isPublic ? _self.isPublic : isPublic // ignore: cast_nullable_to_non_nullable
@@ -219,7 +219,7 @@ as String?,picture: freezed == picture ? _self.picture : picture // ignore: cast
 as SnCloudFile?,backgroundId: freezed == backgroundId ? _self.backgroundId : backgroundId // ignore: cast_nullable_to_non_nullable
 as String?,background: freezed == background ? _self.background : background // ignore: cast_nullable_to_non_nullable
 as SnCloudFile?,realmId: freezed == realmId ? _self.realmId : realmId // ignore: cast_nullable_to_non_nullable
-as int?,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
+as String?,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
 as SnRealm?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -271,7 +271,7 @@ $SnRealmCopyWith<$Res>? get realm {
 /// @nodoc
 mixin _$SnChatMessage {
 
- DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; String get id; String? get content; String? get nonce; Map<String, dynamic> get meta; List<String> get membersMetioned; DateTime? get editedAt; List<SnCloudFile> get attachments; List<SnChatReaction> get reactions; String? get repliedMessageId; String? get forwardedMessageId; String get senderId; SnChatMember get sender; int get chatRoomId;
+ DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; String get id; String? get content; String? get nonce; Map<String, dynamic> get meta; List<String> get membersMetioned; DateTime? get editedAt; List<SnCloudFile> get attachments; List<SnChatReaction> get reactions; String? get repliedMessageId; String? get forwardedMessageId; String get senderId; SnChatMember get sender; String get chatRoomId;
 /// Create a copy of SnChatMessage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -304,7 +304,7 @@ abstract mixin class $SnChatMessageCopyWith<$Res>  {
   factory $SnChatMessageCopyWith(SnChatMessage value, $Res Function(SnChatMessage) _then) = _$SnChatMessageCopyWithImpl;
 @useResult
 $Res call({
- DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, String? content, String? nonce, Map<String, dynamic> meta, List<String> membersMetioned, DateTime? editedAt, List<SnCloudFile> attachments, List<SnChatReaction> reactions, String? repliedMessageId, String? forwardedMessageId, String senderId, SnChatMember sender, int chatRoomId
+ DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, String? content, String? nonce, Map<String, dynamic> meta, List<String> membersMetioned, DateTime? editedAt, List<SnCloudFile> attachments, List<SnChatReaction> reactions, String? repliedMessageId, String? forwardedMessageId, String senderId, SnChatMember sender, String chatRoomId
 });
 
 
@@ -339,7 +339,7 @@ as String?,forwardedMessageId: freezed == forwardedMessageId ? _self.forwardedMe
 as String?,senderId: null == senderId ? _self.senderId : senderId // ignore: cast_nullable_to_non_nullable
 as String,sender: null == sender ? _self.sender : sender // ignore: cast_nullable_to_non_nullable
 as SnChatMember,chatRoomId: null == chatRoomId ? _self.chatRoomId : chatRoomId // ignore: cast_nullable_to_non_nullable
-as int,
+as String,
   ));
 }
 /// Create a copy of SnChatMessage
@@ -401,7 +401,7 @@ class _SnChatMessage implements SnChatMessage {
 @override final  String? forwardedMessageId;
 @override final  String senderId;
 @override final  SnChatMember sender;
-@override final  int chatRoomId;
+@override final  String chatRoomId;
 
 /// Create a copy of SnChatMessage
 /// with the given fields replaced by the non-null parameter values.
@@ -436,7 +436,7 @@ abstract mixin class _$SnChatMessageCopyWith<$Res> implements $SnChatMessageCopy
   factory _$SnChatMessageCopyWith(_SnChatMessage value, $Res Function(_SnChatMessage) _then) = __$SnChatMessageCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, String? content, String? nonce, Map<String, dynamic> meta, List<String> membersMetioned, DateTime? editedAt, List<SnCloudFile> attachments, List<SnChatReaction> reactions, String? repliedMessageId, String? forwardedMessageId, String senderId, SnChatMember sender, int chatRoomId
+ DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, String? content, String? nonce, Map<String, dynamic> meta, List<String> membersMetioned, DateTime? editedAt, List<SnCloudFile> attachments, List<SnChatReaction> reactions, String? repliedMessageId, String? forwardedMessageId, String senderId, SnChatMember sender, String chatRoomId
 });
 
 
@@ -471,7 +471,7 @@ as String?,forwardedMessageId: freezed == forwardedMessageId ? _self.forwardedMe
 as String?,senderId: null == senderId ? _self.senderId : senderId // ignore: cast_nullable_to_non_nullable
 as String,sender: null == sender ? _self.sender : sender // ignore: cast_nullable_to_non_nullable
 as SnChatMember,chatRoomId: null == chatRoomId ? _self.chatRoomId : chatRoomId // ignore: cast_nullable_to_non_nullable
-as int,
+as String,
   ));
 }
 
@@ -666,7 +666,7 @@ $SnChatMemberCopyWith<$Res> get sender {
 /// @nodoc
 mixin _$SnChatMember {
 
- DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; String get id; int get chatRoomId; SnChatRoom? get chatRoom; int get accountId; SnAccount get account; String? get nick; int get role; int get notify; DateTime? get joinedAt; bool get isBot;
+ DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt; String get id; String get chatRoomId; SnChatRoom? get chatRoom; String get accountId; SnAccount get account; String? get nick; int get role; int get notify; DateTime? get joinedAt; bool get isBot;
 /// Create a copy of SnChatMember
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -699,7 +699,7 @@ abstract mixin class $SnChatMemberCopyWith<$Res>  {
   factory $SnChatMemberCopyWith(SnChatMember value, $Res Function(SnChatMember) _then) = _$SnChatMemberCopyWithImpl;
 @useResult
 $Res call({
- DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, int chatRoomId, SnChatRoom? chatRoom, int accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
+ DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, String chatRoomId, SnChatRoom? chatRoom, String accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
 });
 
 
@@ -723,9 +723,9 @@ as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,chatRoomId: null == chatRoomId ? _self.chatRoomId : chatRoomId // ignore: cast_nullable_to_non_nullable
-as int,chatRoom: freezed == chatRoom ? _self.chatRoom : chatRoom // ignore: cast_nullable_to_non_nullable
+as String,chatRoom: freezed == chatRoom ? _self.chatRoom : chatRoom // ignore: cast_nullable_to_non_nullable
 as SnChatRoom?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount,nick: freezed == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as int,notify: null == notify ? _self.notify : notify // ignore: cast_nullable_to_non_nullable
@@ -770,9 +770,9 @@ class _SnChatMember implements SnChatMember {
 @override final  DateTime updatedAt;
 @override final  DateTime? deletedAt;
 @override final  String id;
-@override final  int chatRoomId;
+@override final  String chatRoomId;
 @override final  SnChatRoom? chatRoom;
-@override final  int accountId;
+@override final  String accountId;
 @override final  SnAccount account;
 @override final  String? nick;
 @override final  int role;
@@ -813,7 +813,7 @@ abstract mixin class _$SnChatMemberCopyWith<$Res> implements $SnChatMemberCopyWi
   factory _$SnChatMemberCopyWith(_SnChatMember value, $Res Function(_SnChatMember) _then) = __$SnChatMemberCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, int chatRoomId, SnChatRoom? chatRoom, int accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
+ DateTime createdAt, DateTime updatedAt, DateTime? deletedAt, String id, String chatRoomId, SnChatRoom? chatRoom, String accountId, SnAccount account, String? nick, int role, int notify, DateTime? joinedAt, bool isBot
 });
 
 
@@ -837,9 +837,9 @@ as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,chatRoomId: null == chatRoomId ? _self.chatRoomId : chatRoomId // ignore: cast_nullable_to_non_nullable
-as int,chatRoom: freezed == chatRoom ? _self.chatRoom : chatRoom // ignore: cast_nullable_to_non_nullable
+as String,chatRoom: freezed == chatRoom ? _self.chatRoom : chatRoom // ignore: cast_nullable_to_non_nullable
 as SnChatRoom?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount,nick: freezed == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as int,notify: null == notify ? _self.notify : notify // ignore: cast_nullable_to_non_nullable

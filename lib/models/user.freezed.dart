@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SnAccount {
 
- int get id; String get name; String get nick; String get language; bool get isSuperuser; SnAccountProfile get profile; List<SnAccountBadge> get badges; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; String get name; String get nick; String get language; bool get isSuperuser; SnAccountProfile get profile; List<SnAccountBadge> get badges; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnAccount
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $SnAccountCopyWith<$Res>  {
   factory $SnAccountCopyWith(SnAccount value, $Res Function(SnAccount) _then) = _$SnAccountCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String nick, String language, bool isSuperuser, SnAccountProfile profile, List<SnAccountBadge> badges, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String name, String nick, String language, bool isSuperuser, SnAccountProfile profile, List<SnAccountBadge> badges, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -69,7 +69,7 @@ class _$SnAccountCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? nick = null,Object? language = null,Object? isSuperuser = null,Object? profile = null,Object? badges = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,nick: null == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,isSuperuser: null == isSuperuser ? _self.isSuperuser : isSuperuser // ignore: cast_nullable_to_non_nullable
@@ -101,7 +101,7 @@ class _SnAccount implements SnAccount {
   const _SnAccount({required this.id, required this.name, required this.nick, required this.language, required this.isSuperuser, required this.profile, final  List<SnAccountBadge> badges = const [], required this.createdAt, required this.updatedAt, required this.deletedAt}): _badges = badges;
   factory _SnAccount.fromJson(Map<String, dynamic> json) => _$SnAccountFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  String name;
 @override final  String nick;
 @override final  String language;
@@ -151,7 +151,7 @@ abstract mixin class _$SnAccountCopyWith<$Res> implements $SnAccountCopyWith<$Re
   factory _$SnAccountCopyWith(_SnAccount value, $Res Function(_SnAccount) _then) = __$SnAccountCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String nick, String language, bool isSuperuser, SnAccountProfile profile, List<SnAccountBadge> badges, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String name, String nick, String language, bool isSuperuser, SnAccountProfile profile, List<SnAccountBadge> badges, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -171,7 +171,7 @@ class __$SnAccountCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? nick = null,Object? language = null,Object? isSuperuser = null,Object? profile = null,Object? badges = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnAccount(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,nick: null == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,isSuperuser: null == isSuperuser ? _self.isSuperuser : isSuperuser // ignore: cast_nullable_to_non_nullable
@@ -200,7 +200,7 @@ $SnAccountProfileCopyWith<$Res> get profile {
 /// @nodoc
 mixin _$SnAccountProfile {
 
- int get id; String? get firstName; String? get middleName; String? get lastName; String? get bio; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; String? get firstName; String? get middleName; String? get lastName; String? get bio; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnAccountProfile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -233,7 +233,7 @@ abstract mixin class $SnAccountProfileCopyWith<$Res>  {
   factory $SnAccountProfileCopyWith(SnAccountProfile value, $Res Function(SnAccountProfile) _then) = _$SnAccountProfileCopyWithImpl;
 @useResult
 $Res call({
- int id, String? firstName, String? middleName, String? lastName, String? bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String? firstName, String? middleName, String? lastName, String? bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -253,7 +253,7 @@ class _$SnAccountProfileCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = freezed,Object? middleName = freezed,Object? lastName = freezed,Object? bio = freezed,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+as String,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String?,middleName: freezed == middleName ? _self.middleName : middleName // ignore: cast_nullable_to_non_nullable
 as String?,lastName: freezed == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
@@ -302,7 +302,7 @@ class _SnAccountProfile implements SnAccountProfile {
   const _SnAccountProfile({required this.id, required this.firstName, required this.middleName, required this.lastName, required this.bio, required this.pictureId, required this.picture, required this.backgroundId, required this.background, required this.createdAt, required this.updatedAt, required this.deletedAt});
   factory _SnAccountProfile.fromJson(Map<String, dynamic> json) => _$SnAccountProfileFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  String? firstName;
 @override final  String? middleName;
 @override final  String? lastName;
@@ -348,7 +348,7 @@ abstract mixin class _$SnAccountProfileCopyWith<$Res> implements $SnAccountProfi
   factory _$SnAccountProfileCopyWith(_SnAccountProfile value, $Res Function(_SnAccountProfile) _then) = __$SnAccountProfileCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? firstName, String? middleName, String? lastName, String? bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String? firstName, String? middleName, String? lastName, String? bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -368,7 +368,7 @@ class __$SnAccountProfileCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = freezed,Object? middleName = freezed,Object? lastName = freezed,Object? bio = freezed,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnAccountProfile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+as String,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String?,middleName: freezed == middleName ? _self.middleName : middleName // ignore: cast_nullable_to_non_nullable
 as String?,lastName: freezed == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
@@ -414,7 +414,7 @@ $SnCloudFileCopyWith<$Res>? get background {
 /// @nodoc
 mixin _$SnAccountStatus {
 
- String get id; int get attitude; bool get isOnline; bool get isInvisible; bool get isNotDisturb; bool get isCustomized; String get label; DateTime? get clearedAt; int get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; int get attitude; bool get isOnline; bool get isInvisible; bool get isNotDisturb; bool get isCustomized; String get label; DateTime? get clearedAt; String get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnAccountStatus
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -447,7 +447,7 @@ abstract mixin class $SnAccountStatusCopyWith<$Res>  {
   factory $SnAccountStatusCopyWith(SnAccountStatus value, $Res Function(SnAccountStatus) _then) = _$SnAccountStatusCopyWithImpl;
 @useResult
 $Res call({
- String id, int attitude, bool isOnline, bool isInvisible, bool isNotDisturb, bool isCustomized, String label, DateTime? clearedAt, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int attitude, bool isOnline, bool isInvisible, bool isNotDisturb, bool isCustomized, String label, DateTime? clearedAt, String accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -475,7 +475,7 @@ as bool,isCustomized: null == isCustomized ? _self.isCustomized : isCustomized /
 as bool,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,clearedAt: freezed == clearedAt ? _self.clearedAt : clearedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -500,7 +500,7 @@ class _SnAccountStatus implements SnAccountStatus {
 @override final  bool isCustomized;
 @override@JsonKey() final  String label;
 @override final  DateTime? clearedAt;
-@override final  int accountId;
+@override final  String accountId;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  DateTime? deletedAt;
@@ -538,7 +538,7 @@ abstract mixin class _$SnAccountStatusCopyWith<$Res> implements $SnAccountStatus
   factory _$SnAccountStatusCopyWith(_SnAccountStatus value, $Res Function(_SnAccountStatus) _then) = __$SnAccountStatusCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int attitude, bool isOnline, bool isInvisible, bool isNotDisturb, bool isCustomized, String label, DateTime? clearedAt, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int attitude, bool isOnline, bool isInvisible, bool isNotDisturb, bool isCustomized, String label, DateTime? clearedAt, String accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -566,7 +566,7 @@ as bool,isCustomized: null == isCustomized ? _self.isCustomized : isCustomized /
 as bool,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,clearedAt: freezed == clearedAt ? _self.clearedAt : clearedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -580,7 +580,7 @@ as DateTime?,
 /// @nodoc
 mixin _$SnAccountBadge {
 
- String get id; String get type; String? get label; String? get caption; Map<String, dynamic> get meta; DateTime? get expiredAt; int get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; String get type; String? get label; String? get caption; Map<String, dynamic> get meta; DateTime? get expiredAt; String get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnAccountBadge
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -613,7 +613,7 @@ abstract mixin class $SnAccountBadgeCopyWith<$Res>  {
   factory $SnAccountBadgeCopyWith(SnAccountBadge value, $Res Function(SnAccountBadge) _then) = _$SnAccountBadgeCopyWithImpl;
 @useResult
 $Res call({
- String id, String type, String? label, String? caption, Map<String, dynamic> meta, DateTime? expiredAt, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String type, String? label, String? caption, Map<String, dynamic> meta, DateTime? expiredAt, String accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -639,7 +639,7 @@ as String?,caption: freezed == caption ? _self.caption : caption // ignore: cast
 as String?,meta: null == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,expiredAt: freezed == expiredAt ? _self.expiredAt : expiredAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -668,7 +668,7 @@ class _SnAccountBadge implements SnAccountBadge {
 }
 
 @override final  DateTime? expiredAt;
-@override final  int accountId;
+@override final  String accountId;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  DateTime? deletedAt;
@@ -706,7 +706,7 @@ abstract mixin class _$SnAccountBadgeCopyWith<$Res> implements $SnAccountBadgeCo
   factory _$SnAccountBadgeCopyWith(_SnAccountBadge value, $Res Function(_SnAccountBadge) _then) = __$SnAccountBadgeCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String type, String? label, String? caption, Map<String, dynamic> meta, DateTime? expiredAt, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String type, String? label, String? caption, Map<String, dynamic> meta, DateTime? expiredAt, String accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -732,7 +732,7 @@ as String?,caption: freezed == caption ? _self.caption : caption // ignore: cast
 as String?,meta: null == meta ? _self._meta : meta // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,expiredAt: freezed == expiredAt ? _self.expiredAt : expiredAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

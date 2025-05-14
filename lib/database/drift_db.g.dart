@@ -20,11 +20,11 @@ class $ChatMessagesTable extends ChatMessages
   );
   static const VerificationMeta _roomIdMeta = const VerificationMeta('roomId');
   @override
-  late final GeneratedColumn<int> roomId = GeneratedColumn<int>(
+  late final GeneratedColumn<String> roomId = GeneratedColumn<String>(
     'room_id',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _senderIdMeta = const VerificationMeta(
@@ -175,7 +175,7 @@ class $ChatMessagesTable extends ChatMessages
           )!,
       roomId:
           attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
+            DriftSqlType.string,
             data['${effectivePrefix}room_id'],
           )!,
       senderId:
@@ -221,7 +221,7 @@ class $ChatMessagesTable extends ChatMessages
 
 class ChatMessage extends DataClass implements Insertable<ChatMessage> {
   final String id;
-  final int roomId;
+  final String roomId;
   final String senderId;
   final String? content;
   final String? nonce;
@@ -242,7 +242,7 @@ class ChatMessage extends DataClass implements Insertable<ChatMessage> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['room_id'] = Variable<int>(roomId);
+    map['room_id'] = Variable<String>(roomId);
     map['sender_id'] = Variable<String>(senderId);
     if (!nullToAbsent || content != null) {
       map['content'] = Variable<String>(content);
@@ -284,7 +284,7 @@ class ChatMessage extends DataClass implements Insertable<ChatMessage> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChatMessage(
       id: serializer.fromJson<String>(json['id']),
-      roomId: serializer.fromJson<int>(json['roomId']),
+      roomId: serializer.fromJson<String>(json['roomId']),
       senderId: serializer.fromJson<String>(json['senderId']),
       content: serializer.fromJson<String?>(json['content']),
       nonce: serializer.fromJson<String?>(json['nonce']),
@@ -300,7 +300,7 @@ class ChatMessage extends DataClass implements Insertable<ChatMessage> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'roomId': serializer.toJson<int>(roomId),
+      'roomId': serializer.toJson<String>(roomId),
       'senderId': serializer.toJson<String>(senderId),
       'content': serializer.toJson<String?>(content),
       'nonce': serializer.toJson<String?>(nonce),
@@ -314,7 +314,7 @@ class ChatMessage extends DataClass implements Insertable<ChatMessage> {
 
   ChatMessage copyWith({
     String? id,
-    int? roomId,
+    String? roomId,
     String? senderId,
     Value<String?> content = const Value.absent(),
     Value<String?> nonce = const Value.absent(),
@@ -386,7 +386,7 @@ class ChatMessage extends DataClass implements Insertable<ChatMessage> {
 
 class ChatMessagesCompanion extends UpdateCompanion<ChatMessage> {
   final Value<String> id;
-  final Value<int> roomId;
+  final Value<String> roomId;
   final Value<String> senderId;
   final Value<String?> content;
   final Value<String?> nonce;
@@ -407,7 +407,7 @@ class ChatMessagesCompanion extends UpdateCompanion<ChatMessage> {
   });
   ChatMessagesCompanion.insert({
     required String id,
-    required int roomId,
+    required String roomId,
     required String senderId,
     this.content = const Value.absent(),
     this.nonce = const Value.absent(),
@@ -423,7 +423,7 @@ class ChatMessagesCompanion extends UpdateCompanion<ChatMessage> {
        status = Value(status);
   static Insertable<ChatMessage> custom({
     Expression<String>? id,
-    Expression<int>? roomId,
+    Expression<String>? roomId,
     Expression<String>? senderId,
     Expression<String>? content,
     Expression<String>? nonce,
@@ -447,7 +447,7 @@ class ChatMessagesCompanion extends UpdateCompanion<ChatMessage> {
 
   ChatMessagesCompanion copyWith({
     Value<String>? id,
-    Value<int>? roomId,
+    Value<String>? roomId,
     Value<String>? senderId,
     Value<String?>? content,
     Value<String?>? nonce,
@@ -476,7 +476,7 @@ class ChatMessagesCompanion extends UpdateCompanion<ChatMessage> {
       map['id'] = Variable<String>(id.value);
     }
     if (roomId.present) {
-      map['room_id'] = Variable<int>(roomId.value);
+      map['room_id'] = Variable<String>(roomId.value);
     }
     if (senderId.present) {
       map['sender_id'] = Variable<String>(senderId.value);
@@ -535,7 +535,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 typedef $$ChatMessagesTableCreateCompanionBuilder =
     ChatMessagesCompanion Function({
       required String id,
-      required int roomId,
+      required String roomId,
       required String senderId,
       Value<String?> content,
       Value<String?> nonce,
@@ -547,7 +547,7 @@ typedef $$ChatMessagesTableCreateCompanionBuilder =
 typedef $$ChatMessagesTableUpdateCompanionBuilder =
     ChatMessagesCompanion Function({
       Value<String> id,
-      Value<int> roomId,
+      Value<String> roomId,
       Value<String> senderId,
       Value<String?> content,
       Value<String?> nonce,
@@ -571,7 +571,7 @@ class $$ChatMessagesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get roomId => $composableBuilder(
+  ColumnFilters<String> get roomId => $composableBuilder(
     column: $table.roomId,
     builder: (column) => ColumnFilters(column),
   );
@@ -622,7 +622,7 @@ class $$ChatMessagesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get roomId => $composableBuilder(
+  ColumnOrderings<String> get roomId => $composableBuilder(
     column: $table.roomId,
     builder: (column) => ColumnOrderings(column),
   );
@@ -670,7 +670,7 @@ class $$ChatMessagesTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get roomId =>
+  GeneratedColumn<String> get roomId =>
       $composableBuilder(column: $table.roomId, builder: (column) => column);
 
   GeneratedColumn<String> get senderId =>
@@ -725,7 +725,7 @@ class $$ChatMessagesTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<int> roomId = const Value.absent(),
+                Value<String> roomId = const Value.absent(),
                 Value<String> senderId = const Value.absent(),
                 Value<String?> content = const Value.absent(),
                 Value<String?> nonce = const Value.absent(),
@@ -747,7 +747,7 @@ class $$ChatMessagesTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required int roomId,
+                required String roomId,
                 required String senderId,
                 Value<String?> content = const Value.absent(),
                 Value<String?> nonce = const Value.absent(),

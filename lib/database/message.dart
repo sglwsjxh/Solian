@@ -3,7 +3,7 @@ import 'package:island/models/chat.dart';
 
 class ChatMessages extends Table {
   TextColumn get id => text()();
-  IntColumn get roomId => integer()();
+  TextColumn get roomId => text()();
   TextColumn get senderId => text()();
   TextColumn get content => text().nullable()();
   TextColumn get nonce => text().nullable()();
@@ -17,7 +17,7 @@ class ChatMessages extends Table {
 
 class LocalChatMessage {
   final String id;
-  final int roomId;
+  final String roomId;
   final String senderId;
   final Map<String, dynamic> data;
   final DateTime createdAt;

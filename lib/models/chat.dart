@@ -9,7 +9,7 @@ part 'chat.g.dart';
 @freezed
 abstract class SnChatRoom with _$SnChatRoom {
   const factory SnChatRoom({
-    required int id,
+    required String id,
     required String name,
     required String description,
     required int type,
@@ -18,7 +18,7 @@ abstract class SnChatRoom with _$SnChatRoom {
     required SnCloudFile? picture,
     required String? backgroundId,
     required SnCloudFile? background,
-    required int? realmId,
+    required String? realmId,
     required SnRealm? realm,
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -48,7 +48,7 @@ abstract class SnChatMessage with _$SnChatMessage {
     String? forwardedMessageId,
     required String senderId,
     required SnChatMember sender,
-    required int chatRoomId,
+    required String chatRoomId,
   }) = _SnChatMessage;
 
   factory SnChatMessage.fromJson(Map<String, dynamic> json) =>
@@ -80,9 +80,9 @@ abstract class SnChatMember with _$SnChatMember {
     required DateTime updatedAt,
     required DateTime? deletedAt,
     required String id,
-    required int chatRoomId,
+    required String chatRoomId,
     required SnChatRoom? chatRoom,
-    required int accountId,
+    required String accountId,
     required SnAccount account,
     required String? nick,
     required int role,

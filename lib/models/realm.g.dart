@@ -7,7 +7,7 @@ part of 'realm.dart';
 // **************************************************************************
 
 _SnRealm _$SnRealmFromJson(Map<String, dynamic> json) => _SnRealm(
-  id: (json['id'] as num).toInt(),
+  id: json['id'] as String,
   slug: json['slug'] as String,
   name: json['name'] as String,
   description: json['description'] as String,
@@ -28,7 +28,7 @@ _SnRealm _$SnRealmFromJson(Map<String, dynamic> json) => _SnRealm(
       json['background'] == null
           ? null
           : SnCloudFile.fromJson(json['background'] as Map<String, dynamic>),
-  accountId: (json['account_id'] as num).toInt(),
+  accountId: json['account_id'] as String,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
   deletedAt:
@@ -58,12 +58,12 @@ Map<String, dynamic> _$SnRealmToJson(_SnRealm instance) => <String, dynamic>{
 
 _SnRealmMember _$SnRealmMemberFromJson(Map<String, dynamic> json) =>
     _SnRealmMember(
-      realmId: (json['realm_id'] as num).toInt(),
+      realmId: json['realm_id'] as String,
       realm:
           json['realm'] == null
               ? null
               : SnRealm.fromJson(json['realm'] as Map<String, dynamic>),
-      accountId: (json['account_id'] as num).toInt(),
+      accountId: json['account_id'] as String,
       account:
           json['account'] == null
               ? null

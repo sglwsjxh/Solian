@@ -7,7 +7,7 @@ part of 'chat.dart';
 // **************************************************************************
 
 _SnChatRoom _$SnChatRoomFromJson(Map<String, dynamic> json) => _SnChatRoom(
-  id: (json['id'] as num).toInt(),
+  id: json['id'] as String,
   name: json['name'] as String,
   description: json['description'] as String,
   type: (json['type'] as num).toInt(),
@@ -22,7 +22,7 @@ _SnChatRoom _$SnChatRoomFromJson(Map<String, dynamic> json) => _SnChatRoom(
       json['background'] == null
           ? null
           : SnCloudFile.fromJson(json['background'] as Map<String, dynamic>),
-  realmId: (json['realm_id'] as num?)?.toInt(),
+  realmId: json['realm_id'] as String?,
   realm:
       json['realm'] == null
           ? null
@@ -93,7 +93,7 @@ _SnChatMessage _$SnChatMessageFromJson(Map<String, dynamic> json) =>
       forwardedMessageId: json['forwarded_message_id'] as String?,
       senderId: json['sender_id'] as String,
       sender: SnChatMember.fromJson(json['sender'] as Map<String, dynamic>),
-      chatRoomId: (json['chat_room_id'] as num).toInt(),
+      chatRoomId: json['chat_room_id'] as String,
     );
 
 Map<String, dynamic> _$SnChatMessageToJson(_SnChatMessage instance) =>
@@ -154,12 +154,12 @@ _SnChatMember _$SnChatMemberFromJson(Map<String, dynamic> json) =>
               ? null
               : DateTime.parse(json['deleted_at'] as String),
       id: json['id'] as String,
-      chatRoomId: (json['chat_room_id'] as num).toInt(),
+      chatRoomId: json['chat_room_id'] as String,
       chatRoom:
           json['chat_room'] == null
               ? null
               : SnChatRoom.fromJson(json['chat_room'] as Map<String, dynamic>),
-      accountId: (json['account_id'] as num).toInt(),
+      accountId: json['account_id'] as String,
       account: SnAccount.fromJson(json['account'] as Map<String, dynamic>),
       nick: json['nick'] as String?,
       role: (json['role'] as num).toInt(),

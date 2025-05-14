@@ -232,7 +232,7 @@ class _LoginPickerScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBusy = useState(false);
-    final factorPicked = useState<int?>(null);
+    final factorPicked = useState<String?>(null);
 
     final unfocusColor = Theme.of(
       context,

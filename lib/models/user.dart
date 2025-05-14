@@ -7,7 +7,7 @@ part 'user.g.dart';
 @freezed
 abstract class SnAccount with _$SnAccount {
   const factory SnAccount({
-    required int id,
+    required String id,
     required String name,
     required String nick,
     required String language,
@@ -26,7 +26,7 @@ abstract class SnAccount with _$SnAccount {
 @freezed
 abstract class SnAccountProfile with _$SnAccountProfile {
   const factory SnAccountProfile({
-    required int id,
+    required String id,
     required String? firstName,
     required String? middleName,
     required String? lastName,
@@ -55,7 +55,7 @@ abstract class SnAccountStatus with _$SnAccountStatus {
     required bool isCustomized,
     @Default("") String label,
     required DateTime? clearedAt,
-    required int accountId,
+    required String accountId,
     required DateTime createdAt,
     required DateTime updatedAt,
     required DateTime? deletedAt,
@@ -74,7 +74,7 @@ abstract class SnAccountBadge with _$SnAccountBadge {
     required String? caption,
     required Map<String, dynamic> meta,
     required DateTime? expiredAt,
-    required int accountId,
+    required String accountId,
     required DateTime createdAt,
     required DateTime updatedAt,
     required DateTime? deletedAt,

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SnActivity {
 
- String get id; String get type; String get resourceIdentifier; int get visibility; int get accountId; SnAccount get account; dynamic get data; DateTime get createdAt; DateTime get updatedAt; dynamic get deletedAt;
+ String get id; String get type; String get resourceIdentifier; int get visibility; String get accountId; SnAccount get account; dynamic get data; DateTime get createdAt; DateTime get updatedAt; dynamic get deletedAt;
 /// Create a copy of SnActivity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $SnActivityCopyWith<$Res>  {
   factory $SnActivityCopyWith(SnActivity value, $Res Function(SnActivity) _then) = _$SnActivityCopyWithImpl;
 @useResult
 $Res call({
- String id, String type, String resourceIdentifier, int visibility, int accountId, SnAccount account, dynamic data, DateTime createdAt, DateTime updatedAt, dynamic deletedAt
+ String id, String type, String resourceIdentifier, int visibility, String accountId, SnAccount account, dynamic data, DateTime createdAt, DateTime updatedAt, dynamic deletedAt
 });
 
 
@@ -73,7 +73,7 @@ as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non
 as String,resourceIdentifier: null == resourceIdentifier ? _self.resourceIdentifier : resourceIdentifier // ignore: cast_nullable_to_non_nullable
 as String,visibility: null == visibility ? _self.visibility : visibility // ignore: cast_nullable_to_non_nullable
 as int,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as dynamic,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ class _SnActivity implements SnActivity {
 @override final  String type;
 @override final  String resourceIdentifier;
 @override final  int visibility;
-@override final  int accountId;
+@override final  String accountId;
 @override final  SnAccount account;
 @override final  dynamic data;
 @override final  DateTime createdAt;
@@ -145,7 +145,7 @@ abstract mixin class _$SnActivityCopyWith<$Res> implements $SnActivityCopyWith<$
   factory _$SnActivityCopyWith(_SnActivity value, $Res Function(_SnActivity) _then) = __$SnActivityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String type, String resourceIdentifier, int visibility, int accountId, SnAccount account, dynamic data, DateTime createdAt, DateTime updatedAt, dynamic deletedAt
+ String id, String type, String resourceIdentifier, int visibility, String accountId, SnAccount account, dynamic data, DateTime createdAt, DateTime updatedAt, dynamic deletedAt
 });
 
 
@@ -169,7 +169,7 @@ as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non
 as String,resourceIdentifier: null == resourceIdentifier ? _self.resourceIdentifier : resourceIdentifier // ignore: cast_nullable_to_non_nullable
 as String,visibility: null == visibility ? _self.visibility : visibility // ignore: cast_nullable_to_non_nullable
 as int,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: null == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as dynamic,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -194,7 +194,7 @@ $SnAccountCopyWith<$Res> get account {
 /// @nodoc
 mixin _$SnCheckInResult {
 
- String get id; int get level; List<SnFortuneTip> get tips; int get accountId; SnAccount? get account; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; int get level; List<SnFortuneTip> get tips; String get accountId; SnAccount? get account; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnCheckInResult
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -227,7 +227,7 @@ abstract mixin class $SnCheckInResultCopyWith<$Res>  {
   factory $SnCheckInResultCopyWith(SnCheckInResult value, $Res Function(SnCheckInResult) _then) = _$SnCheckInResultCopyWithImpl;
 @useResult
 $Res call({
- String id, int level, List<SnFortuneTip> tips, int accountId, SnAccount? account, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int level, List<SnFortuneTip> tips, String accountId, SnAccount? account, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -250,7 +250,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as int,tips: null == tips ? _self.tips : tips // ignore: cast_nullable_to_non_nullable
 as List<SnFortuneTip>,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -289,7 +289,7 @@ class _SnCheckInResult implements SnCheckInResult {
   return EqualUnmodifiableListView(_tips);
 }
 
-@override final  int accountId;
+@override final  String accountId;
 @override final  SnAccount? account;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
@@ -328,7 +328,7 @@ abstract mixin class _$SnCheckInResultCopyWith<$Res> implements $SnCheckInResult
   factory _$SnCheckInResultCopyWith(_SnCheckInResult value, $Res Function(_SnCheckInResult) _then) = __$SnCheckInResultCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int level, List<SnFortuneTip> tips, int accountId, SnAccount? account, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int level, List<SnFortuneTip> tips, String accountId, SnAccount? account, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -351,7 +351,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as int,tips: null == tips ? _self._tips : tips // ignore: cast_nullable_to_non_nullable
 as List<SnFortuneTip>,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable

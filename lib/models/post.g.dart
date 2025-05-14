@@ -7,7 +7,7 @@ part of 'post.dart';
 // **************************************************************************
 
 _SnPost _$SnPostFromJson(Map<String, dynamic> json) => _SnPost(
-  id: (json['id'] as num).toInt(),
+  id: json['id'] as String,
   title: json['title'] as String?,
   description: json['description'] as String?,
   language: json['language'] as String?,
@@ -24,12 +24,21 @@ _SnPost _$SnPostFromJson(Map<String, dynamic> json) => _SnPost(
   viewsTotal: (json['views_total'] as num).toInt(),
   upvotes: (json['upvotes'] as num).toInt(),
   downvotes: (json['downvotes'] as num).toInt(),
-  threadedPostId: json['threaded_post_id'],
-  threadedPost: json['threaded_post'],
-  repliedPostId: json['replied_post_id'],
-  repliedPost: json['replied_post'],
-  forwardedPostId: json['forwarded_post_id'],
-  forwardedPost: json['forwarded_post'],
+  threadedPostId: json['threaded_post_id'] as String?,
+  threadedPost:
+      json['threaded_post'] == null
+          ? null
+          : SnPost.fromJson(json['threaded_post'] as Map<String, dynamic>),
+  repliedPostId: json['replied_post_id'] as String?,
+  repliedPost:
+      json['replied_post'] == null
+          ? null
+          : SnPost.fromJson(json['replied_post'] as Map<String, dynamic>),
+  forwardedPostId: json['forwarded_post_id'] as String?,
+  forwardedPost:
+      json['forwarded_post'] == null
+          ? null
+          : SnPost.fromJson(json['forwarded_post'] as Map<String, dynamic>),
   attachments:
       (json['attachments'] as List<dynamic>)
           .map((e) => SnCloudFile.fromJson(e as Map<String, dynamic>))
@@ -68,11 +77,11 @@ Map<String, dynamic> _$SnPostToJson(_SnPost instance) => <String, dynamic>{
   'upvotes': instance.upvotes,
   'downvotes': instance.downvotes,
   'threaded_post_id': instance.threadedPostId,
-  'threaded_post': instance.threadedPost,
+  'threaded_post': instance.threadedPost?.toJson(),
   'replied_post_id': instance.repliedPostId,
-  'replied_post': instance.repliedPost,
+  'replied_post': instance.repliedPost?.toJson(),
   'forwarded_post_id': instance.forwardedPostId,
-  'forwarded_post': instance.forwardedPost,
+  'forwarded_post': instance.forwardedPost?.toJson(),
   'attachments': instance.attachments.map((e) => e.toJson()).toList(),
   'publisher': instance.publisher.toJson(),
   'reactions_count': instance.reactionsCount,
@@ -86,7 +95,7 @@ Map<String, dynamic> _$SnPostToJson(_SnPost instance) => <String, dynamic>{
 };
 
 _SnPublisher _$SnPublisherFromJson(Map<String, dynamic> json) => _SnPublisher(
-  id: (json['id'] as num).toInt(),
+  id: json['id'] as String,
   publisherType: (json['publisher_type'] as num).toInt(),
   name: json['name'] as String,
   nick: json['nick'] as String,
@@ -101,7 +110,7 @@ _SnPublisher _$SnPublisherFromJson(Map<String, dynamic> json) => _SnPublisher(
       json['background'] == null
           ? null
           : SnCloudFile.fromJson(json['background'] as Map<String, dynamic>),
-  accountId: (json['account_id'] as num).toInt(),
+  accountId: json['account_id'] as String?,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
   deletedAt:

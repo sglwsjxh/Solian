@@ -7,7 +7,7 @@ part 'post.g.dart';
 @freezed
 abstract class SnPost with _$SnPost {
   const factory SnPost({
-    required int id,
+    required String id,
     required String? title,
     required String? description,
     required String? language,
@@ -21,12 +21,12 @@ abstract class SnPost with _$SnPost {
     required int viewsTotal,
     required int upvotes,
     required int downvotes,
-    required dynamic threadedPostId,
-    required dynamic threadedPost,
-    required dynamic repliedPostId,
-    required dynamic repliedPost,
-    required dynamic forwardedPostId,
-    required dynamic forwardedPost,
+    required String? threadedPostId,
+    required SnPost? threadedPost,
+    required String? repliedPostId,
+    required SnPost? repliedPost,
+    required String? forwardedPostId,
+    required SnPost? forwardedPost,
     required List<SnCloudFile> attachments,
     required SnPublisher publisher,
     @Default({}) Map<String, int> reactionsCount,
@@ -45,7 +45,7 @@ abstract class SnPost with _$SnPost {
 @freezed
 abstract class SnPublisher with _$SnPublisher {
   const factory SnPublisher({
-    required int id,
+    required String id,
     required int publisherType,
     required String name,
     required String nick,
@@ -54,7 +54,7 @@ abstract class SnPublisher with _$SnPublisher {
     required SnCloudFile? picture,
     required String? backgroundId,
     required SnCloudFile? background,
-    required int accountId,
+    required String? accountId,
     required DateTime createdAt,
     required DateTime updatedAt,
     required DateTime? deletedAt,

@@ -40,7 +40,7 @@ abstract class SnAuthChallenge with _$SnAuthChallenge {
 @freezed
 abstract class SnAuthFactor with _$SnAuthFactor {
   const factory SnAuthFactor({
-    required int id,
+    required String id,
     required int type,
     required DateTime createdAt,
     required DateTime updatedAt,

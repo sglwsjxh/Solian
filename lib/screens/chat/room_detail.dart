@@ -21,7 +21,7 @@ part 'room_detail.freezed.dart';
 
 @RoutePage()
 class ChatDetailScreen extends HookConsumerWidget {
-  final int id;
+  final String id;
   const ChatDetailScreen({super.key, @PathParam("id") required this.id});
 
   @override
@@ -129,7 +129,7 @@ class ChatDetailScreen extends HookConsumerWidget {
 }
 
 class _ChatRoomActionMenu extends HookConsumerWidget {
-  final int id;
+  final String id;
   final Shadow iconShadow;
 
   const _ChatRoomActionMenu({required this.id, required this.iconShadow});
@@ -199,17 +199,17 @@ abstract class ChatRoomMemberState with _$ChatRoomMemberState {
   }) = _ChatRoomMemberState;
 }
 
-final chatMemberStateProvider =
-    StateNotifierProvider.family<ChatMemberNotifier, ChatRoomMemberState, int>((
-      ref,
-      roomId,
-    ) {
-      final apiClient = ref.watch(apiClientProvider);
-      return ChatMemberNotifier(apiClient, roomId);
-    });
+final chatMemberStateProvider = StateNotifierProvider.family<
+  ChatMemberNotifier,
+  ChatRoomMemberState,
+  String
+>((ref, roomId) {
+  final apiClient = ref.watch(apiClientProvider);
+  return ChatMemberNotifier(apiClient, roomId);
+});
 
 class ChatMemberNotifier extends StateNotifier<ChatRoomMemberState> {
-  final int roomId;
+  final String roomId;
   final Dio _apiClient;
 
   ChatMemberNotifier(this._apiClient, this.roomId)
@@ -247,7 +247,7 @@ class ChatMemberNotifier extends StateNotifier<ChatRoomMemberState> {
 }
 
 class _ChatMemberListSheet extends HookConsumerWidget {
-  final int roomId;
+  final String roomId;
   const _ChatMemberListSheet({required this.roomId});
 
   @override

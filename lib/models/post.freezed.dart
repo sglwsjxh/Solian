@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SnPost {
 
- int get id; String? get title; String? get description; String? get language; DateTime? get editedAt; DateTime get publishedAt; int get visibility; String? get content; int get type; Map<String, dynamic>? get meta; int get viewsUnique; int get viewsTotal; int get upvotes; int get downvotes; dynamic get threadedPostId; dynamic get threadedPost; dynamic get repliedPostId; dynamic get repliedPost; dynamic get forwardedPostId; dynamic get forwardedPost; List<SnCloudFile> get attachments; SnPublisher get publisher; Map<String, int> get reactionsCount; List<dynamic> get reactions; List<dynamic> get tags; List<dynamic> get categories; List<dynamic> get collections; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; String? get title; String? get description; String? get language; DateTime? get editedAt; DateTime get publishedAt; int get visibility; String? get content; int get type; Map<String, dynamic>? get meta; int get viewsUnique; int get viewsTotal; int get upvotes; int get downvotes; String? get threadedPostId; SnPost? get threadedPost; String? get repliedPostId; SnPost? get repliedPost; String? get forwardedPostId; SnPost? get forwardedPost; List<SnCloudFile> get attachments; SnPublisher get publisher; Map<String, int> get reactionsCount; List<dynamic> get reactions; List<dynamic> get tags; List<dynamic> get categories; List<dynamic> get collections; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnPost
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,12 +29,12 @@ $SnPostCopyWith<SnPost> get copyWith => _$SnPostCopyWithImpl<SnPost>(this as SnP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SnPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.language, language) || other.language == language)&&(identical(other.editedAt, editedAt) || other.editedAt == editedAt)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.content, content) || other.content == content)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.meta, meta)&&(identical(other.viewsUnique, viewsUnique) || other.viewsUnique == viewsUnique)&&(identical(other.viewsTotal, viewsTotal) || other.viewsTotal == viewsTotal)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other.threadedPostId, threadedPostId)&&const DeepCollectionEquality().equals(other.threadedPost, threadedPost)&&const DeepCollectionEquality().equals(other.repliedPostId, repliedPostId)&&const DeepCollectionEquality().equals(other.repliedPost, repliedPost)&&const DeepCollectionEquality().equals(other.forwardedPostId, forwardedPostId)&&const DeepCollectionEquality().equals(other.forwardedPost, forwardedPost)&&const DeepCollectionEquality().equals(other.attachments, attachments)&&(identical(other.publisher, publisher) || other.publisher == publisher)&&const DeepCollectionEquality().equals(other.reactionsCount, reactionsCount)&&const DeepCollectionEquality().equals(other.reactions, reactions)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.collections, collections)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SnPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.language, language) || other.language == language)&&(identical(other.editedAt, editedAt) || other.editedAt == editedAt)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.content, content) || other.content == content)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.meta, meta)&&(identical(other.viewsUnique, viewsUnique) || other.viewsUnique == viewsUnique)&&(identical(other.viewsTotal, viewsTotal) || other.viewsTotal == viewsTotal)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.threadedPostId, threadedPostId) || other.threadedPostId == threadedPostId)&&(identical(other.threadedPost, threadedPost) || other.threadedPost == threadedPost)&&(identical(other.repliedPostId, repliedPostId) || other.repliedPostId == repliedPostId)&&(identical(other.repliedPost, repliedPost) || other.repliedPost == repliedPost)&&(identical(other.forwardedPostId, forwardedPostId) || other.forwardedPostId == forwardedPostId)&&(identical(other.forwardedPost, forwardedPost) || other.forwardedPost == forwardedPost)&&const DeepCollectionEquality().equals(other.attachments, attachments)&&(identical(other.publisher, publisher) || other.publisher == publisher)&&const DeepCollectionEquality().equals(other.reactionsCount, reactionsCount)&&const DeepCollectionEquality().equals(other.reactions, reactions)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.collections, collections)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,description,language,editedAt,publishedAt,visibility,content,type,const DeepCollectionEquality().hash(meta),viewsUnique,viewsTotal,upvotes,downvotes,const DeepCollectionEquality().hash(threadedPostId),const DeepCollectionEquality().hash(threadedPost),const DeepCollectionEquality().hash(repliedPostId),const DeepCollectionEquality().hash(repliedPost),const DeepCollectionEquality().hash(forwardedPostId),const DeepCollectionEquality().hash(forwardedPost),const DeepCollectionEquality().hash(attachments),publisher,const DeepCollectionEquality().hash(reactionsCount),const DeepCollectionEquality().hash(reactions),const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(collections),createdAt,updatedAt,deletedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,title,description,language,editedAt,publishedAt,visibility,content,type,const DeepCollectionEquality().hash(meta),viewsUnique,viewsTotal,upvotes,downvotes,threadedPostId,threadedPost,repliedPostId,repliedPost,forwardedPostId,forwardedPost,const DeepCollectionEquality().hash(attachments),publisher,const DeepCollectionEquality().hash(reactionsCount),const DeepCollectionEquality().hash(reactions),const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(collections),createdAt,updatedAt,deletedAt]);
 
 @override
 String toString() {
@@ -49,11 +49,11 @@ abstract mixin class $SnPostCopyWith<$Res>  {
   factory $SnPostCopyWith(SnPost value, $Res Function(SnPost) _then) = _$SnPostCopyWithImpl;
 @useResult
 $Res call({
- int id, String? title, String? description, String? language, DateTime? editedAt, DateTime publishedAt, int visibility, String? content, int type, Map<String, dynamic>? meta, int viewsUnique, int viewsTotal, int upvotes, int downvotes, dynamic threadedPostId, dynamic threadedPost, dynamic repliedPostId, dynamic repliedPost, dynamic forwardedPostId, dynamic forwardedPost, List<SnCloudFile> attachments, SnPublisher publisher, Map<String, int> reactionsCount, List<dynamic> reactions, List<dynamic> tags, List<dynamic> categories, List<dynamic> collections, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String? title, String? description, String? language, DateTime? editedAt, DateTime publishedAt, int visibility, String? content, int type, Map<String, dynamic>? meta, int viewsUnique, int viewsTotal, int upvotes, int downvotes, String? threadedPostId, SnPost? threadedPost, String? repliedPostId, SnPost? repliedPost, String? forwardedPostId, SnPost? forwardedPost, List<SnCloudFile> attachments, SnPublisher publisher, Map<String, int> reactionsCount, List<dynamic> reactions, List<dynamic> tags, List<dynamic> categories, List<dynamic> collections, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
-$SnPublisherCopyWith<$Res> get publisher;
+$SnPostCopyWith<$Res>? get threadedPost;$SnPostCopyWith<$Res>? get repliedPost;$SnPostCopyWith<$Res>? get forwardedPost;$SnPublisherCopyWith<$Res> get publisher;
 
 }
 /// @nodoc
@@ -69,7 +69,7 @@ class _$SnPostCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = freezed,Object? description = freezed,Object? language = freezed,Object? editedAt = freezed,Object? publishedAt = null,Object? visibility = null,Object? content = freezed,Object? type = null,Object? meta = freezed,Object? viewsUnique = null,Object? viewsTotal = null,Object? upvotes = null,Object? downvotes = null,Object? threadedPostId = freezed,Object? threadedPost = freezed,Object? repliedPostId = freezed,Object? repliedPost = freezed,Object? forwardedPostId = freezed,Object? forwardedPost = freezed,Object? attachments = null,Object? publisher = null,Object? reactionsCount = null,Object? reactions = null,Object? tags = null,Object? categories = null,Object? collections = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,language: freezed == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String?,editedAt: freezed == editedAt ? _self.editedAt : editedAt // ignore: cast_nullable_to_non_nullable
@@ -83,12 +83,12 @@ as int,viewsTotal: null == viewsTotal ? _self.viewsTotal : viewsTotal // ignore:
 as int,upvotes: null == upvotes ? _self.upvotes : upvotes // ignore: cast_nullable_to_non_nullable
 as int,downvotes: null == downvotes ? _self.downvotes : downvotes // ignore: cast_nullable_to_non_nullable
 as int,threadedPostId: freezed == threadedPostId ? _self.threadedPostId : threadedPostId // ignore: cast_nullable_to_non_nullable
-as dynamic,threadedPost: freezed == threadedPost ? _self.threadedPost : threadedPost // ignore: cast_nullable_to_non_nullable
-as dynamic,repliedPostId: freezed == repliedPostId ? _self.repliedPostId : repliedPostId // ignore: cast_nullable_to_non_nullable
-as dynamic,repliedPost: freezed == repliedPost ? _self.repliedPost : repliedPost // ignore: cast_nullable_to_non_nullable
-as dynamic,forwardedPostId: freezed == forwardedPostId ? _self.forwardedPostId : forwardedPostId // ignore: cast_nullable_to_non_nullable
-as dynamic,forwardedPost: freezed == forwardedPost ? _self.forwardedPost : forwardedPost // ignore: cast_nullable_to_non_nullable
-as dynamic,attachments: null == attachments ? _self.attachments : attachments // ignore: cast_nullable_to_non_nullable
+as String?,threadedPost: freezed == threadedPost ? _self.threadedPost : threadedPost // ignore: cast_nullable_to_non_nullable
+as SnPost?,repliedPostId: freezed == repliedPostId ? _self.repliedPostId : repliedPostId // ignore: cast_nullable_to_non_nullable
+as String?,repliedPost: freezed == repliedPost ? _self.repliedPost : repliedPost // ignore: cast_nullable_to_non_nullable
+as SnPost?,forwardedPostId: freezed == forwardedPostId ? _self.forwardedPostId : forwardedPostId // ignore: cast_nullable_to_non_nullable
+as String?,forwardedPost: freezed == forwardedPost ? _self.forwardedPost : forwardedPost // ignore: cast_nullable_to_non_nullable
+as SnPost?,attachments: null == attachments ? _self.attachments : attachments // ignore: cast_nullable_to_non_nullable
 as List<SnCloudFile>,publisher: null == publisher ? _self.publisher : publisher // ignore: cast_nullable_to_non_nullable
 as SnPublisher,reactionsCount: null == reactionsCount ? _self.reactionsCount : reactionsCount // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,reactions: null == reactions ? _self.reactions : reactions // ignore: cast_nullable_to_non_nullable
@@ -102,6 +102,42 @@ as DateTime?,
   ));
 }
 /// Create a copy of SnPost
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SnPostCopyWith<$Res>? get threadedPost {
+    if (_self.threadedPost == null) {
+    return null;
+  }
+
+  return $SnPostCopyWith<$Res>(_self.threadedPost!, (value) {
+    return _then(_self.copyWith(threadedPost: value));
+  });
+}/// Create a copy of SnPost
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SnPostCopyWith<$Res>? get repliedPost {
+    if (_self.repliedPost == null) {
+    return null;
+  }
+
+  return $SnPostCopyWith<$Res>(_self.repliedPost!, (value) {
+    return _then(_self.copyWith(repliedPost: value));
+  });
+}/// Create a copy of SnPost
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SnPostCopyWith<$Res>? get forwardedPost {
+    if (_self.forwardedPost == null) {
+    return null;
+  }
+
+  return $SnPostCopyWith<$Res>(_self.forwardedPost!, (value) {
+    return _then(_self.copyWith(forwardedPost: value));
+  });
+}/// Create a copy of SnPost
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -121,7 +157,7 @@ class _SnPost implements SnPost {
   const _SnPost({required this.id, required this.title, required this.description, required this.language, required this.editedAt, required this.publishedAt, required this.visibility, required this.content, required this.type, required final  Map<String, dynamic>? meta, required this.viewsUnique, required this.viewsTotal, required this.upvotes, required this.downvotes, required this.threadedPostId, required this.threadedPost, required this.repliedPostId, required this.repliedPost, required this.forwardedPostId, required this.forwardedPost, required final  List<SnCloudFile> attachments, required this.publisher, final  Map<String, int> reactionsCount = const {}, required final  List<dynamic> reactions, required final  List<dynamic> tags, required final  List<dynamic> categories, required final  List<dynamic> collections, required this.createdAt, required this.updatedAt, required this.deletedAt}): _meta = meta,_attachments = attachments,_reactionsCount = reactionsCount,_reactions = reactions,_tags = tags,_categories = categories,_collections = collections;
   factory _SnPost.fromJson(Map<String, dynamic> json) => _$SnPostFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  String? title;
 @override final  String? description;
 @override final  String? language;
@@ -143,12 +179,12 @@ class _SnPost implements SnPost {
 @override final  int viewsTotal;
 @override final  int upvotes;
 @override final  int downvotes;
-@override final  dynamic threadedPostId;
-@override final  dynamic threadedPost;
-@override final  dynamic repliedPostId;
-@override final  dynamic repliedPost;
-@override final  dynamic forwardedPostId;
-@override final  dynamic forwardedPost;
+@override final  String? threadedPostId;
+@override final  SnPost? threadedPost;
+@override final  String? repliedPostId;
+@override final  SnPost? repliedPost;
+@override final  String? forwardedPostId;
+@override final  SnPost? forwardedPost;
  final  List<SnCloudFile> _attachments;
 @override List<SnCloudFile> get attachments {
   if (_attachments is EqualUnmodifiableListView) return _attachments;
@@ -209,12 +245,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SnPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.language, language) || other.language == language)&&(identical(other.editedAt, editedAt) || other.editedAt == editedAt)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.content, content) || other.content == content)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._meta, _meta)&&(identical(other.viewsUnique, viewsUnique) || other.viewsUnique == viewsUnique)&&(identical(other.viewsTotal, viewsTotal) || other.viewsTotal == viewsTotal)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other.threadedPostId, threadedPostId)&&const DeepCollectionEquality().equals(other.threadedPost, threadedPost)&&const DeepCollectionEquality().equals(other.repliedPostId, repliedPostId)&&const DeepCollectionEquality().equals(other.repliedPost, repliedPost)&&const DeepCollectionEquality().equals(other.forwardedPostId, forwardedPostId)&&const DeepCollectionEquality().equals(other.forwardedPost, forwardedPost)&&const DeepCollectionEquality().equals(other._attachments, _attachments)&&(identical(other.publisher, publisher) || other.publisher == publisher)&&const DeepCollectionEquality().equals(other._reactionsCount, _reactionsCount)&&const DeepCollectionEquality().equals(other._reactions, _reactions)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._collections, _collections)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SnPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.language, language) || other.language == language)&&(identical(other.editedAt, editedAt) || other.editedAt == editedAt)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.content, content) || other.content == content)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._meta, _meta)&&(identical(other.viewsUnique, viewsUnique) || other.viewsUnique == viewsUnique)&&(identical(other.viewsTotal, viewsTotal) || other.viewsTotal == viewsTotal)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.threadedPostId, threadedPostId) || other.threadedPostId == threadedPostId)&&(identical(other.threadedPost, threadedPost) || other.threadedPost == threadedPost)&&(identical(other.repliedPostId, repliedPostId) || other.repliedPostId == repliedPostId)&&(identical(other.repliedPost, repliedPost) || other.repliedPost == repliedPost)&&(identical(other.forwardedPostId, forwardedPostId) || other.forwardedPostId == forwardedPostId)&&(identical(other.forwardedPost, forwardedPost) || other.forwardedPost == forwardedPost)&&const DeepCollectionEquality().equals(other._attachments, _attachments)&&(identical(other.publisher, publisher) || other.publisher == publisher)&&const DeepCollectionEquality().equals(other._reactionsCount, _reactionsCount)&&const DeepCollectionEquality().equals(other._reactions, _reactions)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._collections, _collections)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,description,language,editedAt,publishedAt,visibility,content,type,const DeepCollectionEquality().hash(_meta),viewsUnique,viewsTotal,upvotes,downvotes,const DeepCollectionEquality().hash(threadedPostId),const DeepCollectionEquality().hash(threadedPost),const DeepCollectionEquality().hash(repliedPostId),const DeepCollectionEquality().hash(repliedPost),const DeepCollectionEquality().hash(forwardedPostId),const DeepCollectionEquality().hash(forwardedPost),const DeepCollectionEquality().hash(_attachments),publisher,const DeepCollectionEquality().hash(_reactionsCount),const DeepCollectionEquality().hash(_reactions),const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_collections),createdAt,updatedAt,deletedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,title,description,language,editedAt,publishedAt,visibility,content,type,const DeepCollectionEquality().hash(_meta),viewsUnique,viewsTotal,upvotes,downvotes,threadedPostId,threadedPost,repliedPostId,repliedPost,forwardedPostId,forwardedPost,const DeepCollectionEquality().hash(_attachments),publisher,const DeepCollectionEquality().hash(_reactionsCount),const DeepCollectionEquality().hash(_reactions),const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_collections),createdAt,updatedAt,deletedAt]);
 
 @override
 String toString() {
@@ -229,11 +265,11 @@ abstract mixin class _$SnPostCopyWith<$Res> implements $SnPostCopyWith<$Res> {
   factory _$SnPostCopyWith(_SnPost value, $Res Function(_SnPost) _then) = __$SnPostCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? title, String? description, String? language, DateTime? editedAt, DateTime publishedAt, int visibility, String? content, int type, Map<String, dynamic>? meta, int viewsUnique, int viewsTotal, int upvotes, int downvotes, dynamic threadedPostId, dynamic threadedPost, dynamic repliedPostId, dynamic repliedPost, dynamic forwardedPostId, dynamic forwardedPost, List<SnCloudFile> attachments, SnPublisher publisher, Map<String, int> reactionsCount, List<dynamic> reactions, List<dynamic> tags, List<dynamic> categories, List<dynamic> collections, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String? title, String? description, String? language, DateTime? editedAt, DateTime publishedAt, int visibility, String? content, int type, Map<String, dynamic>? meta, int viewsUnique, int viewsTotal, int upvotes, int downvotes, String? threadedPostId, SnPost? threadedPost, String? repliedPostId, SnPost? repliedPost, String? forwardedPostId, SnPost? forwardedPost, List<SnCloudFile> attachments, SnPublisher publisher, Map<String, int> reactionsCount, List<dynamic> reactions, List<dynamic> tags, List<dynamic> categories, List<dynamic> collections, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
-@override $SnPublisherCopyWith<$Res> get publisher;
+@override $SnPostCopyWith<$Res>? get threadedPost;@override $SnPostCopyWith<$Res>? get repliedPost;@override $SnPostCopyWith<$Res>? get forwardedPost;@override $SnPublisherCopyWith<$Res> get publisher;
 
 }
 /// @nodoc
@@ -249,7 +285,7 @@ class __$SnPostCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = freezed,Object? description = freezed,Object? language = freezed,Object? editedAt = freezed,Object? publishedAt = null,Object? visibility = null,Object? content = freezed,Object? type = null,Object? meta = freezed,Object? viewsUnique = null,Object? viewsTotal = null,Object? upvotes = null,Object? downvotes = null,Object? threadedPostId = freezed,Object? threadedPost = freezed,Object? repliedPostId = freezed,Object? repliedPost = freezed,Object? forwardedPostId = freezed,Object? forwardedPost = freezed,Object? attachments = null,Object? publisher = null,Object? reactionsCount = null,Object? reactions = null,Object? tags = null,Object? categories = null,Object? collections = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnPost(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,language: freezed == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String?,editedAt: freezed == editedAt ? _self.editedAt : editedAt // ignore: cast_nullable_to_non_nullable
@@ -263,12 +299,12 @@ as int,viewsTotal: null == viewsTotal ? _self.viewsTotal : viewsTotal // ignore:
 as int,upvotes: null == upvotes ? _self.upvotes : upvotes // ignore: cast_nullable_to_non_nullable
 as int,downvotes: null == downvotes ? _self.downvotes : downvotes // ignore: cast_nullable_to_non_nullable
 as int,threadedPostId: freezed == threadedPostId ? _self.threadedPostId : threadedPostId // ignore: cast_nullable_to_non_nullable
-as dynamic,threadedPost: freezed == threadedPost ? _self.threadedPost : threadedPost // ignore: cast_nullable_to_non_nullable
-as dynamic,repliedPostId: freezed == repliedPostId ? _self.repliedPostId : repliedPostId // ignore: cast_nullable_to_non_nullable
-as dynamic,repliedPost: freezed == repliedPost ? _self.repliedPost : repliedPost // ignore: cast_nullable_to_non_nullable
-as dynamic,forwardedPostId: freezed == forwardedPostId ? _self.forwardedPostId : forwardedPostId // ignore: cast_nullable_to_non_nullable
-as dynamic,forwardedPost: freezed == forwardedPost ? _self.forwardedPost : forwardedPost // ignore: cast_nullable_to_non_nullable
-as dynamic,attachments: null == attachments ? _self._attachments : attachments // ignore: cast_nullable_to_non_nullable
+as String?,threadedPost: freezed == threadedPost ? _self.threadedPost : threadedPost // ignore: cast_nullable_to_non_nullable
+as SnPost?,repliedPostId: freezed == repliedPostId ? _self.repliedPostId : repliedPostId // ignore: cast_nullable_to_non_nullable
+as String?,repliedPost: freezed == repliedPost ? _self.repliedPost : repliedPost // ignore: cast_nullable_to_non_nullable
+as SnPost?,forwardedPostId: freezed == forwardedPostId ? _self.forwardedPostId : forwardedPostId // ignore: cast_nullable_to_non_nullable
+as String?,forwardedPost: freezed == forwardedPost ? _self.forwardedPost : forwardedPost // ignore: cast_nullable_to_non_nullable
+as SnPost?,attachments: null == attachments ? _self._attachments : attachments // ignore: cast_nullable_to_non_nullable
 as List<SnCloudFile>,publisher: null == publisher ? _self.publisher : publisher // ignore: cast_nullable_to_non_nullable
 as SnPublisher,reactionsCount: null == reactionsCount ? _self._reactionsCount : reactionsCount // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,reactions: null == reactions ? _self._reactions : reactions // ignore: cast_nullable_to_non_nullable
@@ -286,6 +322,42 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
+$SnPostCopyWith<$Res>? get threadedPost {
+    if (_self.threadedPost == null) {
+    return null;
+  }
+
+  return $SnPostCopyWith<$Res>(_self.threadedPost!, (value) {
+    return _then(_self.copyWith(threadedPost: value));
+  });
+}/// Create a copy of SnPost
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SnPostCopyWith<$Res>? get repliedPost {
+    if (_self.repliedPost == null) {
+    return null;
+  }
+
+  return $SnPostCopyWith<$Res>(_self.repliedPost!, (value) {
+    return _then(_self.copyWith(repliedPost: value));
+  });
+}/// Create a copy of SnPost
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SnPostCopyWith<$Res>? get forwardedPost {
+    if (_self.forwardedPost == null) {
+    return null;
+  }
+
+  return $SnPostCopyWith<$Res>(_self.forwardedPost!, (value) {
+    return _then(_self.copyWith(forwardedPost: value));
+  });
+}/// Create a copy of SnPost
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
 $SnPublisherCopyWith<$Res> get publisher {
   
   return $SnPublisherCopyWith<$Res>(_self.publisher, (value) {
@@ -298,7 +370,7 @@ $SnPublisherCopyWith<$Res> get publisher {
 /// @nodoc
 mixin _$SnPublisher {
 
- int get id; int get publisherType; String get name; String get nick; String get bio; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; int get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; int get publisherType; String get name; String get nick; String get bio; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; String? get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnPublisher
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -331,7 +403,7 @@ abstract mixin class $SnPublisherCopyWith<$Res>  {
   factory $SnPublisherCopyWith(SnPublisher value, $Res Function(SnPublisher) _then) = _$SnPublisherCopyWithImpl;
 @useResult
 $Res call({
- int id, int publisherType, String name, String nick, String bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int publisherType, String name, String nick, String bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, String? accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -348,10 +420,10 @@ class _$SnPublisherCopyWithImpl<$Res>
 
 /// Create a copy of SnPublisher
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publisherType = null,Object? name = null,Object? nick = null,Object? bio = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? accountId = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publisherType = null,Object? name = null,Object? nick = null,Object? bio = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? accountId = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,publisherType: null == publisherType ? _self.publisherType : publisherType // ignore: cast_nullable_to_non_nullable
+as String,publisherType: null == publisherType ? _self.publisherType : publisherType // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,nick: null == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String,bio: null == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
@@ -359,8 +431,8 @@ as String,pictureId: freezed == pictureId ? _self.pictureId : pictureId // ignor
 as String?,picture: freezed == picture ? _self.picture : picture // ignore: cast_nullable_to_non_nullable
 as SnCloudFile?,backgroundId: freezed == backgroundId ? _self.backgroundId : backgroundId // ignore: cast_nullable_to_non_nullable
 as String?,background: freezed == background ? _self.background : background // ignore: cast_nullable_to_non_nullable
-as SnCloudFile?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as SnCloudFile?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -401,7 +473,7 @@ class _SnPublisher implements SnPublisher {
   const _SnPublisher({required this.id, required this.publisherType, required this.name, required this.nick, required this.bio, required this.pictureId, required this.picture, required this.backgroundId, required this.background, required this.accountId, required this.createdAt, required this.updatedAt, required this.deletedAt});
   factory _SnPublisher.fromJson(Map<String, dynamic> json) => _$SnPublisherFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  int publisherType;
 @override final  String name;
 @override final  String nick;
@@ -410,7 +482,7 @@ class _SnPublisher implements SnPublisher {
 @override final  SnCloudFile? picture;
 @override final  String? backgroundId;
 @override final  SnCloudFile? background;
-@override final  int accountId;
+@override final  String? accountId;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  DateTime? deletedAt;
@@ -448,7 +520,7 @@ abstract mixin class _$SnPublisherCopyWith<$Res> implements $SnPublisherCopyWith
   factory _$SnPublisherCopyWith(_SnPublisher value, $Res Function(_SnPublisher) _then) = __$SnPublisherCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int publisherType, String name, String nick, String bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int publisherType, String name, String nick, String bio, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, String? accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -465,10 +537,10 @@ class __$SnPublisherCopyWithImpl<$Res>
 
 /// Create a copy of SnPublisher
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publisherType = null,Object? name = null,Object? nick = null,Object? bio = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? accountId = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publisherType = null,Object? name = null,Object? nick = null,Object? bio = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? accountId = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnPublisher(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,publisherType: null == publisherType ? _self.publisherType : publisherType // ignore: cast_nullable_to_non_nullable
+as String,publisherType: null == publisherType ? _self.publisherType : publisherType // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,nick: null == nick ? _self.nick : nick // ignore: cast_nullable_to_non_nullable
 as String,bio: null == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
@@ -476,8 +548,8 @@ as String,pictureId: freezed == pictureId ? _self.pictureId : pictureId // ignor
 as String?,picture: freezed == picture ? _self.picture : picture // ignore: cast_nullable_to_non_nullable
 as SnCloudFile?,backgroundId: freezed == backgroundId ? _self.backgroundId : backgroundId // ignore: cast_nullable_to_non_nullable
 as String?,background: freezed == background ? _self.background : background // ignore: cast_nullable_to_non_nullable
-as SnCloudFile?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as SnCloudFile?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

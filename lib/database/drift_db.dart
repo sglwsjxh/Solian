@@ -14,7 +14,7 @@ class AppDatabase extends _$AppDatabase {
 
   // Methods for chat messages
   Future<List<ChatMessage>> getMessagesForRoom(
-    int roomId, {
+    String roomId, {
     int offset = 0,
     int limit = 20,
   }) {

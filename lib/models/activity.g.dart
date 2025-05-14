@@ -11,7 +11,7 @@ _SnActivity _$SnActivityFromJson(Map<String, dynamic> json) => _SnActivity(
   type: json['type'] as String,
   resourceIdentifier: json['resource_identifier'] as String,
   visibility: (json['visibility'] as num).toInt(),
-  accountId: (json['account_id'] as num).toInt(),
+  accountId: json['account_id'] as String,
   account: SnAccount.fromJson(json['account'] as Map<String, dynamic>),
   data: json['data'],
   createdAt: DateTime.parse(json['created_at'] as String),
@@ -41,7 +41,7 @@ _SnCheckInResult _$SnCheckInResultFromJson(Map<String, dynamic> json) =>
           (json['tips'] as List<dynamic>)
               .map((e) => SnFortuneTip.fromJson(e as Map<String, dynamic>))
               .toList(),
-      accountId: (json['account_id'] as num).toInt(),
+      accountId: json['account_id'] as String,
       account:
           json['account'] == null
               ? null

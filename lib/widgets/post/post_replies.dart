@@ -8,7 +8,7 @@ import 'package:styled_widget/styled_widget.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class PostRepliesList extends HookConsumerWidget {
-  final int postId;
+  final String postId;
   const PostRepliesList({super.key, required this.postId});
 
   @override
@@ -68,21 +68,19 @@ class PostRepliesList extends HookConsumerWidget {
   }
 }
 
-final postRepliesProvider = FutureProviderFamily<_PostRepliesController, int>((
-  ref,
-  postId,
-) async {
-  final client = ref.watch(apiClientProvider);
-  final controller = _PostRepliesController(client, postId);
-  await controller.fetchMore();
-  return controller;
-});
+final postRepliesProvider =
+    FutureProviderFamily<_PostRepliesController, String>((ref, postId) async {
+      final client = ref.watch(apiClientProvider);
+      final controller = _PostRepliesController(client, postId);
+      await controller.fetchMore();
+      return controller;
+    });
 
 class _PostRepliesController {
   _PostRepliesController(this._dio, this.parentId);
 
   final Dio _dio;
-  final int parentId;
+  final String parentId;
   final List<SnPost> posts = [];
   bool isLoading = false;
   bool hasReachedMax = false;

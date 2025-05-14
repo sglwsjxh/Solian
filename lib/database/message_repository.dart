@@ -102,7 +102,7 @@ class MessageRepository {
   }
 
   Future<List<LocalChatMessage>> _getCachedMessages(
-    int roomId, {
+    String roomId, {
     int offset = 0,
     int take = 20,
   }) async {
@@ -136,7 +136,7 @@ class MessageRepository {
   }
 
   Future<List<LocalChatMessage>> _fetchAndCacheMessages(
-    int roomId, {
+    String roomId, {
     int offset = 0,
     int take = 20,
   }) async {
@@ -172,7 +172,7 @@ class MessageRepository {
   Future<LocalChatMessage> sendMessage(
     String atk,
     String baseUrl,
-    int roomId,
+    String roomId,
     String content,
     String nonce, {
     required List<UniversalFile> attachments,

@@ -64,7 +64,7 @@ Map<String, dynamic> _$SnAuthChallengeToJson(_SnAuthChallenge instance) =>
 
 _SnAuthFactor _$SnAuthFactorFromJson(Map<String, dynamic> json) =>
     _SnAuthFactor(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as String,
       type: (json['type'] as num).toInt(),
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),

@@ -6,7 +6,7 @@ part of 'detail.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$postHash() => r'58de03954e284b5c04544b61ccb9cadfc45e9422';
+String _$postHash() => r'a5f66f47ed0eaef57e49518f6b764cdbfa725ad8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,7 +39,7 @@ class PostFamily extends Family<AsyncValue<SnPost?>> {
   const PostFamily();
 
   /// See also [post].
-  PostProvider call(int id) {
+  PostProvider call(String id) {
     return PostProvider(id);
   }
 
@@ -66,7 +66,7 @@ class PostFamily extends Family<AsyncValue<SnPost?>> {
 /// See also [post].
 class PostProvider extends AutoDisposeFutureProvider<SnPost?> {
   /// See also [post].
-  PostProvider(int id)
+  PostProvider(String id)
     : this._internal(
         (ref) => post(ref as PostRef, id),
         from: postProvider,
@@ -88,7 +88,7 @@ class PostProvider extends AutoDisposeFutureProvider<SnPost?> {
     required this.id,
   }) : super.internal();
 
-  final int id;
+  final String id;
 
   @override
   Override overrideWith(FutureOr<SnPost?> Function(PostRef provider) create) {
@@ -129,7 +129,7 @@ class PostProvider extends AutoDisposeFutureProvider<SnPost?> {
 // ignore: unused_element
 mixin PostRef on AutoDisposeFutureProviderRef<SnPost?> {
   /// The parameter `id` of this provider.
-  int get id;
+  String get id;
 }
 
 class _PostProviderElement extends AutoDisposeFutureProviderElement<SnPost?>
@@ -137,7 +137,7 @@ class _PostProviderElement extends AutoDisposeFutureProviderElement<SnPost?>
   _PostProviderElement(super.provider);
 
   @override
-  int get id => (origin as PostProvider).id;
+  String get id => (origin as PostProvider).id;
 }
 
 // ignore_for_file: type=lint

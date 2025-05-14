@@ -342,7 +342,7 @@ as DateTime?,
 /// @nodoc
 mixin _$SnAuthFactor {
 
- int get id; int get type; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; int get type; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnAuthFactor
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -375,7 +375,7 @@ abstract mixin class $SnAuthFactorCopyWith<$Res>  {
   factory $SnAuthFactorCopyWith(SnAuthFactor value, $Res Function(SnAuthFactor) _then) = _$SnAuthFactorCopyWithImpl;
 @useResult
 $Res call({
- int id, int type, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int type, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -395,7 +395,7 @@ class _$SnAuthFactorCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -413,7 +413,7 @@ class _SnAuthFactor implements SnAuthFactor {
   const _SnAuthFactor({required this.id, required this.type, required this.createdAt, required this.updatedAt, required this.deletedAt});
   factory _SnAuthFactor.fromJson(Map<String, dynamic> json) => _$SnAuthFactorFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  int type;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
@@ -452,7 +452,7 @@ abstract mixin class _$SnAuthFactorCopyWith<$Res> implements $SnAuthFactorCopyWi
   factory _$SnAuthFactorCopyWith(_SnAuthFactor value, $Res Function(_SnAuthFactor) _then) = __$SnAuthFactorCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int type, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, int type, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -472,7 +472,7 @@ class __$SnAuthFactorCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnAuthFactor(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable

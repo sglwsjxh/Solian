@@ -14,7 +14,7 @@ import 'package:styled_widget/styled_widget.dart';
 part 'detail.g.dart';
 
 @riverpod
-Future<SnPost?> post(Ref ref, int id) async {
+Future<SnPost?> post(Ref ref, String id) async {
   final client = ref.watch(apiClientProvider);
   final resp = await client.get('/posts/$id');
   return SnPost.fromJson(resp.data);
@@ -22,7 +22,7 @@ Future<SnPost?> post(Ref ref, int id) async {
 
 @RoutePage()
 class PostDetailScreen extends HookConsumerWidget {
-  final int id;
+  final String id;
   const PostDetailScreen({super.key, @PathParam('id') required this.id});
 
   @override

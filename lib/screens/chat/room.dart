@@ -24,27 +24,26 @@ import 'package:super_context_menu/super_context_menu.dart';
 import 'package:uuid/uuid.dart';
 import 'chat.dart';
 
-final messageRepositoryProvider = FutureProvider.family<MessageRepository, int>(
-  (ref, roomId) async {
-    final room = await ref.watch(chatroomProvider(roomId).future);
-    final identity = await ref.watch(chatroomIdentityProvider(roomId).future);
-    final apiClient = ref.watch(apiClientProvider);
-    final database = ref.watch(databaseProvider);
-    return MessageRepository(room!, identity!, apiClient, database);
-  },
-);
+final messageRepositoryProvider =
+    FutureProvider.family<MessageRepository, String>((ref, roomId) async {
+      final room = await ref.watch(chatroomProvider(roomId).future);
+      final identity = await ref.watch(chatroomIdentityProvider(roomId).future);
+      final apiClient = ref.watch(apiClientProvider);
+      final database = ref.watch(databaseProvider);
+      return MessageRepository(room!, identity!, apiClient, database);
+    });
 
 // Provider for messages with pagination
 final messagesProvider = StateNotifierProvider.family<
   MessagesNotifier,
   AsyncValue<List<LocalChatMessage>>,
-  int
+  String
 >((ref, roomId) => MessagesNotifier(ref, roomId));
 
 class MessagesNotifier
     extends StateNotifier<AsyncValue<List<LocalChatMessage>>> {
   final Ref _ref;
-  final int _roomId;
+  final String _roomId;
   int _currentPage = 0;
   static const int _pageSize = 20;
   bool _hasMore = true;
@@ -334,7 +333,7 @@ class MessagesNotifier
 
 @RoutePage()
 class ChatRoomScreen extends HookConsumerWidget {
-  final int id;
+  final String id;
   const ChatRoomScreen({super.key, @PathParam("id") required this.id});
 
   @override

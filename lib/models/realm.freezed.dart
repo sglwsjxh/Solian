@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SnRealm {
 
- int get id; String get slug; String get name; String get description; String? get verifiedAs; DateTime? get verifiedAt; bool get isCommunity; bool get isPublic; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; int get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; String get slug; String get name; String get description; String? get verifiedAs; DateTime? get verifiedAt; bool get isCommunity; bool get isPublic; String? get pictureId; SnCloudFile? get picture; String? get backgroundId; SnCloudFile? get background; String get accountId; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnRealm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $SnRealmCopyWith<$Res>  {
   factory $SnRealmCopyWith(SnRealm value, $Res Function(SnRealm) _then) = _$SnRealmCopyWithImpl;
 @useResult
 $Res call({
- int id, String slug, String name, String description, String? verifiedAs, DateTime? verifiedAt, bool isCommunity, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String slug, String name, String description, String? verifiedAs, DateTime? verifiedAt, bool isCommunity, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, String accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -69,7 +69,7 @@ class _$SnRealmCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? slug = null,Object? name = null,Object? description = null,Object? verifiedAs = freezed,Object? verifiedAt = freezed,Object? isCommunity = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? accountId = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
+as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,verifiedAs: freezed == verifiedAs ? _self.verifiedAs : verifiedAs // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,7 @@ as String?,picture: freezed == picture ? _self.picture : picture // ignore: cast
 as SnCloudFile?,backgroundId: freezed == backgroundId ? _self.backgroundId : backgroundId // ignore: cast_nullable_to_non_nullable
 as String?,background: freezed == background ? _self.background : background // ignore: cast_nullable_to_non_nullable
 as SnCloudFile?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -122,7 +122,7 @@ class _SnRealm implements SnRealm {
   const _SnRealm({required this.id, required this.slug, required this.name, required this.description, required this.verifiedAs, required this.verifiedAt, required this.isCommunity, required this.isPublic, required this.pictureId, required this.picture, required this.backgroundId, required this.background, required this.accountId, required this.createdAt, required this.updatedAt, required this.deletedAt});
   factory _SnRealm.fromJson(Map<String, dynamic> json) => _$SnRealmFromJson(json);
 
-@override final  int id;
+@override final  String id;
 @override final  String slug;
 @override final  String name;
 @override final  String description;
@@ -134,7 +134,7 @@ class _SnRealm implements SnRealm {
 @override final  SnCloudFile? picture;
 @override final  String? backgroundId;
 @override final  SnCloudFile? background;
-@override final  int accountId;
+@override final  String accountId;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  DateTime? deletedAt;
@@ -172,7 +172,7 @@ abstract mixin class _$SnRealmCopyWith<$Res> implements $SnRealmCopyWith<$Res> {
   factory _$SnRealmCopyWith(_SnRealm value, $Res Function(_SnRealm) _then) = __$SnRealmCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String slug, String name, String description, String? verifiedAs, DateTime? verifiedAt, bool isCommunity, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, int accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String slug, String name, String description, String? verifiedAs, DateTime? verifiedAt, bool isCommunity, bool isPublic, String? pictureId, SnCloudFile? picture, String? backgroundId, SnCloudFile? background, String accountId, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -192,7 +192,7 @@ class __$SnRealmCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? slug = null,Object? name = null,Object? description = null,Object? verifiedAs = freezed,Object? verifiedAt = freezed,Object? isCommunity = null,Object? isPublic = null,Object? pictureId = freezed,Object? picture = freezed,Object? backgroundId = freezed,Object? background = freezed,Object? accountId = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnRealm(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
+as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,verifiedAs: freezed == verifiedAs ? _self.verifiedAs : verifiedAs // ignore: cast_nullable_to_non_nullable
@@ -204,7 +204,7 @@ as String?,picture: freezed == picture ? _self.picture : picture // ignore: cast
 as SnCloudFile?,backgroundId: freezed == backgroundId ? _self.backgroundId : backgroundId // ignore: cast_nullable_to_non_nullable
 as String?,background: freezed == background ? _self.background : background // ignore: cast_nullable_to_non_nullable
 as SnCloudFile?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -242,7 +242,7 @@ $SnCloudFileCopyWith<$Res>? get background {
 /// @nodoc
 mixin _$SnRealmMember {
 
- int get realmId; SnRealm? get realm; int get accountId; SnAccount? get account; int get role; DateTime? get joinedAt; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get realmId; SnRealm? get realm; String get accountId; SnAccount? get account; int get role; DateTime? get joinedAt; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnRealmMember
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -275,7 +275,7 @@ abstract mixin class $SnRealmMemberCopyWith<$Res>  {
   factory $SnRealmMemberCopyWith(SnRealmMember value, $Res Function(SnRealmMember) _then) = _$SnRealmMemberCopyWithImpl;
 @useResult
 $Res call({
- int realmId, SnRealm? realm, int accountId, SnAccount? account, int role, DateTime? joinedAt, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String realmId, SnRealm? realm, String accountId, SnAccount? account, int role, DateTime? joinedAt, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -295,9 +295,9 @@ class _$SnRealmMemberCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? realmId = null,Object? realm = freezed,Object? accountId = null,Object? account = freezed,Object? role = null,Object? joinedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 realmId: null == realmId ? _self.realmId : realmId // ignore: cast_nullable_to_non_nullable
-as int,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
+as String,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
 as SnRealm?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as int,joinedAt: freezed == joinedAt ? _self.joinedAt : joinedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -341,9 +341,9 @@ class _SnRealmMember implements SnRealmMember {
   const _SnRealmMember({required this.realmId, required this.realm, required this.accountId, required this.account, required this.role, required this.joinedAt, required this.createdAt, required this.updatedAt, required this.deletedAt});
   factory _SnRealmMember.fromJson(Map<String, dynamic> json) => _$SnRealmMemberFromJson(json);
 
-@override final  int realmId;
+@override final  String realmId;
 @override final  SnRealm? realm;
-@override final  int accountId;
+@override final  String accountId;
 @override final  SnAccount? account;
 @override final  int role;
 @override final  DateTime? joinedAt;
@@ -384,7 +384,7 @@ abstract mixin class _$SnRealmMemberCopyWith<$Res> implements $SnRealmMemberCopy
   factory _$SnRealmMemberCopyWith(_SnRealmMember value, $Res Function(_SnRealmMember) _then) = __$SnRealmMemberCopyWithImpl;
 @override @useResult
 $Res call({
- int realmId, SnRealm? realm, int accountId, SnAccount? account, int role, DateTime? joinedAt, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String realmId, SnRealm? realm, String accountId, SnAccount? account, int role, DateTime? joinedAt, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -404,9 +404,9 @@ class __$SnRealmMemberCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? realmId = null,Object? realm = freezed,Object? accountId = null,Object? account = freezed,Object? role = null,Object? joinedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_SnRealmMember(
 realmId: null == realmId ? _self.realmId : realmId // ignore: cast_nullable_to_non_nullable
-as int,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
+as String,realm: freezed == realm ? _self.realm : realm // ignore: cast_nullable_to_non_nullable
 as SnRealm?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
+as String,account: freezed == account ? _self.account : account // ignore: cast_nullable_to_non_nullable
 as SnAccount?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as int,joinedAt: freezed == joinedAt ? _self.joinedAt : joinedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
