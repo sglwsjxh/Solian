@@ -62,20 +62,140 @@ class RelationshipListNotifier extends _$RelationshipListNotifier
       nextCursor: nextCursor,
     );
   }
+}
 
-  void updateOne(int index, SnRelationship relationship) {
-    final currentState = state.valueOrNull;
-    if (currentState == null) return;
+class RelationshipListTile extends StatelessWidget {
+  final SnRelationship relationship;
+  final bool submitting;
+  final VoidCallback? onAccept;
+  final VoidCallback? onDecline;
+  final VoidCallback? onCancel;
+  final bool showActions;
+  final String? currentUserId;
+  final bool showRelatedAccount;
+  final Function(SnRelationship, int)? onUpdateStatus;
 
-    final updatedItems = [...currentState.items];
-    updatedItems[index] = relationship;
+  const RelationshipListTile({
+    super.key,
+    required this.relationship,
+    this.submitting = false,
+    this.onAccept,
+    this.onDecline,
+    this.onCancel,
+    this.showActions = true,
+    required this.currentUserId,
+    this.showRelatedAccount = false,
+    this.onUpdateStatus,
+  });
 
-    state = AsyncData(
-      CursorPagingData(
-        items: updatedItems,
-        hasMore: currentState.hasMore,
-        nextCursor: currentState.nextCursor,
+  @override
+  Widget build(BuildContext context) {
+    final account =
+        showRelatedAccount ? relationship.related : relationship.account;
+    final isPending =
+        relationship.status == 0 && relationship.relatedId == currentUserId;
+    final isWaiting =
+        relationship.status == 0 && relationship.accountId == currentUserId;
+    final isEstablished = relationship.status == 1 || relationship.status == 2;
+
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 16, right: 12),
+      leading: ProfilePictureWidget(fileId: account.profile.pictureId),
+      title: Row(
+        spacing: 6,
+        children: [
+          Flexible(child: Text(account.nick)),
+          if (relationship.status == 1) // Friend
+            Badge(
+              label: Text('relationshipStatusFriend').tr(),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              textColor: Theme.of(context).colorScheme.onPrimary,
+            )
+          else if (relationship.status == 2) // Blocked
+            Badge(
+              label: Text('relationshipStatusBlocked').tr(),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              textColor: Theme.of(context).colorScheme.onError,
+            ),
+          if (isPending) // Pending
+            Badge(
+              label: Text('pendingRequest').tr(),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              textColor: Theme.of(context).colorScheme.onPrimary,
+            )
+          else if (isWaiting) // Waiting
+            Badge(
+              label: Text('pendingRequest').tr(),
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              textColor: Theme.of(context).colorScheme.onSecondary,
+            ),
+          if (relationship.expiredAt != null)
+            Badge(
+              label: Text(
+                'requestExpiredIn'.tr(
+                  args: [RelativeTime(context).format(relationship.expiredAt!)],
+                ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              textColor: Theme.of(context).colorScheme.onTertiary,
+            ),
+        ],
       ),
+      subtitle: Text('@${account.name}'),
+      trailing:
+          showActions
+              ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isPending && onAccept != null)
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: submitting ? null : onAccept,
+                      icon: const Icon(Symbols.check),
+                    ),
+                  if (isPending && onDecline != null)
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: submitting ? null : onDecline,
+                      icon: const Icon(Symbols.close),
+                    ),
+                  if (isWaiting && onCancel != null)
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: submitting ? null : onCancel,
+                      icon: const Icon(Symbols.close),
+                    ),
+                  if (isEstablished && onUpdateStatus != null)
+                    PopupMenuButton(
+                      padding: EdgeInsets.zero,
+                      icon: const Icon(Symbols.more_vert),
+                      itemBuilder:
+                          (context) => [
+                            if (relationship.status == 1) // If friend
+                              PopupMenuItem(
+                                child: ListTile(
+                                  leading: const Icon(Symbols.block),
+                                  title: Text('blockUser').tr(),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                onTap:
+                                    () => onUpdateStatus?.call(relationship, 2),
+                              )
+                            else if (relationship.status == 2) // If blocked
+                              PopupMenuItem(
+                                child: ListTile(
+                                  leading: const Icon(Symbols.person_add),
+                                  title: Text('unblockUser').tr(),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                onTap:
+                                    () => onUpdateStatus?.call(relationship, 1),
+                              ),
+                          ],
+                    ),
+                ],
+              )
+              : null,
     );
   }
 }
@@ -135,6 +255,18 @@ class RelationshipScreen extends HookConsumerWidget {
       }
     }
 
+    Future<void> updateRelationship(
+      SnRelationship relationship,
+      int newStatus,
+    ) async {
+      final client = ref.read(apiClientProvider);
+      await client.patch(
+        '/relationships/${relationship.accountId}',
+        data: {'status': newStatus},
+      );
+      relationshipNotifier.forceRefresh();
+    }
+
     final user = ref.watch(userInfoProvider);
     final requests = ref.watch(sentFriendRequestProvider);
 
@@ -181,90 +313,15 @@ class RelationshipScreen extends HookConsumerWidget {
                       }
 
                       final relationship = data.items[index];
-                      final account = relationship.account;
-                      final isPending =
-                          relationship.status == 0 &&
-                          relationship.relatedId == user.value?.id;
-                      final isWaiting =
-                          relationship.status == 0 &&
-                          relationship.accountId == user.value?.id;
-
-                      return ListTile(
-                        contentPadding: const EdgeInsets.only(
-                          left: 16,
-                          right: 12,
-                        ),
-                        leading: ProfilePictureWidget(
-                          fileId: account.profile.pictureId,
-                        ),
-                        title: Row(
-                          spacing: 6,
-                          children: [
-                            Flexible(child: Text(account.nick)),
-                            if (isPending) // Pending
-                              Badge(
-                                label: Text('pendingRequest').tr(),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                textColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                              )
-                            else if (isWaiting) // Waiting
-                              Badge(
-                                label: Text('pendingRequest').tr(),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                textColor:
-                                    Theme.of(context).colorScheme.onSecondary,
-                              ),
-                            if (relationship.expiredAt != null)
-                              Badge(
-                                label: Text(
-                                  'requestExpiredIn'.tr(
-                                    args: [
-                                      RelativeTime(
-                                        context,
-                                      ).format(relationship.expiredAt!),
-                                    ],
-                                  ),
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.tertiary,
-                                textColor:
-                                    Theme.of(context).colorScheme.onTertiary,
-                              ),
-                          ],
-                        ),
-                        subtitle: Text('@${account.name}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (isPending)
-                              IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed:
-                                    submitting.value
-                                        ? null
-                                        : () => handleFriendRequest(
-                                          relationship,
-                                          true,
-                                        ),
-                                icon: const Icon(Symbols.check),
-                              ),
-                            if (isPending)
-                              IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed:
-                                    submitting.value
-                                        ? null
-                                        : () => handleFriendRequest(
-                                          relationship,
-                                          false,
-                                        ),
-                                icon: const Icon(Symbols.close),
-                              ),
-                          ],
-                        ),
+                      return RelationshipListTile(
+                        relationship: relationship,
+                        submitting: submitting.value,
+                        onAccept: () => handleFriendRequest(relationship, true),
+                        onDecline:
+                            () => handleFriendRequest(relationship, false),
+                        currentUserId: user.value?.id,
+                        showRelatedAccount: false,
+                        onUpdateStatus: updateRelationship,
                       );
                     },
                   ),
@@ -282,11 +339,12 @@ class _SentFriendRequestsSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final requests = ref.watch(sentFriendRequestProvider);
+    final user = ref.watch(userInfoProvider);
 
     Future<void> cancelRequest(SnRelationship request) async {
       try {
         final client = ref.read(apiClientProvider);
-        await client.delete('/relationships/${request.accountId}/friends');
+        await client.delete('/relationships/${request.relatedId}/friends');
         ref.invalidate(sentFriendRequestProvider);
       } catch (err) {
         showErrorAlert(err);
@@ -349,42 +407,11 @@ class _SentFriendRequestsSheet extends HookConsumerWidget {
                             itemCount: items.length,
                             itemBuilder: (context, index) {
                               final request = items[index];
-                              final account = request.related;
-                              return ListTile(
-                                leading: ProfilePictureWidget(
-                                  fileId: account.profile.pictureId,
-                                ),
-                                title: Text(account.nick),
-                                subtitle: Text('@${account.name}'),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    if (request.expiredAt != null)
-                                      Badge(
-                                        label: Text(
-                                          'requestExpiredIn'.tr(
-                                            args: [
-                                              RelativeTime(
-                                                context,
-                                              ).format(request.expiredAt!),
-                                            ],
-                                          ),
-                                        ),
-                                        backgroundColor:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.tertiary,
-                                        textColor:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.onTertiary,
-                                      ),
-                                    IconButton(
-                                      icon: const Icon(Symbols.close),
-                                      onPressed: () => cancelRequest(request),
-                                    ),
-                                  ],
-                                ),
+                              return RelationshipListTile(
+                                relationship: request,
+                                onCancel: () => cancelRequest(request),
+                                currentUserId: user.value?.id,
+                                showRelatedAccount: true,
                               );
                             },
                           ),
