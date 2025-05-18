@@ -46,7 +46,7 @@ class AccountProfileScreen extends HookConsumerWidget {
     final iconShadow = Shadow(
       color: Colors.black54,
       blurRadius: 5.0,
-      offset: Offset(1.0, 1.0),
+      offset: const Offset(1.0, 1.0),
     );
 
     return account.when(
@@ -78,36 +78,39 @@ class AccountProfileScreen extends HookConsumerWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 20,
-                    children: [
-                      ProfilePictureWidget(
-                        fileId: data.profile.pictureId!,
-                        radius: 32,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              spacing: 6,
-                              children: [
-                                Text(data.nick).fontSize(20),
-                                Text(
-                                  '@${data.name}',
-                                ).fontSize(14).opacity(0.85),
-                              ],
-                            ),
-                            AccountStatusWidget(
-                              uname: name,
-                              padding: EdgeInsets.zero,
-                            ),
-                          ],
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ProfilePictureWidget(
+                          fileId: data.profile.pictureId,
+                          radius: 32,
                         ),
-                      ),
-                    ],
-                  ).padding(horizontal: 24, top: 24, bottom: 8),
+                        const Gap(20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(data.nick).fontSize(20),
+                                  const Gap(6),
+                                  Text(
+                                    '@${data.name}',
+                                  ).fontSize(14).opacity(0.85),
+                                ],
+                              ),
+                              AccountStatusWidget(
+                                uname: name,
+                                padding: EdgeInsets.zero,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 if (data.badges.isNotEmpty)
                   SliverToBoxAdapter(
@@ -127,7 +130,7 @@ class AccountProfileScreen extends HookConsumerWidget {
                 SliverToBoxAdapter(
                   child: const Divider(height: 1).padding(bottom: 24),
                 ),
-                if (data.profile.bio != null && data.profile.bio!.isNotEmpty)
+                if (data.profile.bio?.isNotEmpty ?? false)
                   SliverToBoxAdapter(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,

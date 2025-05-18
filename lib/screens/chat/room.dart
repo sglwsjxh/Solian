@@ -18,7 +18,7 @@ import 'package:island/pods/websocket.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/screens/posts/compose.dart';
 import 'package:island/widgets/alert.dart';
-import 'package:island/widgets/chat/message_bubble.dart';
+import 'package:island/widgets/chat/message_item.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/response.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -506,17 +506,17 @@ class ChatRoomScreen extends HookConsumerWidget {
                               return chatIdentity.when(
                                 skipError: true,
                                 data:
-                                    (identity) => MessageBubble(
+                                    (identity) => MessageItem(
                                       message: message,
                                       isCurrentUser:
                                           identity?.id == message.senderId,
                                       onAction: (action) {
                                         switch (action) {
-                                          case MessageBubbleAction.delete:
+                                          case MessageItemAction.delete:
                                             messagesNotifier.deleteMessage(
                                               message.id,
                                             );
-                                          case MessageBubbleAction.edit:
+                                          case MessageItemAction.edit:
                                             messageEditingTo.value =
                                                 message.toRemoteMessage();
                                             messageController.text =
@@ -535,10 +535,10 @@ class ChatRoomScreen extends HookConsumerWidget {
                                                           ),
                                                     )
                                                     .toList();
-                                          case MessageBubbleAction.forward:
+                                          case MessageItemAction.forward:
                                             messageForwardingTo.value =
                                                 message.toRemoteMessage();
-                                          case MessageBubbleAction.reply:
+                                          case MessageItemAction.reply:
                                             messageReplyingTo.value =
                                                 message.toRemoteMessage();
                                         }
@@ -548,7 +548,7 @@ class ChatRoomScreen extends HookConsumerWidget {
                                       showAvatar: isLastInGroup,
                                     ),
                                 loading:
-                                    () => MessageBubble(
+                                    () => MessageItem(
                                       message: message,
                                       isCurrentUser: false,
                                       onAction: null,

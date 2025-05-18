@@ -183,47 +183,75 @@ class SplitAvatarWidget extends ConsumerWidget {
                   ),
                 ],
               )
-            else ...[
-              Positioned(
-                top: 0,
-                left: 0,
-                child: _buildQuadrant(context, filesId[0], ref, radius),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: _buildQuadrant(context, filesId[1], ref, radius),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                child: _buildQuadrant(context, filesId[2], ref, radius),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child:
-                    filesId.length > 4
-                        ? Container(
-                          width: radius,
-                          height: radius,
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          child: Center(
-                            child: Text(
-                              '+${filesId.length - 3}',
-                              style: TextStyle(
-                                fontSize: radius * 0.4,
-                                color:
-                                    Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimaryContainer,
-                              ),
-                            ),
+            else
+              Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildQuadrant(
+                            context,
+                            filesId[0],
+                            ref,
+                            radius,
                           ),
-                        )
-                        : _buildQuadrant(context, filesId[3], ref, radius),
+                        ),
+                        Expanded(
+                          child: _buildQuadrant(
+                            context,
+                            filesId[1],
+                            ref,
+                            radius,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildQuadrant(
+                            context,
+                            filesId[2],
+                            ref,
+                            radius,
+                          ),
+                        ),
+                        Expanded(
+                          child:
+                              filesId.length > 4
+                                  ? Container(
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primaryContainer,
+                                    child: Center(
+                                      child: Text(
+                                        '+${filesId.length - 3}',
+                                        style: TextStyle(
+                                          fontSize: radius * 0.4,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onPrimaryContainer,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  : _buildQuadrant(
+                                    context,
+                                    filesId[3],
+                                    ref,
+                                    radius,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
           ],
         ),
       ),

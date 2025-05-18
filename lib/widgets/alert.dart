@@ -6,8 +6,16 @@ import 'package:styled_widget/styled_widget.dart';
 export 'content/alert.native.dart'
     if (dart.library.html) 'content/alert.web.dart';
 
-void showSnackBar(BuildContext context, String message) {
-  showSnackBar(context, message);
+void showSnackBar(
+  BuildContext context,
+  String message, {
+  SnackBarAction? action,
+}) {
+  showSnackBar(context, message, action: action);
+}
+
+void clearSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).clearSnackBars();
 }
 
 OverlayEntry? _loadingOverlay;

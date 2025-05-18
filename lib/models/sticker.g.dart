@@ -43,7 +43,7 @@ _SnStickerPack _$SnStickerPackFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       description: json['description'] as String,
       prefix: json['prefix'] as String,
-      publisherId: (json['publisher_id'] as num).toInt(),
+      publisherId: json['publisher_id'] as String,
       publisher:
           json['publisher'] == null
               ? null

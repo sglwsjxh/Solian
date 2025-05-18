@@ -215,7 +215,7 @@ $SnStickerPackCopyWith<$Res>? get pack {
 /// @nodoc
 mixin _$SnStickerPack {
 
- String get id; String get name; String get description; String get prefix; int get publisherId; SnPublisher? get publisher; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
+ String get id; String get name; String get description; String get prefix; String get publisherId; SnPublisher? get publisher; DateTime get createdAt; DateTime get updatedAt; DateTime? get deletedAt;
 /// Create a copy of SnStickerPack
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -248,7 +248,7 @@ abstract mixin class $SnStickerPackCopyWith<$Res>  {
   factory $SnStickerPackCopyWith(SnStickerPack value, $Res Function(SnStickerPack) _then) = _$SnStickerPackCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String description, String prefix, int publisherId, SnPublisher? publisher, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String name, String description, String prefix, String publisherId, SnPublisher? publisher, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -272,7 +272,7 @@ as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,prefix: null == prefix ? _self.prefix : prefix // ignore: cast_nullable_to_non_nullable
 as String,publisherId: null == publisherId ? _self.publisherId : publisherId // ignore: cast_nullable_to_non_nullable
-as int,publisher: freezed == publisher ? _self.publisher : publisher // ignore: cast_nullable_to_non_nullable
+as String,publisher: freezed == publisher ? _self.publisher : publisher // ignore: cast_nullable_to_non_nullable
 as SnPublisher?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -306,7 +306,7 @@ class _SnStickerPack implements SnStickerPack {
 @override final  String name;
 @override final  String description;
 @override final  String prefix;
-@override final  int publisherId;
+@override final  String publisherId;
 @override final  SnPublisher? publisher;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
@@ -345,7 +345,7 @@ abstract mixin class _$SnStickerPackCopyWith<$Res> implements $SnStickerPackCopy
   factory _$SnStickerPackCopyWith(_SnStickerPack value, $Res Function(_SnStickerPack) _then) = __$SnStickerPackCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String description, String prefix, int publisherId, SnPublisher? publisher, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
+ String id, String name, String description, String prefix, String publisherId, SnPublisher? publisher, DateTime createdAt, DateTime updatedAt, DateTime? deletedAt
 });
 
 
@@ -369,7 +369,7 @@ as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,prefix: null == prefix ? _self.prefix : prefix // ignore: cast_nullable_to_non_nullable
 as String,publisherId: null == publisherId ? _self.publisherId : publisherId // ignore: cast_nullable_to_non_nullable
-as int,publisher: freezed == publisher ? _self.publisher : publisher // ignore: cast_nullable_to_non_nullable
+as String,publisher: freezed == publisher ? _self.publisher : publisher // ignore: cast_nullable_to_non_nullable
 as SnPublisher?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable

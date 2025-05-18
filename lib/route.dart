@@ -24,7 +24,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SettingsRoute.page, path: '/settings'),
     AutoRoute(page: LoginRoute.page, path: '/auth/login'),
     AutoRoute(page: CreateAccountRoute.page, path: '/auth/create-account'),
-    AutoRoute(page: MyselfProfileRoute.page, path: '/account/me'),
     AutoRoute(page: AccountSettingsRoute.page, path: '/account/settings'),
     AutoRoute(
       page: MyselfEventCalendarRoute.page,

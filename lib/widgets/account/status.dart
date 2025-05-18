@@ -115,7 +115,7 @@ class AccountStatusWidget extends HookConsumerWidget {
       child: Row(
         spacing: 4,
         children: [
-          if (userStatus.value!.isOnline)
+          if (userStatus.value?.isOnline ?? false)
             Icon(
               Symbols.circle,
               fill: 1,

@@ -30,7 +30,7 @@ abstract class SnStickerPack with _$SnStickerPack {
     required String name,
     required String description,
     required String prefix,
-    required int publisherId,
+    required String publisherId,
     required SnPublisher? publisher,
     required DateTime createdAt,
     required DateTime updatedAt,

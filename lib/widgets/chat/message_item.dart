@@ -4,29 +4,29 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/database/message.dart';
 import 'package:island/models/chat.dart';
+import 'package:island/screens/chat/room.dart';
 import 'package:island/widgets/content/cloud_file_collection.dart';
 import 'package:island/widgets/content/cloud_files.dart';
+import 'package:island/widgets/content/markdown.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:super_context_menu/super_context_menu.dart';
 
-import '../../screens/chat/room.dart';
-
-class MessageBubbleAction {
+class MessageItemAction {
   static const String edit = "edit";
   static const String delete = "delete";
   static const String reply = "reply";
   static const String forward = "forward";
 }
 
-class MessageBubble extends HookConsumerWidget {
+class MessageItem extends HookConsumerWidget {
   final LocalChatMessage message;
   final bool isCurrentUser;
   final Function(String action)? onAction;
   final Map<int, double>? progress;
   final bool showAvatar;
 
-  const MessageBubble({
+  const MessageItem({
     super.key,
     required this.message,
     required this.isCurrentUser,
@@ -45,6 +45,10 @@ class MessageBubble extends HookConsumerWidget {
         isCurrentUser
             ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5)
             : Theme.of(context).colorScheme.surfaceContainer;
+    final linkColor = Color.alphaBlend(
+      Theme.of(context).colorScheme.primary,
+      containerColor,
+    );
 
     final remoteMessage = message.toRemoteMessage();
     final sender = remoteMessage.sender;
@@ -59,7 +63,7 @@ class MessageBubble extends HookConsumerWidget {
                 title: 'edit'.tr(),
                 image: MenuImage.icon(Symbols.edit),
                 callback: () {
-                  onAction!.call(MessageBubbleAction.edit);
+                  onAction!.call(MessageItemAction.edit);
                 },
               ),
             if (isCurrentUser)
@@ -67,7 +71,7 @@ class MessageBubble extends HookConsumerWidget {
                 title: 'delete'.tr(),
                 image: MenuImage.icon(Symbols.delete),
                 callback: () {
-                  onAction!.call(MessageBubbleAction.delete);
+                  onAction!.call(MessageItemAction.delete);
                 },
               ),
             if (isCurrentUser) MenuSeparator(),
@@ -75,14 +79,14 @@ class MessageBubble extends HookConsumerWidget {
               title: 'reply'.tr(),
               image: MenuImage.icon(Symbols.reply),
               callback: () {
-                onAction!.call(MessageBubbleAction.reply);
+                onAction!.call(MessageItemAction.reply);
               },
             ),
             MenuAction(
               title: 'forward'.tr(),
               image: MenuImage.icon(Symbols.forward),
               callback: () {
-                onAction!.call(MessageBubbleAction.forward);
+                onAction!.call(MessageItemAction.forward);
               },
             ),
           ],
@@ -93,27 +97,20 @@ class MessageBubble extends HookConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: Column(
-            crossAxisAlignment:
-                isCurrentUser
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (showAvatar && !isCurrentUser) ...[
+              if (showAvatar) ...[
                 Row(
                   spacing: 8,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (!isCurrentUser)
-                      ProfilePictureWidget(
-                        fileId: sender.account.profile.pictureId,
-                        radius: 18,
-                      ),
+                    ProfilePictureWidget(
+                      fileId: sender.account.profile.pictureId,
+                      radius: 16,
+                    ),
                     Column(
-                      crossAxisAlignment:
-                          isCurrentUser
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 2,
                       children: [
                         Text(
@@ -124,41 +121,24 @@ class MessageBubble extends HookConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           spacing: 5,
                           children: [
-                            if (isCurrentUser)
-                              Badge(
-                                label:
-                                    Text(
-                                      sender.role >= 100
-                                          ? 'permissionOwner'
-                                          : sender.role >= 50
-                                          ? 'permissionModerator'
-                                          : 'permissionMember',
-                                    ).tr(),
-                              ),
                             Text(
                               sender.account.nick,
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
-                            if (!isCurrentUser)
-                              Badge(
-                                label:
-                                    Text(
-                                      sender.role >= 100
-                                          ? 'permissionOwner'
-                                          : sender.role >= 50
-                                          ? 'permissionModerator'
-                                          : 'permissionMember',
-                                    ).tr(),
-                              ),
+                            Badge(
+                              label:
+                                  Text(
+                                    sender.role >= 100
+                                        ? 'permissionOwner'
+                                        : sender.role >= 50
+                                        ? 'permissionModerator'
+                                        : 'permissionMember',
+                                  ).tr(),
+                            ),
                           ],
                         ),
                       ],
                     ),
-                    if (isCurrentUser)
-                      ProfilePictureWidget(
-                        fileId: sender.account.profile.pictureId,
-                        radius: 18,
-                      ),
                   ],
                 ),
                 const Gap(4),
@@ -169,14 +149,6 @@ class MessageBubble extends HookConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if (isCurrentUser)
-                    _buildMessageIndicators(
-                      context,
-                      textColor,
-                      remoteMessage,
-                      message,
-                      isCurrentUser,
-                    ),
                   Flexible(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -203,9 +175,14 @@ class MessageBubble extends HookConsumerWidget {
                               isReply: false,
                             ),
                           if (remoteMessage.content?.isNotEmpty ?? false)
-                            Text(
-                              remoteMessage.content!,
-                              style: TextStyle(color: textColor),
+                            MarkdownTextContent(
+                              content: remoteMessage.content!,
+                              isSelectable: true,
+                              linkStyle: TextStyle(color: linkColor),
+                              textStyle: TextStyle(
+                                color: textColor,
+                                fontSize: 14,
+                              ),
                             ),
                           if (remoteMessage.attachments.isNotEmpty)
                             CloudFileList(
@@ -260,14 +237,13 @@ class MessageBubble extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  if (!isCurrentUser)
-                    _buildMessageIndicators(
-                      context,
-                      textColor,
-                      remoteMessage,
-                      message,
-                      isCurrentUser,
-                    ),
+                  _buildMessageIndicators(
+                    context,
+                    textColor,
+                    remoteMessage,
+                    message,
+                    isCurrentUser,
+                  ),
                 ],
               ),
             ],
@@ -288,10 +264,6 @@ class MessageBubble extends HookConsumerWidget {
       spacing: 4,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          DateFormat.Hm().format(message.createdAt.toLocal()),
-          style: TextStyle(fontSize: 11, color: textColor.withOpacity(0.7)),
-        ),
         if (remoteMessage.editedAt != null)
           Text(
             'edited'.tr().toLowerCase(),
