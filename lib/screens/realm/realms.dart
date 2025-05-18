@@ -379,7 +379,7 @@ class _RealmInviteSheet extends HookConsumerWidget {
     Future<void> acceptInvite(SnRealmMember invite) async {
       try {
         final client = ref.read(apiClientProvider);
-        await client.post('/realms/invites/${invite.realm!.id}/accept');
+        await client.post('/realms/invites/${invite.realm!.slug}/accept');
         ref.invalidate(realmInvitesProvider);
         ref.invalidate(realmsJoinedProvider);
       } catch (err) {
@@ -390,7 +390,7 @@ class _RealmInviteSheet extends HookConsumerWidget {
     Future<void> declineInvite(SnRealmMember invite) async {
       try {
         final client = ref.read(apiClientProvider);
-        await client.post('/realms/invites/${invite.realm!.id}/decline');
+        await client.post('/realms/invites/${invite.realm!.slug}/decline');
         ref.invalidate(realmInvitesProvider);
       } catch (err) {
         showErrorAlert(err);
@@ -452,7 +452,6 @@ class _RealmInviteSheet extends HookConsumerWidget {
                               return ListTile(
                                 leading: ProfilePictureWidget(
                                   fileId: invite.realm!.pictureId,
-                                  radius: 24,
                                   fallbackIcon: Symbols.group,
                                 ),
                                 title: Text(invite.realm!.name),

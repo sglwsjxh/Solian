@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:island/route.gr.dart';
+import 'package:island/services/responsive.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 @RoutePage()
@@ -10,6 +11,9 @@ class TabsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final useHorizontalLayout =
+        MediaQuery.of(context).size.width > kWideScreenWidth;
+
     return AutoTabsRouter.pageView(
       routes: const [
         ExploreRoute(),
@@ -17,6 +21,8 @@ class TabsScreen extends StatelessWidget {
         RealmListRoute(),
         AccountRoute(),
       ],
+      scrollDirection: useHorizontalLayout ? Axis.vertical : Axis.horizontal,
+      physics: const NeverScrollableScrollPhysics(),
       builder: (context, child, _) {
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(

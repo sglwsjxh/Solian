@@ -759,9 +759,13 @@ class _ChatInput extends StatelessWidget {
                     controller: messageController,
                     decoration: InputDecoration(
                       hintText:
-                          chatRoom.type == 1
+                          (chatRoom.type == 1 && chatRoom.name == null)
                               ? 'chatDirectMessageHint'.tr(
-                                args: [chatRoom.members!.first.account.nick],
+                                args: [
+                                  chatRoom.members!
+                                      .map((e) => e.account.nick)
+                                      .join(', '),
+                                ],
                               )
                               : 'chatMessageHint'.tr(args: [chatRoom.name!]),
                       border: InputBorder.none,

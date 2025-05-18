@@ -1,0 +1,1 @@
+const kWideScreenWidth = 640;

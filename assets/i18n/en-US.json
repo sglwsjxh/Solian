@@ -248,5 +248,9 @@
   "openLinkConfirm": "Leaving the Solar Network",
   "openLinkConfirmDescription": "You're going to leave the Solar Network and open the link ({}) in your browser. It is not related to Solar Network. Beware of phishing and scams.",
   "brokenLink": "Unable open link {}... It might be broken or missing uri parts...",
-  "copyToClipboard": "Copy to clipboard"
+  "copyToClipboard": "Copy to clipboard",
+  "leaveChatRoom": "Leave Chat Room",
+  "leaveChatRoomHint": "Are you sure to leave this chat room?",
+  "leaveRealm": "Leave Realm",
+  "leaveRealmHint": "Are you sure to leave this realm?"
 }

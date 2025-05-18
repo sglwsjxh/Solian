@@ -27,13 +27,6 @@ class ChatDetailScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final roomState = ref.watch(chatroomProvider(id));
-    final roomIdentity = ref.watch(chatroomIdentityProvider(id));
-
-    final isModerator = roomIdentity.when(
-      loading: () => false,
-      error: (error, _) => false,
-      data: (identity) => (identity?.role ?? 0) >= 50,
-    );
 
     const iconShadow = Shadow(
       color: Colors.black54,
@@ -110,8 +103,7 @@ class ChatDetailScreen extends HookConsumerWidget {
                         );
                       },
                     ),
-                    if (isModerator)
-                      _ChatRoomActionMenu(id: id, iconShadow: iconShadow),
+                    _ChatRoomActionMenu(id: id, iconShadow: iconShadow),
                     const Gap(8),
                   ],
                 ),
@@ -144,54 +136,93 @@ class _ChatRoomActionMenu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final chatIdentity = ref.watch(chatroomIdentityProvider(id));
+
     return PopupMenuButton(
       icon: Icon(Icons.more_vert, shadows: [iconShadow]),
       itemBuilder:
           (context) => [
-            PopupMenuItem(
-              onTap: () {
-                context.router.replace(EditChatRoute(id: id));
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.edit,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
-                  const Gap(12),
-                  const Text('editChatRoom').tr(),
-                ],
+            if ((chatIdentity.value?.role ?? 0) >= 50)
+              PopupMenuItem(
+                onTap: () {
+                  context.router.replace(EditChatRoute(id: id));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                    const Gap(12),
+                    const Text('editChatRoom').tr(),
+                  ],
+                ),
               ),
-            ),
-            PopupMenuItem(
-              child: Row(
-                children: [
-                  const Icon(Icons.delete, color: Colors.red),
-                  const Gap(12),
-                  const Text(
-                    'deleteChatRoom',
-                    style: TextStyle(color: Colors.red),
-                  ).tr(),
-                ],
-              ),
-              onTap: () {
-                showConfirmAlert(
-                  'deleteChatRoomHint'.tr(),
-                  'deleteChatRoom'.tr(),
-                ).then((confirm) {
-                  if (confirm) {
-                    final client = ref.watch(apiClientProvider);
-                    client.delete('/chat/$id');
-                    ref.invalidate(chatroomsJoinedProvider);
-                    if (context.mounted) {
-                      context.router.popUntil(
-                        (route) => route is ChatRoomRoute,
-                      );
+            if ((chatIdentity.value?.role ?? 0) >= 100)
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    const Icon(Icons.delete, color: Colors.red),
+                    const Gap(12),
+                    const Text(
+                      'deleteChatRoom',
+                      style: TextStyle(color: Colors.red),
+                    ).tr(),
+                  ],
+                ),
+                onTap: () {
+                  showConfirmAlert(
+                    'deleteChatRoomHint'.tr(),
+                    'deleteChatRoom'.tr(),
+                  ).then((confirm) {
+                    if (confirm) {
+                      final client = ref.watch(apiClientProvider);
+                      client.delete('/chat/$id');
+                      ref.invalidate(chatroomsJoinedProvider);
+                      if (context.mounted) {
+                        context.router.popUntil(
+                          (route) => route is ChatRoomRoute,
+                        );
+                      }
                     }
-                  }
-                });
-              },
-            ),
+                  });
+                },
+              )
+            else
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.exit_to_app,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const Gap(12),
+                    Text(
+                      'leaveChatRoom',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ).tr(),
+                  ],
+                ),
+                onTap: () {
+                  showConfirmAlert(
+                    'leaveChatRoomHint'.tr(),
+                    'leaveChatRoom'.tr(),
+                  ).then((confirm) {
+                    if (confirm) {
+                      final client = ref.watch(apiClientProvider);
+                      client.delete('/chat/$id/members/me');
+                      ref.invalidate(chatroomsJoinedProvider);
+                      if (context.mounted) {
+                        context.router.popUntil(
+                          (route) => route is ChatRoomRoute,
+                        );
+                      }
+                    }
+                  });
+                },
+              ),
           ],
     );
   }

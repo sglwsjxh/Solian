@@ -34,13 +34,6 @@ class RealmDetailScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final realmState = ref.watch(realmProvider(slug));
-    final realmIdentity = ref.watch(realmIdentityProvider(slug));
-
-    final isModerator = realmIdentity.when(
-      loading: () => false,
-      error: (error, _) => false,
-      data: (identity) => (identity?.role ?? 0) >= 50,
-    );
 
     const iconShadow = Shadow(
       color: Colors.black54,
@@ -88,8 +81,7 @@ class RealmDetailScreen extends HookConsumerWidget {
                         );
                       },
                     ),
-                    if (isModerator)
-                      _RealmActionMenu(realmSlug: slug, iconShadow: iconShadow),
+                    _RealmActionMenu(realmSlug: slug, iconShadow: iconShadow),
                     const Gap(8),
                   ],
                 ),
@@ -122,49 +114,135 @@ class _RealmActionMenu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final realmIdentityAsync = ref.watch(realmIdentityProvider(realmSlug));
+    final isModerator = realmIdentityAsync.when(
+      data: (identity) => (identity?.role ?? 0) >= 50,
+      loading: () => false,
+      error: (_, __) => false,
+    );
+
     return PopupMenuButton(
       icon: Icon(Icons.more_vert, shadows: [iconShadow]),
       itemBuilder:
           (context) => [
-            PopupMenuItem(
-              onTap: () {
-                context.router.replace(EditRealmRoute(slug: realmSlug));
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.edit,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+            if (isModerator)
+              PopupMenuItem(
+                onTap: () {
+                  context.router.replace(EditRealmRoute(slug: realmSlug));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                    const Gap(12),
+                    const Text('editRealm').tr(),
+                  ],
+                ),
+              ),
+            realmIdentityAsync.when(
+              data:
+                  (identity) =>
+                      (identity?.role ?? 0) >= 100
+                          ? PopupMenuItem(
+                            child: Row(
+                              children: [
+                                const Icon(Icons.delete, color: Colors.red),
+                                const Gap(12),
+                                const Text(
+                                  'deleteRealm',
+                                  style: TextStyle(color: Colors.red),
+                                ).tr(),
+                              ],
+                            ),
+                            onTap: () {
+                              showConfirmAlert(
+                                'deleteRealmHint'.tr(),
+                                'deleteRealm'.tr(),
+                              ).then((confirm) {
+                                if (confirm) {
+                                  final client = ref.watch(apiClientProvider);
+                                  client.delete('/realms/$realmSlug');
+                                  ref.invalidate(realmsJoinedProvider);
+                                  if (context.mounted)
+                                    context.router.maybePop(true);
+                                }
+                              });
+                            },
+                          )
+                          : PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.exit_to_app,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                                const Gap(12),
+                                Text(
+                                  'leaveRealm',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ).tr(),
+                              ],
+                            ),
+                            onTap: () {
+                              showConfirmAlert(
+                                'leaveRealmHint'.tr(),
+                                'leaveRealm'.tr(),
+                              ).then((confirm) {
+                                if (confirm) {
+                                  final client = ref.watch(apiClientProvider);
+                                  client.delete(
+                                    '/realms/$realmSlug/members/me',
+                                  );
+                                  ref.invalidate(realmsJoinedProvider);
+                                  if (context.mounted) {
+                                    context.router.maybePop(true);
+                                  }
+                                }
+                              });
+                            },
+                          ),
+              loading:
+                  () => const PopupMenuItem(
+                    enabled: false,
+                    child: Center(child: CircularProgressIndicator()),
                   ),
-                  const Gap(12),
-                  const Text('editRealm').tr(),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              child: Row(
-                children: [
-                  const Icon(Icons.delete, color: Colors.red),
-                  const Gap(12),
-                  const Text(
-                    'deleteRealm',
-                    style: TextStyle(color: Colors.red),
-                  ).tr(),
-                ],
-              ),
-              onTap: () {
-                showConfirmAlert(
-                  'deleteRealmHint'.tr(),
-                  'deleteRealm'.tr(),
-                ).then((confirm) {
-                  if (confirm) {
-                    final client = ref.watch(apiClientProvider);
-                    client.delete('/realms/$realmSlug');
-                    ref.invalidate(realmsJoinedProvider);
-                    if (context.mounted) context.router.maybePop(true);
-                  }
-                });
-              },
+              error:
+                  (_, __) => PopupMenuItem(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.exit_to_app,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        const Gap(12),
+                        Text(
+                          'leaveRealm',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ).tr(),
+                      ],
+                    ),
+                    onTap: () {
+                      showConfirmAlert(
+                        'leaveRealmHint'.tr(),
+                        'leaveRealm'.tr(),
+                      ).then((confirm) {
+                        if (confirm) {
+                          final client = ref.watch(apiClientProvider);
+                          client.delete('/realms/$realmSlug/members/me');
+                          ref.invalidate(realmsJoinedProvider);
+                          if (context.mounted) {
+                            context.router.maybePop(true);
+                          }
+                        }
+                      });
+                    },
+                  ),
             ),
           ],
     );

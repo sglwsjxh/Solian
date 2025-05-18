@@ -101,6 +101,7 @@ class MessageItem extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (showAvatar) ...[
+                const Gap(8),
                 Row(
                   spacing: 8,
                   mainAxisSize: MainAxisSize.min,
