@@ -115,6 +115,11 @@ class ChatListScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isWide = isWideScreen(context);
+    if (isWide && !isAside) {
+      return Container(color: Theme.of(context).scaffoldBackgroundColor);
+    }
+
     final chats = ref.watch(chatroomsJoinedProvider);
     final chatInvites = ref.watch(chatroomInvitesProvider);
 
@@ -131,12 +136,6 @@ class ChatListScreen extends HookConsumerWidget {
       } catch (err) {
         showErrorAlert(err);
       }
-    }
-
-    final isWide = isWideScreen(context);
-
-    if (isWide && !isAside) {
-      return SizedBox.shrink();
     }
 
     return AppScaffold(
@@ -222,7 +221,7 @@ class ChatListScreen extends HookConsumerWidget {
                     room: item,
                     isDirect: item.type == 1,
                     onTap: () {
-                      if (isWide) {
+                      if (context.router.topRoute.name == ChatRoomRoute.name) {
                         context.router.replace(ChatRoomRoute(id: item.id));
                       } else {
                         context.router.push(ChatRoomRoute(id: item.id));

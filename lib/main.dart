@@ -17,6 +17,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:island/pods/userinfo.dart';
 import 'package:island/pods/websocket.dart';
 import 'package:island/route.dart';
+import 'package:island/screens/auth/tabs.dart';
 import 'package:island/services/notify.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:relative_time/relative_time.dart';
@@ -102,7 +103,16 @@ class IslandApp extends HookConsumerWidget {
       theme: theme?.light,
       darkTheme: theme?.dark,
       themeMode: ThemeMode.system,
-      routerConfig: _appRouter.config(),
+      routerConfig: _appRouter.config(
+        navigatorObservers:
+            () => [
+              TabNavigationObserver(
+                onChange: (route) {
+                  ref.read(currentRouteProvider.notifier).state = route;
+                },
+              ),
+            ],
+      ),
       supportedLocales: context.supportedLocales,
       localizationsDelegates: [
         ...context.localizationDelegates,
@@ -117,7 +127,10 @@ class IslandApp extends HookConsumerWidget {
               builder:
                   (_) => WindowScaffold(
                     router: _appRouter,
-                    child: child ?? const SizedBox.shrink(),
+                    child: TabsNavigationWidget(
+                      router: _appRouter,
+                      child: child ?? const SizedBox.shrink(),
+                    ),
                   ),
             ),
           ],

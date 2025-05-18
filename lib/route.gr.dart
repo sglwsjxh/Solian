@@ -10,8 +10,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i25;
+import 'package:flutter/foundation.dart' as _i27;
 import 'package:flutter/material.dart' as _i26;
-import 'package:island/models/post.dart' as _i27;
+import 'package:island/models/post.dart' as _i28;
+import 'package:island/route.dart' as _i29;
 import 'package:island/screens/account.dart' as _i2;
 import 'package:island/screens/account/me/event_calendar.dart' as _i15;
 import 'package:island/screens/account/me/publishers.dart' as _i9;
@@ -81,18 +83,41 @@ class AccountProfileRouteArgs {
 
 /// generated route for
 /// [_i2.AccountScreen]
-class AccountRoute extends _i25.PageRouteInfo<void> {
-  const AccountRoute({List<_i25.PageRouteInfo>? children})
-    : super(AccountRoute.name, initialChildren: children);
+class AccountRoute extends _i25.PageRouteInfo<AccountRouteArgs> {
+  AccountRoute({
+    _i27.Key? key,
+    bool isAside = false,
+    List<_i25.PageRouteInfo>? children,
+  }) : super(
+         AccountRoute.name,
+         args: AccountRouteArgs(key: key, isAside: isAside),
+         initialChildren: children,
+       );
 
   static const String name = 'AccountRoute';
 
   static _i25.PageInfo page = _i25.PageInfo(
     name,
     builder: (data) {
-      return const _i2.AccountScreen();
+      final args = data.argsAs<AccountRouteArgs>(
+        orElse: () => const AccountRouteArgs(),
+      );
+      return _i2.AccountScreen(key: args.key, isAside: args.isAside);
     },
   );
+}
+
+class AccountRouteArgs {
+  const AccountRouteArgs({this.key, this.isAside = false});
+
+  final _i27.Key? key;
+
+  final bool isAside;
+
+  @override
+  String toString() {
+    return 'AccountRouteArgs{key: $key, isAside: $isAside}';
+  }
 }
 
 /// generated route for
@@ -107,6 +132,22 @@ class AccountSettingsRoute extends _i25.PageRouteInfo<void> {
     name,
     builder: (data) {
       return const _i3.AccountSettingsScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [_i2.AccountShellScreen]
+class AccountShellRoute extends _i25.PageRouteInfo<void> {
+  const AccountShellRoute({List<_i25.PageRouteInfo>? children})
+    : super(AccountShellRoute.name, initialChildren: children);
+
+  static const String name = 'AccountShellRoute';
+
+  static _i25.PageInfo page = _i25.PageInfo(
+    name,
+    builder: (data) {
+      return const _i2.AccountShellScreen();
     },
   );
 }
@@ -154,18 +195,41 @@ class ChatDetailRouteArgs {
 
 /// generated route for
 /// [_i5.ChatListScreen]
-class ChatListRoute extends _i25.PageRouteInfo<void> {
-  const ChatListRoute({List<_i25.PageRouteInfo>? children})
-    : super(ChatListRoute.name, initialChildren: children);
+class ChatListRoute extends _i25.PageRouteInfo<ChatListRouteArgs> {
+  ChatListRoute({
+    _i26.Key? key,
+    bool isAside = false,
+    List<_i25.PageRouteInfo>? children,
+  }) : super(
+         ChatListRoute.name,
+         args: ChatListRouteArgs(key: key, isAside: isAside),
+         initialChildren: children,
+       );
 
   static const String name = 'ChatListRoute';
 
   static _i25.PageInfo page = _i25.PageInfo(
     name,
     builder: (data) {
-      return const _i5.ChatListScreen();
+      final args = data.argsAs<ChatListRouteArgs>(
+        orElse: () => const ChatListRouteArgs(),
+      );
+      return _i5.ChatListScreen(key: args.key, isAside: args.isAside);
     },
   );
+}
+
+class ChatListRouteArgs {
+  const ChatListRouteArgs({this.key, this.isAside = false});
+
+  final _i26.Key? key;
+
+  final bool isAside;
+
+  @override
+  String toString() {
+    return 'ChatListRouteArgs{key: $key, isAside: $isAside}';
+  }
 }
 
 /// generated route for
@@ -697,7 +761,7 @@ class NewStickersRouteArgs {
 class PostComposeRoute extends _i25.PageRouteInfo<PostComposeRouteArgs> {
   PostComposeRoute({
     _i26.Key? key,
-    _i27.SnPost? originalPost,
+    _i28.SnPost? originalPost,
     List<_i25.PageRouteInfo>? children,
   }) : super(
          PostComposeRoute.name,
@@ -726,7 +790,7 @@ class PostComposeRouteArgs {
 
   final _i26.Key? key;
 
-  final _i27.SnPost? originalPost;
+  final _i28.SnPost? originalPost;
 
   @override
   String toString() {
@@ -1047,19 +1111,52 @@ class StickersRouteArgs {
 }
 
 /// generated route for
-/// [_i22.TabsScreen]
-class TabsRoute extends _i25.PageRouteInfo<void> {
-  const TabsRoute({List<_i25.PageRouteInfo>? children})
-    : super(TabsRoute.name, initialChildren: children);
+/// [_i22.TabsNavigationWidget]
+class TabsNavigationWidget
+    extends _i25.PageRouteInfo<TabsNavigationWidgetArgs> {
+  TabsNavigationWidget({
+    _i26.Key? key,
+    required _i26.Widget child,
+    required _i29.AppRouter router,
+    List<_i25.PageRouteInfo>? children,
+  }) : super(
+         TabsNavigationWidget.name,
+         args: TabsNavigationWidgetArgs(key: key, child: child, router: router),
+         initialChildren: children,
+       );
 
-  static const String name = 'TabsRoute';
+  static const String name = 'TabsNavigationWidget';
 
   static _i25.PageInfo page = _i25.PageInfo(
     name,
     builder: (data) {
-      return const _i22.TabsScreen();
+      final args = data.argsAs<TabsNavigationWidgetArgs>();
+      return _i22.TabsNavigationWidget(
+        key: args.key,
+        child: args.child,
+        router: args.router,
+      );
     },
   );
+}
+
+class TabsNavigationWidgetArgs {
+  const TabsNavigationWidgetArgs({
+    this.key,
+    required this.child,
+    required this.router,
+  });
+
+  final _i26.Key? key;
+
+  final _i26.Widget child;
+
+  final _i29.AppRouter router;
+
+  @override
+  String toString() {
+    return 'TabsNavigationWidgetArgs{key: $key, child: $child, router: $router}';
+  }
 }
 
 /// generated route for

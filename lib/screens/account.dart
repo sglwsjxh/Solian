@@ -9,6 +9,7 @@ import 'package:island/pods/message.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/pods/userinfo.dart';
 import 'package:island/route.gr.dart';
+import 'package:island/services/responsive.dart';
 import 'package:island/widgets/account/status.dart';
 import 'package:island/widgets/account/leveling_progress.dart';
 import 'package:island/widgets/app_scaffold.dart';
@@ -17,11 +18,39 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 @RoutePage()
-class AccountScreen extends HookConsumerWidget {
-  const AccountScreen({super.key});
+class AccountShellScreen extends HookConsumerWidget {
+  const AccountShellScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isWide = isWideScreen(context);
+
+    if (isWide) {
+      return Row(
+        children: [
+          SizedBox(width: 360, child: AccountScreen(isAside: true)),
+          VerticalDivider(width: 1),
+          Expanded(child: AutoRouter()),
+        ],
+      );
+    }
+
+    return AutoRouter();
+  }
+}
+
+@RoutePage()
+class AccountScreen extends HookConsumerWidget {
+  final bool isAside;
+  const AccountScreen({super.key, this.isAside = false});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isWide = isWideScreen(context);
+    if (isWide && !isAside) {
+      return Container(color: Theme.of(context).scaffoldBackgroundColor);
+    }
+
     final user = ref.watch(userInfoProvider);
 
     if (!user.hasValue || user.value == null) {

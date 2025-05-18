@@ -2,18 +2,53 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:island/route.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/services/responsive.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-@RoutePage()
-class TabsScreen extends StatelessWidget {
-  const TabsScreen({super.key});
+final currentRouteProvider = StateProvider<String?>((ref) => null);
+
+class TabNavigationObserver extends AutoRouterObserver {
+  Function(String?) onChange;
+  TabNavigationObserver({required this.onChange});
 
   @override
-  Widget build(BuildContext context) {
+  void didPush(Route route, Route? previousRoute) {
+    Future(() {
+      print('didPush: ${route.settings.name}');
+      onChange(route.settings.name);
+    });
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    Future(() {
+      print('didPop: ${previousRoute?.settings.name}');
+      onChange(previousRoute?.settings.name);
+    });
+  }
+}
+
+@RoutePage()
+class TabsNavigationWidget extends HookConsumerWidget {
+  final Widget child;
+  final AppRouter router;
+  const TabsNavigationWidget({
+    super.key,
+    required this.child,
+    required this.router,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final useHorizontalLayout = isWideScreen(context);
     final useExpandableLayout = isWidestScreen(context);
+    final currentRoute = ref.watch(currentRouteProvider);
+    print('currentRoute: $currentRoute');
+
+    int activeIndex = 0;
 
     final destinations = [
       NavigationDestination(
@@ -31,90 +66,93 @@ class TabsScreen extends StatelessWidget {
       ),
     ];
 
-    final routes = [
+    final routes = <PageRouteInfo>[
       ExploreRoute(),
       ChatListRoute(),
       RealmListRoute(),
       AccountRoute(),
     ];
+    final routeNames = [
+      ExploreRoute.name,
+      ChatListRoute.name,
+      RealmListRoute.name,
+      AccountRoute.name,
+      ChatShellRoute.name,
+      AccountShellRoute.name,
+    ];
 
-    return AutoTabsRouter.tabBar(
-      routes: routes,
-      scrollDirection: useHorizontalLayout ? Axis.vertical : Axis.horizontal,
-      physics: const NeverScrollableScrollPhysics(),
-      builder: (context, child, _) {
-        final tabsRouter = AutoTabsRouter.of(context);
+    activeIndex = routes.indexWhere((route) => route.routeName == currentRoute);
+    if (activeIndex == -1) {
+      activeIndex = 0;
+    }
 
-        // Check if current route is a tab route
-        final currentRoute = context.router.topRoute;
-        final isTabRoute = routes.any(
-          (route) => route.routeName == currentRoute.name,
-        );
+    final isTabRoute = routeNames.any((route) {
+      return route == currentRoute;
+    });
 
-        return Scaffold(
-          extendBodyBehindAppBar: true,
-          backgroundColor: Colors.transparent,
-          body:
-              useHorizontalLayout
-                  ? Row(
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      body:
+          useHorizontalLayout
+              ? Row(
+                children: [
+                  Column(
                     children: [
-                      if (isTabRoute)
-                        Column(
-                          children: [
-                            Gap(MediaQuery.of(context).padding.top + 8),
-                            if (useExpandableLayout)
-                              Expanded(
-                                child: NavigationDrawer(
-                                  backgroundColor: Colors.transparent,
-                                  children: [
-                                    for (final destination in destinations)
-                                      NavigationDrawerDestination(
-                                        label: Text(destination.label),
-                                        icon: destination.icon,
+                      Gap(MediaQuery.of(context).padding.top + 8),
+                      if (useExpandableLayout)
+                        Expanded(
+                          child: NavigationDrawer(
+                            backgroundColor: Colors.transparent,
+                            children: [
+                              for (final destination in destinations)
+                                NavigationDrawerDestination(
+                                  label: Text(destination.label),
+                                  icon: destination.icon,
+                                ),
+                            ],
+                          ),
+                        )
+                      else
+                        Expanded(
+                          child: NavigationRail(
+                            selectedIndex: activeIndex,
+                            onDestinationSelected: (index) {
+                              router.replace(routes[index]);
+                            },
+                            labelType: NavigationRailLabelType.all,
+                            destinations:
+                                destinations
+                                    .map(
+                                      (d) => NavigationRailDestination(
+                                        icon: d.icon,
+                                        label: Text(d.label),
                                       ),
-                                  ],
-                                ),
-                              )
-                            else
-                              Expanded(
-                                child: NavigationRail(
-                                  selectedIndex: tabsRouter.activeIndex,
-                                  onDestinationSelected:
-                                      tabsRouter.setActiveIndex,
-                                  labelType: NavigationRailLabelType.all,
-                                  destinations:
-                                      destinations
-                                          .map(
-                                            (d) => NavigationRailDestination(
-                                              icon: d.icon,
-                                              label: Text(d.label),
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                              ),
-                            Gap(MediaQuery.of(context).padding.bottom + 8),
-                          ],
+                                    )
+                                    .toList(),
+                          ),
                         ),
-                      if (isTabRoute)
-                        VerticalDivider(
-                          color: Theme.of(context).dividerColor,
-                          width: 1 / MediaQuery.of(context).devicePixelRatio,
-                        ),
-                      Expanded(child: child),
+                      Gap(MediaQuery.of(context).padding.bottom + 8),
                     ],
-                  )
-                  : child,
-          bottomNavigationBar:
-              !useHorizontalLayout && isTabRoute
-                  ? NavigationBar(
-                    selectedIndex: tabsRouter.activeIndex,
-                    onDestinationSelected: tabsRouter.setActiveIndex,
-                    destinations: destinations,
-                  )
-                  : null,
-        );
-      },
+                  ),
+                  VerticalDivider(
+                    color: Theme.of(context).dividerColor,
+                    width: 1 / MediaQuery.of(context).devicePixelRatio,
+                  ),
+                  Expanded(child: child),
+                ],
+              )
+              : child,
+      bottomNavigationBar:
+          !useHorizontalLayout && isTabRoute
+              ? NavigationBar(
+                selectedIndex: activeIndex,
+                onDestinationSelected: (index) {
+                  router.replace(routes[index]);
+                },
+                destinations: destinations,
+              )
+              : null,
     );
   }
 }
