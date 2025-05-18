@@ -151,92 +151,77 @@ class MessageItem extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Flexible(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (remoteMessage.repliedMessageId != null)
-                            MessageQuoteWidget(
-                              message: message,
-                              textColor: textColor,
-                              isReply: true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (remoteMessage.repliedMessageId != null)
+                          MessageQuoteWidget(
+                            message: message,
+                            textColor: textColor,
+                            isReply: true,
+                          ),
+                        if (remoteMessage.forwardedMessageId != null)
+                          MessageQuoteWidget(
+                            message: message,
+                            textColor: textColor,
+                            isReply: false,
+                          ),
+                        if (remoteMessage.content?.isNotEmpty ?? false)
+                          MarkdownTextContent(
+                            content: remoteMessage.content!,
+                            isSelectable: true,
+                            linkStyle: TextStyle(color: linkColor),
+                            textStyle: TextStyle(
+                              color: textColor,
+                              fontSize: 14,
                             ),
-                          if (remoteMessage.forwardedMessageId != null)
-                            MessageQuoteWidget(
-                              message: message,
-                              textColor: textColor,
-                              isReply: false,
-                            ),
-                          if (remoteMessage.content?.isNotEmpty ?? false)
-                            MarkdownTextContent(
-                              content: remoteMessage.content!,
-                              isSelectable: true,
-                              linkStyle: TextStyle(color: linkColor),
-                              textStyle: TextStyle(
-                                color: textColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          if (remoteMessage.attachments.isNotEmpty)
-                            CloudFileList(
-                              files: remoteMessage.attachments,
-                              maxWidth: MediaQuery.of(context).size.width * 0.8,
-                            ).padding(top: 4),
-                          if (progress != null && progress!.isNotEmpty)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              spacing: 8,
-                              children: [
-                                if ((remoteMessage.content?.isNotEmpty ??
-                                    false))
-                                  const Gap(0),
-                                for (var entry in progress!.entries)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'fileUploadingProgress'.tr(
-                                          args: [
-                                            (entry.key + 1).toString(),
-                                            entry.value.toStringAsFixed(1),
-                                          ],
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: textColor.withOpacity(0.8),
-                                        ),
-                                      ),
-                                      const Gap(4),
-                                      LinearProgressIndicator(
-                                        value: entry.value / 100,
-                                        backgroundColor:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.surfaceVariant,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
+                          ),
+                        if (remoteMessage.attachments.isNotEmpty)
+                          CloudFileList(
+                            files: remoteMessage.attachments,
+                            maxWidth: MediaQuery.of(context).size.width * 0.8,
+                          ).padding(top: 4),
+                        if (progress != null && progress!.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            spacing: 8,
+                            children: [
+                              if ((remoteMessage.content?.isNotEmpty ?? false))
                                 const Gap(0),
-                              ],
-                            ),
-                        ],
-                      ),
-                    ),
+                              for (var entry in progress!.entries)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'fileUploadingProgress'.tr(
+                                        args: [
+                                          (entry.key + 1).toString(),
+                                          entry.value.toStringAsFixed(1),
+                                        ],
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: textColor.withOpacity(0.8),
+                                      ),
+                                    ),
+                                    const Gap(4),
+                                    LinearProgressIndicator(
+                                      value: entry.value / 100,
+                                      backgroundColor:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceVariant,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              const Gap(0),
+                            ],
+                          ),
+                      ],
+                    ).padding(left: 40),
                   ),
                   _buildMessageIndicators(
                     context,

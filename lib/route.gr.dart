@@ -210,6 +210,22 @@ class ChatRoomRouteArgs {
 }
 
 /// generated route for
+/// [_i5.ChatShellScreen]
+class ChatShellRoute extends _i25.PageRouteInfo<void> {
+  const ChatShellRoute({List<_i25.PageRouteInfo>? children})
+    : super(ChatShellRoute.name, initialChildren: children);
+
+  static const String name = 'ChatShellRoute';
+
+  static _i25.PageInfo page = _i25.PageInfo(
+    name,
+    builder: (data) {
+      return const _i5.ChatShellScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [_i7.CreateAccountScreen]
 class CreateAccountRoute extends _i25.PageRouteInfo<void> {
   const CreateAccountRoute({List<_i25.PageRouteInfo>? children})

@@ -17,7 +17,9 @@ import 'package:island/pods/network.dart';
 import 'package:island/pods/websocket.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/screens/posts/compose.dart';
+import 'package:island/services/responsive.dart';
 import 'package:island/widgets/alert.dart';
+import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/chat/message_item.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/response.dart';
@@ -415,46 +417,96 @@ class ChatRoomScreen extends HookConsumerWidget {
       }
     }
 
+    final compactHeader = isWideScreen(context);
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 64,
+        leading: !compactHeader ? const Center(child: PageBackButton()) : null,
+        automaticallyImplyLeading: false,
+        toolbarHeight: compactHeader ? null : 64,
         title: chatRoom.when(
           data:
-              (room) => Column(
-                spacing: 4,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 26,
-                    width: 26,
-                    child:
-                        (room!.type == 1 && room.pictureId == null)
-                            ? SplitAvatarWidget(
-                              filesId:
-                                  room.members!
-                                      .map((e) => e.account.profile.pictureId)
-                                      .toList(),
-                            )
-                            : room.pictureId != null
-                            ? ProfilePictureWidget(
-                              fileId: room.pictureId,
-                              fallbackIcon: Symbols.chat,
-                            )
-                            : CircleAvatar(
-                              child: Text(
-                                room.name![0].toUpperCase(),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                  ),
-                  Text(
-                    (room.type == 1 && room.name == null)
-                        ? room.members!.map((e) => e.account.nick).join(', ')
-                        : room.name!,
-                  ).fontSize(15),
-                ],
-              ),
+              (room) =>
+                  compactHeader
+                      ? Row(
+                        spacing: 8,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 26,
+                            width: 26,
+                            child:
+                                (room!.type == 1 && room.pictureId == null)
+                                    ? SplitAvatarWidget(
+                                      filesId:
+                                          room.members!
+                                              .map(
+                                                (e) =>
+                                                    e.account.profile.pictureId,
+                                              )
+                                              .toList(),
+                                    )
+                                    : room.pictureId != null
+                                    ? ProfilePictureWidget(
+                                      fileId: room.pictureId,
+                                      fallbackIcon: Symbols.chat,
+                                    )
+                                    : CircleAvatar(
+                                      child: Text(
+                                        room.name![0].toUpperCase(),
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                          ),
+                          Text(
+                            (room.type == 1 && room.name == null)
+                                ? room.members!
+                                    .map((e) => e.account.nick)
+                                    .join(', ')
+                                : room.name!,
+                          ).fontSize(19),
+                        ],
+                      )
+                      : Column(
+                        spacing: 4,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 26,
+                            width: 26,
+                            child:
+                                (room!.type == 1 && room.pictureId == null)
+                                    ? SplitAvatarWidget(
+                                      filesId:
+                                          room.members!
+                                              .map(
+                                                (e) =>
+                                                    e.account.profile.pictureId,
+                                              )
+                                              .toList(),
+                                    )
+                                    : room.pictureId != null
+                                    ? ProfilePictureWidget(
+                                      fileId: room.pictureId,
+                                      fallbackIcon: Symbols.chat,
+                                    )
+                                    : CircleAvatar(
+                                      child: Text(
+                                        room.name![0].toUpperCase(),
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                          ),
+                          Text(
+                            (room.type == 1 && room.name == null)
+                                ? room.members!
+                                    .map((e) => e.account.nick)
+                                    .join(', ')
+                                : room.name!,
+                          ).fontSize(15),
+                        ],
+                      ),
           loading: () => const Text('Loading...'),
           error:
               (err, __) => ResponseErrorWidget(

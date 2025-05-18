@@ -16,11 +16,13 @@ import 'package:island/pods/network.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/screens/realm/realms.dart';
 import 'package:island/services/file.dart';
+import 'package:island/services/responsive.dart';
 import 'package:island/widgets/account/account_picker.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/realms/selection_dropdown.dart';
+import 'package:island/widgets/response.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -69,11 +71,7 @@ class ChatRoomListTile extends StatelessWidget {
               ? Text(room.members!.map((e) => '@${e.account.name}').join(', '))
               : Text(room.description ?? 'descriptionNone'.tr()),
       trailing: trailing,
-      onTap:
-          onTap ??
-          () {
-            context.pushRoute(ChatRoomRoute(id: room.id));
-          },
+      onTap: onTap,
     );
   }
 }
@@ -89,8 +87,31 @@ Future<List<SnChatRoom>> chatroomsJoined(Ref ref) async {
 }
 
 @RoutePage()
+class ChatShellScreen extends HookConsumerWidget {
+  const ChatShellScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isWide = isWideScreen(context);
+
+    if (isWide) {
+      return Row(
+        children: [
+          SizedBox(width: 320, child: ChatListScreen(isAside: true)),
+          VerticalDivider(width: 1),
+          Expanded(child: AutoRouter()),
+        ],
+      );
+    }
+
+    return AutoRouter();
+  }
+}
+
+@RoutePage()
 class ChatListScreen extends HookConsumerWidget {
-  const ChatListScreen({super.key});
+  final bool isAside;
+  const ChatListScreen({super.key, this.isAside = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,6 +131,12 @@ class ChatListScreen extends HookConsumerWidget {
       } catch (err) {
         showErrorAlert(err);
       }
+    }
+
+    final isWide = isWideScreen(context);
+
+    if (isWide && !isAside) {
+      return SizedBox.shrink();
     }
 
     return AppScaffold(
@@ -191,15 +218,25 @@ class ChatListScreen extends HookConsumerWidget {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final item = items[index];
-                  return ChatRoomListTile(room: item, isDirect: item.type == 1);
+                  return ChatRoomListTile(
+                    room: item,
+                    isDirect: item.type == 1,
+                    onTap: () {
+                      if (isWide) {
+                        context.router.replace(ChatRoomRoute(id: item.id));
+                      } else {
+                        context.router.push(ChatRoomRoute(id: item.id));
+                      }
+                    },
+                  );
                 },
               ),
             ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error:
-            (error, stack) => GestureDetector(
-              child: Center(child: Text('Error: $error')),
-              onTap: () {
+            (error, stack) => ResponseErrorWidget(
+              error: error,
+              onRetry: () {
                 ref.invalidate(chatroomsJoinedProvider);
               },
             ),
