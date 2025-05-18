@@ -240,6 +240,8 @@
   "fileUploadingProgress": "Uploading file #{}: {}%",
   "removeChatMember": "Remove Chat Room Member",
   "removeChatMemberHint": "Are you sure to remove this member from the room?",
+  "removeRealmMember": "Remove Realm Member",
+  "removeRealmMemberHint": "Are you sure to remove this member from the realm?",
   "memberRole": "Member Role",
   "memberRoleHint": "Greater number has higher permission.",
   "memberRoleEdit": "Edit role for @{}"
