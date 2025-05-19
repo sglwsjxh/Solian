@@ -146,7 +146,6 @@ class MessageRepository {
       queryParameters: {'offset': offset, 'take': take},
     );
 
-    final total = int.parse(response.headers.value('X-Total') ?? '0');
     final List<dynamic> data = response.data;
 
     final messages =

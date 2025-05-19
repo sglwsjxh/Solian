@@ -11,6 +11,7 @@ import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/models/post.dart';
 import 'package:island/widgets/check_in.dart';
 import 'package:island/widgets/post/post_item.dart';
+import 'package:island/widgets/tour/tour.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_paging_utils/riverpod_paging_utils.dart';
@@ -27,74 +28,77 @@ class ExploreScreen extends ConsumerWidget {
     final user = ref.watch(userInfoProvider);
     final activitiesNotifier = ref.watch(activityListNotifierProvider.notifier);
 
-    return AppScaffold(
-      appBar: AppBar(title: const Text('explore').tr()),
-      floatingActionButton: FloatingActionButton(
-        heroTag: Key("explore-page-fab"),
-        onPressed: () {
-          context.router.push(PostComposeRoute()).then((value) {
-            if (value != null) {
-              activitiesNotifier.forceRefresh();
-            }
-          });
-        },
-        child: const Icon(Symbols.edit),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: RefreshIndicator(
-        onRefresh: () => Future.sync(activitiesNotifier.forceRefresh),
-        child: PagingHelperView(
-          provider: activityListNotifierProvider,
-          futureRefreshable: activityListNotifierProvider.future,
-          notifierRefreshable: activityListNotifierProvider.notifier,
-          contentBuilder:
-              (data, widgetCount, endItemView) => CustomScrollView(
-                slivers: [
-                  if (user.hasValue) SliverToBoxAdapter(child: CheckInWidget()),
-                  SliverList.builder(
-                    itemCount: widgetCount,
-                    itemBuilder: (context, index) {
-                      if (index == widgetCount - 1) {
-                        return endItemView;
-                      }
+    return TourTriggerWidget(
+      child: AppScaffold(
+        appBar: AppBar(title: const Text('explore').tr()),
+        floatingActionButton: FloatingActionButton(
+          heroTag: Key("explore-page-fab"),
+          onPressed: () {
+            context.router.push(PostComposeRoute()).then((value) {
+              if (value != null) {
+                activitiesNotifier.forceRefresh();
+              }
+            });
+          },
+          child: const Icon(Symbols.edit),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        body: RefreshIndicator(
+          onRefresh: () => Future.sync(activitiesNotifier.forceRefresh),
+          child: PagingHelperView(
+            provider: activityListNotifierProvider,
+            futureRefreshable: activityListNotifierProvider.future,
+            notifierRefreshable: activityListNotifierProvider.notifier,
+            contentBuilder:
+                (data, widgetCount, endItemView) => CustomScrollView(
+                  slivers: [
+                    if (user.hasValue)
+                      SliverToBoxAdapter(child: CheckInWidget()),
+                    SliverList.builder(
+                      itemCount: widgetCount,
+                      itemBuilder: (context, index) {
+                        if (index == widgetCount - 1) {
+                          return endItemView;
+                        }
 
-                      final item = data.items[index];
-                      if (item.data == null) return const SizedBox.shrink();
-                      Widget itemWidget;
+                        final item = data.items[index];
+                        if (item.data == null) return const SizedBox.shrink();
+                        Widget itemWidget;
 
-                      switch (item.type) {
-                        case 'posts.new':
-                          itemWidget = PostItem(
-                            item: SnPost.fromJson(item.data),
-                            onRefresh: (_) {
-                              activitiesNotifier.forceRefresh();
-                            },
-                            onUpdate: (post) {
-                              activitiesNotifier.updateOne(
-                                index,
-                                item.copyWith(data: post.toJson()),
-                              );
-                            },
-                          );
-                          break;
-                        case 'accounts.check-in':
-                          itemWidget = CheckInActivityWidget(item: item);
-                          break;
-                        case 'accounts.status':
-                          itemWidget = StatusActivityWidget(item: item);
-                          break;
-                        default:
-                          itemWidget = const Placeholder();
-                      }
+                        switch (item.type) {
+                          case 'posts.new':
+                            itemWidget = PostItem(
+                              item: SnPost.fromJson(item.data),
+                              onRefresh: (_) {
+                                activitiesNotifier.forceRefresh();
+                              },
+                              onUpdate: (post) {
+                                activitiesNotifier.updateOne(
+                                  index,
+                                  item.copyWith(data: post.toJson()),
+                                );
+                              },
+                            );
+                            break;
+                          case 'accounts.check-in':
+                            itemWidget = CheckInActivityWidget(item: item);
+                            break;
+                          case 'accounts.status':
+                            itemWidget = StatusActivityWidget(item: item);
+                            break;
+                          default:
+                            itemWidget = const Placeholder();
+                        }
 
-                      return Column(
-                        children: [itemWidget, const Divider(height: 1)],
-                      );
-                    },
-                  ),
-                  SliverGap(MediaQuery.of(context).padding.bottom + 16),
-                ],
-              ),
+                        return Column(
+                          children: [itemWidget, const Divider(height: 1)],
+                        );
+                      },
+                    ),
+                    SliverGap(MediaQuery.of(context).padding.bottom + 16),
+                  ],
+                ),
+          ),
         ),
       ),
     );
