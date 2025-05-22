@@ -261,5 +261,7 @@
   "settingsServerUrl": "Server URL",
   "settingsApplied": "The settings has been applied.",
   "notifications": "Notifications",
-  "posts": "Posts"
+  "posts": "Posts",
+  "settingsBackgroundImage": "Background Image",
+  "settingsBackgroundImageClear": "Clear Background Image"
 }

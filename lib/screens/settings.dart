@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:island/pods/network.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:island/pods/config.dart';
 
@@ -19,6 +26,15 @@ class SettingsScreen extends HookConsumerWidget {
     final serverUrl = ref.watch(serverUrlProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
     final controller = TextEditingController(text: serverUrl);
+
+    final docBasepath = useState<String?>(null);
+
+    useEffect(() {
+      getApplicationSupportDirectory().then((dir) {
+        docBasepath.value = dir.path;
+      });
+      return null;
+    }, []);
 
     return AppScaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -106,6 +122,57 @@ class SettingsScreen extends HookConsumerWidget {
                 ),
               ),
             ),
+            if (!kIsWeb && docBasepath.value != null)
+              ListTile(
+                minLeadingWidth: 48,
+                title: Text('settingsBackgroundImage').tr(),
+                contentPadding: const EdgeInsets.only(left: 24, right: 17),
+                leading: const Icon(Symbols.image),
+                trailing: const Icon(Symbols.chevron_right),
+                onTap: () async {
+                  final imagePicker = ref.read(imagePickerProvider);
+                  final image = await imagePicker.pickImage(
+                    source: ImageSource.gallery,
+                  );
+                  if (image == null) return;
+
+                  await File(
+                    image.path,
+                  ).copy('${docBasepath.value}/$kAppBackgroundImagePath');
+                  prefs.setBool(kAppBackgroundStoreKey, true);
+                  ref.invalidate(backgroundImageFileProvider);
+                  if (context.mounted) {
+                    showSnackBar(context, 'settingsApplied'.tr());
+                  }
+                },
+              ),
+            if (!kIsWeb && docBasepath.value != null)
+              FutureBuilder<bool>(
+                future:
+                    File('${docBasepath.value}/app_background_image').exists(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || !snapshot.data!) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return ListTile(
+                    title: Text('settingsBackgroundImageClear').tr(),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+                    leading: const Icon(Symbols.texture),
+                    trailing: const Icon(Symbols.chevron_right),
+                    onTap: () {
+                      File(
+                        '${docBasepath.value}/$kAppBackgroundImagePath',
+                      ).deleteSync();
+                      prefs.remove(kAppBackgroundStoreKey);
+                      ref.invalidate(backgroundImageFileProvider);
+                      if (context.mounted) {
+                        showSnackBar(context, 'settingsApplied'.tr());
+                      }
+                    },
+                  );
+                },
+              ),
           ],
         ),
       ),
