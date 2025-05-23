@@ -9,7 +9,16 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     RedirectRoute(path: '/', redirectTo: '/explore'),
-    AutoRoute(page: ExploreRoute.page, path: '/explore'),
+    AutoRoute(
+      page: ExploreShellRoute.page,
+      path: '/explore',
+      children: [
+        AutoRoute(page: ExploreRoute.page, path: ''),
+        AutoRoute(page: PostComposeRoute.page, path: 'posts/compose'),
+        AutoRoute(page: PostDetailRoute.page, path: 'posts/:id'),
+        AutoRoute(page: PostEditRoute.page, path: 'posts/:id/edit'),
+      ],
+    ),
     AutoRoute(
       page: AccountShellRoute.page,
       path: '/account',
@@ -64,9 +73,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: LoginRoute.page, path: '/auth/login'),
     AutoRoute(page: CreateAccountRoute.page, path: '/auth/create-account'),
     AutoRoute(page: SettingsRoute.page, path: '/settings'),
-    AutoRoute(page: PostComposeRoute.page, path: '/posts/compose'),
-    AutoRoute(page: PostDetailRoute.page, path: '/posts/:id'),
-    AutoRoute(page: PostEditRoute.page, path: '/posts/:id/edit'),
     AutoRoute(page: NewRealmRoute.page, path: '/realms/new'),
     AutoRoute(page: RealmDetailRoute.page, path: '/realms/:slug'),
     AutoRoute(page: EditRealmRoute.page, path: '/realms/:slug/edit'),

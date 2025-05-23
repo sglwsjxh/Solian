@@ -18,56 +18,48 @@ class PostRepliesList extends HookConsumerWidget {
     final postAsync = ref.watch(postRepliesProvider(postId));
     final isWide = isWideScreen(context);
 
-    return RefreshIndicator(
-      onRefresh:
-          () => Future.sync((() {
-            ref.invalidate(postRepliesProvider(postId));
-          })),
-      child: postAsync.when(
-        data:
-            (controller) => RefreshIndicator(
-              onRefresh:
-                  () => Future.sync((() {
-                    ref.invalidate(postRepliesProvider(postId));
-                  })),
-              child: InfiniteList(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom,
-                ),
-                itemCount: controller.posts.length,
-                isLoading: controller.isLoading,
-                hasReachedMax: controller.hasReachedMax,
-                onFetchData: controller.fetchMore,
-                itemBuilder: (context, index) {
-                  final post = controller.posts[index];
-                  return PostItem(
-                    item: post,
-                    backgroundColor: isWide ? Colors.transparent : null,
-                  );
-                },
-                separatorBuilder: (_, __) => const Divider(height: 1),
-                emptyBuilder: (context) {
-                  return Column(
-                    children: [
-                      Text(
-                        'No replies',
-                        textAlign: TextAlign.center,
-                      ).fontSize(18).bold(),
-                      Text('Why not start a discussion?'),
-                    ],
-                  ).padding(vertical: 16);
-                },
-              ),
-            ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error:
-            (e, _) => ResponseErrorWidget(
+    return postAsync.when(
+      data:
+          (controller) => SliverInfiniteList(
+            itemCount: controller.posts.length,
+            isLoading: controller.isLoading,
+            hasReachedMax: controller.hasReachedMax,
+            onFetchData: controller.fetchMore,
+            itemBuilder: (context, index) {
+              final post = controller.posts[index];
+              return PostItem(
+                item: post,
+                backgroundColor: isWide ? Colors.transparent : null,
+              );
+            },
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            emptyBuilder: (context) {
+              return SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    Text(
+                      'No replies',
+                      textAlign: TextAlign.center,
+                    ).fontSize(18).bold(),
+                    Text('Why not start a discussion?'),
+                  ],
+                ).padding(vertical: 16),
+              );
+            },
+          ),
+      loading:
+          () => SliverFillRemaining(
+            child: const Center(child: CircularProgressIndicator()),
+          ),
+      error:
+          (e, _) => SliverFillRemaining(
+            child: ResponseErrorWidget(
               error: e,
               onRetry: () {
                 ref.invalidate(postRepliesProvider(postId));
               },
             ),
-      ),
+          ),
     );
   }
 }

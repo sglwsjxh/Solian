@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,6 +24,7 @@ import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/post/publishers_modal.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:super_clipboard/super_clipboard.dart';
 
 @RoutePage()
 class PostEditScreen extends HookConsumerWidget {
@@ -215,6 +217,47 @@ class PostComposeScreen extends HookConsumerWidget {
       }
     }
 
+    Future<void> _handlePaste() async {
+      final clipboard = SystemClipboard.instance;
+      if (clipboard == null) return;
+
+      final reader = await clipboard.read();
+      if (reader.canProvide(Formats.png)) {
+        reader.getFile(Formats.png, (file) async {
+          final stream = file.getStream();
+          final bytes = await stream.toList();
+          final imageBytes = bytes.expand((e) => e).toList();
+
+          // Create a temporary file to store the image
+          final tempDir = Directory.systemTemp;
+          final tempFile = File(
+            '${tempDir.path}/pasted_image_${DateTime.now().millisecondsSinceEpoch}.png',
+          );
+          await tempFile.writeAsBytes(imageBytes);
+
+          // Add the file to attachments
+          attachments.value = [
+            ...attachments.value,
+            UniversalFile(
+              data: XFile(tempFile.path),
+              type: UniversalFileType.image,
+            ),
+          ];
+        });
+      }
+    }
+
+    void _handleKeyPress(RawKeyEvent event) {
+      if (event is! RawKeyDownEvent) return;
+
+      final isPaste = event.logicalKey == LogicalKeyboardKey.keyV;
+      final isModifierPressed = event.isMetaPressed || event.isControlPressed;
+
+      if (isPaste && isModifierPressed) {
+        _handlePaste();
+      }
+    }
+
     return AppScaffold(
       appBar: AppBar(
         leading: const PageBackButton(),
@@ -291,17 +334,22 @@ class PostComposeScreen extends HookConsumerWidget {
                                   FocusManager.instance.primaryFocus?.unfocus(),
                         ),
                         const Gap(8),
-                        TextField(
-                          controller: contentController,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'postPlaceholder'.tr(),
-                            isDense: true,
+                        RawKeyboardListener(
+                          focusNode: FocusNode(),
+                          onKey: _handleKeyPress,
+                          child: TextField(
+                            controller: contentController,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'postPlaceholder'.tr(),
+                              isDense: true,
+                            ),
+                            onTapOutside:
+                                (_) =>
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus(),
                           ),
-                          onTapOutside:
-                              (_) =>
-                                  FocusManager.instance.primaryFocus?.unfocus(),
                         ),
                         const Gap(8),
                         Column(

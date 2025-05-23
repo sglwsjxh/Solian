@@ -36,19 +36,25 @@ class PostDetailScreen extends HookConsumerWidget {
       appBar: AppBar(title: const Text('Post')),
       body: post.when(
         data: (post) {
-          final content = Stack(
+          return Stack(
             fit: StackFit.expand,
             children: [
-              Column(
-                children: [
-                  PostItem(
-                    item: post!,
-                    isOpenable: false,
-                    backgroundColor: isWide ? Colors.transparent : null,
+              CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        PostItem(
+                          item: post!,
+                          isOpenable: false,
+                          backgroundColor: isWide ? Colors.transparent : null,
+                        ),
+                        const Divider(height: 1),
+                      ],
+                    ),
                   ),
-                  const Divider(height: 1),
-                  Expanded(child: PostRepliesList(postId: id)),
-                  Gap(MediaQuery.of(context).padding.bottom),
+                  PostRepliesList(postId: id),
+                  SliverGap(MediaQuery.of(context).padding.bottom + 80),
                 ],
               ),
               Positioned(
@@ -67,30 +73,6 @@ class PostDetailScreen extends HookConsumerWidget {
               ),
             ],
           );
-
-          return isWide
-              ? Center(
-                child: Card(
-                  elevation: 8,
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                  ),
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.surfaceContainerLow.withOpacity(0.8),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: kWideScreenWidth - 160,
-                    ),
-                    child: content,
-                  ),
-                ),
-              )
-              : content;
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Text('Error: $e'),

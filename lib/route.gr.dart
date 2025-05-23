@@ -598,16 +598,55 @@ class EditStickersRouteArgs {
 
 /// generated route for
 /// [_i13.ExploreScreen]
-class ExploreRoute extends _i26.PageRouteInfo<void> {
-  const ExploreRoute({List<_i26.PageRouteInfo>? children})
-    : super(ExploreRoute.name, initialChildren: children);
+class ExploreRoute extends _i26.PageRouteInfo<ExploreRouteArgs> {
+  ExploreRoute({
+    _i27.Key? key,
+    bool isAside = false,
+    List<_i26.PageRouteInfo>? children,
+  }) : super(
+         ExploreRoute.name,
+         args: ExploreRouteArgs(key: key, isAside: isAside),
+         initialChildren: children,
+       );
 
   static const String name = 'ExploreRoute';
 
   static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
-      return const _i13.ExploreScreen();
+      final args = data.argsAs<ExploreRouteArgs>(
+        orElse: () => const ExploreRouteArgs(),
+      );
+      return _i13.ExploreScreen(key: args.key, isAside: args.isAside);
+    },
+  );
+}
+
+class ExploreRouteArgs {
+  const ExploreRouteArgs({this.key, this.isAside = false});
+
+  final _i27.Key? key;
+
+  final bool isAside;
+
+  @override
+  String toString() {
+    return 'ExploreRouteArgs{key: $key, isAside: $isAside}';
+  }
+}
+
+/// generated route for
+/// [_i13.ExploreShellScreen]
+class ExploreShellRoute extends _i26.PageRouteInfo<void> {
+  const ExploreShellRoute({List<_i26.PageRouteInfo>? children})
+    : super(ExploreShellRoute.name, initialChildren: children);
+
+  static const String name = 'ExploreShellRoute';
+
+  static _i26.PageInfo page = _i26.PageInfo(
+    name,
+    builder: (data) {
+      return const _i13.ExploreShellScreen();
     },
   );
 }

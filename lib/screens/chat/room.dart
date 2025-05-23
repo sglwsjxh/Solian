@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:uuid/uuid.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:super_clipboard/super_clipboard.dart';
 import 'chat.dart';
 
 part 'room.g.dart';
@@ -667,6 +669,9 @@ class ChatRoomScreen extends HookConsumerWidget {
                     clone.insert(idx + delta, clone.removeAt(idx));
                     attachments.value = clone;
                   },
+                  onAttachmentsChanged: (newAttachments) {
+                    attachments.value = newAttachments;
+                  },
                 ),
             error: (_, __) => const SizedBox.shrink(),
             loading: () => const SizedBox.shrink(),
@@ -690,6 +695,7 @@ class _ChatInput extends ConsumerWidget {
   final Function(int) onUploadAttachment;
   final Function(int) onDeleteAttachment;
   final Function(int, int) onMoveAttachment;
+  final Function(List<UniversalFile>) onAttachmentsChanged;
 
   const _ChatInput({
     required this.messageController,
@@ -704,14 +710,22 @@ class _ChatInput extends ConsumerWidget {
     required this.onUploadAttachment,
     required this.onDeleteAttachment,
     required this.onMoveAttachment,
+    required this.onAttachmentsChanged,
   });
 
   void _handleKeyPress(BuildContext context, WidgetRef ref, RawKeyEvent event) {
     if (event is! RawKeyDownEvent) return;
 
+    final isPaste = event.logicalKey == LogicalKeyboardKey.keyV;
+    final isModifierPressed = event.isMetaPressed || event.isControlPressed;
+
+    if (isPaste && isModifierPressed) {
+      _handlePaste();
+      return;
+    }
+
     final enterToSend = ref.read(appSettingsProvider).enterToSend;
     final isEnter = event.logicalKey == LogicalKeyboardKey.enter;
-    final isModifierPressed = event.isMetaPressed || event.isControlPressed;
 
     if (isEnter) {
       if (enterToSend && !isModifierPressed) {
@@ -719,6 +733,36 @@ class _ChatInput extends ConsumerWidget {
       } else if (!enterToSend && isModifierPressed) {
         onSend();
       }
+    }
+  }
+
+  Future<void> _handlePaste() async {
+    final clipboard = SystemClipboard.instance;
+    if (clipboard == null) return;
+
+    final reader = await clipboard.read();
+    if (reader.canProvide(Formats.png)) {
+      reader.getFile(Formats.png, (file) async {
+        final stream = file.getStream();
+        final bytes = await stream.toList();
+        final imageBytes = bytes.expand((e) => e).toList();
+
+        // Create a temporary file to store the image
+        final tempDir = Directory.systemTemp;
+        final tempFile = File(
+          '${tempDir.path}/pasted_image_${DateTime.now().millisecondsSinceEpoch}.png',
+        );
+        await tempFile.writeAsBytes(imageBytes);
+
+        // Add the file to attachments
+        onAttachmentsChanged([
+          ...attachments,
+          UniversalFile(
+            data: XFile(tempFile.path),
+            type: UniversalFileType.image,
+          ),
+        ]);
+      });
     }
   }
 
@@ -748,7 +792,7 @@ class _ChatInput extends ConsumerWidget {
                 },
                 separatorBuilder: (_, __) => const Gap(8),
               ),
-            ),
+            ).padding(top: 12),
           if (messageReplyingTo != null ||
               messageForwardingTo != null ||
               messageEditingTo != null)

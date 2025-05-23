@@ -31,9 +31,9 @@ class AccountShellScreen extends HookConsumerWidget {
         isRoot: true,
         child: Row(
           children: [
-            SizedBox(width: 360, child: AccountScreen(isAside: true)),
+            Flexible(flex: 2, child: AccountScreen(isAside: true)),
             VerticalDivider(width: 1),
-            Expanded(child: AutoRouter()),
+            Flexible(flex: 3, child: AutoRouter()),
           ],
         ),
       );

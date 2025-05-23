@@ -21,14 +21,43 @@ import 'package:island/pods/network.dart';
 part 'explore.g.dart';
 
 @RoutePage()
-class ExploreScreen extends ConsumerWidget {
-  const ExploreScreen({super.key});
+class ExploreShellScreen extends ConsumerWidget {
+  const ExploreShellScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activitiesNotifier = ref.watch(activityListNotifierProvider.notifier);
-
     final isWide = isWideScreen(context);
+
+    if (isWide) {
+      return AppBackground(
+        isRoot: true,
+        child: Row(
+          children: [
+            Flexible(flex: 2, child: ExploreScreen(isAside: true)),
+            VerticalDivider(width: 1),
+            Flexible(flex: 3, child: AutoRouter()),
+          ],
+        ),
+      );
+    }
+
+    return AppBackground(isRoot: true, child: AutoRouter());
+  }
+}
+
+@RoutePage()
+class ExploreScreen extends ConsumerWidget {
+  final bool isAside;
+  const ExploreScreen({super.key, this.isAside = false});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isWide = isWideScreen(context);
+    if (isWide && !isAside) {
+      return const EmptyPageHolder();
+    }
+
+    final activitiesNotifier = ref.watch(activityListNotifierProvider.notifier);
 
     return TourTriggerWidget(
       child: AppScaffold(
@@ -53,38 +82,11 @@ class ExploreScreen extends ConsumerWidget {
             notifierRefreshable: activityListNotifierProvider.notifier,
             contentBuilder:
                 (data, widgetCount, endItemView) => Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: kWideScreenWidth - 160,
-                    ),
-                    child:
-                        isWide
-                            ? Card(
-                              elevation: 8,
-                              margin: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                ),
-                              ),
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerLow
-                                  .withOpacity(0.8),
-                              child: _ActivityListView(
-                                data: data,
-                                widgetCount: widgetCount,
-                                endItemView: endItemView,
-                                activitiesNotifier: activitiesNotifier,
-                              ),
-                            )
-                            : _ActivityListView(
-                              data: data,
-                              widgetCount: widgetCount,
-                              endItemView: endItemView,
-                              activitiesNotifier: activitiesNotifier,
-                            ),
+                  child: _ActivityListView(
+                    data: data,
+                    widgetCount: widgetCount,
+                    endItemView: endItemView,
+                    activitiesNotifier: activitiesNotifier,
                   ),
                 ),
           ),
