@@ -27,16 +27,19 @@ class AccountShellScreen extends HookConsumerWidget {
     final isWide = isWideScreen(context);
 
     if (isWide) {
-      return Row(
-        children: [
-          SizedBox(width: 360, child: AccountScreen(isAside: true)),
-          VerticalDivider(width: 1),
-          Expanded(child: AutoRouter()),
-        ],
+      return AppBackground(
+        isRoot: true,
+        child: Row(
+          children: [
+            SizedBox(width: 360, child: AccountScreen(isAside: true)),
+            VerticalDivider(width: 1),
+            Expanded(child: AutoRouter()),
+          ],
+        ),
       );
     }
 
-    return AutoRouter();
+    return AppBackground(isRoot: true, child: AutoRouter());
   }
 }
 
@@ -49,7 +52,7 @@ class AccountScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isWide = isWideScreen(context);
     if (isWide && !isAside) {
-      return Container(color: Theme.of(context).scaffoldBackgroundColor);
+      return const EmptyPageHolder();
     }
 
     final user = ref.watch(userInfoProvider);
@@ -62,6 +65,7 @@ class AccountScreen extends HookConsumerWidget {
     }
 
     return AppScaffold(
+      noBackground: isWide,
       appBar: AppBar(title: const Text('account').tr()),
       body: SingleChildScrollView(
         child: Column(

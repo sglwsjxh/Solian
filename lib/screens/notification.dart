@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/models/user.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/widgets/alert.dart';
+import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/markdown.dart';
 import 'package:relative_time/relative_time.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -85,7 +86,7 @@ class NotificationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(title: const Text('notifications').tr()),
       body: PagingHelperView(
         provider: notificationListNotifierProvider,

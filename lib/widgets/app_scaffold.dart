@@ -9,9 +9,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/pods/userinfo.dart';
 import 'package:island/pods/websocket.dart';
 import 'package:island/route.dart';
+import 'package:island/services/responsive.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class WindowScaffold extends HookConsumerWidget {
@@ -109,7 +109,7 @@ class AppScaffold extends StatelessWidget {
   final AppBar? appBar;
   final DrawerCallback? onDrawerChanged;
   final DrawerCallback? onEndDrawerChanged;
-  final bool noBackground;
+  final bool? noBackground;
 
   const AppScaffold({
     super.key,
@@ -124,13 +124,15 @@ class AppScaffold extends StatelessWidget {
     this.endDrawer,
     this.onDrawerChanged,
     this.onEndDrawerChanged,
-    this.noBackground = false,
+    this.noBackground,
   });
 
   @override
   Widget build(BuildContext context) {
     final appBarHeight = appBar?.preferredSize.height ?? 0;
     final safeTop = MediaQuery.of(context).padding.top;
+
+    final noBackground = this.noBackground ?? isWideScreen(context);
 
     final content = Column(
       children: [
@@ -208,7 +210,7 @@ class AppBackground extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final imageFileAsync = ref.watch(backgroundImageFileProvider);
 
-    if (isRoot || ResponsiveBreakpoints.of(context).smallerOrEqualTo(MOBILE)) {
+    if (isRoot || !isWideScreen(context)) {
       return imageFileAsync.when(
         data: (file) {
           if (file != null) {
@@ -251,6 +253,20 @@ class AppBackground extends ConsumerWidget {
     }
 
     return Material(color: Colors.transparent, child: child);
+  }
+}
+
+class EmptyPageHolder extends HookConsumerWidget {
+  const EmptyPageHolder({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasBackground =
+        ref.watch(backgroundImageFileProvider).valueOrNull != null;
+    if (hasBackground) {
+      return const SizedBox.shrink();
+    }
+    return Container(color: Theme.of(context).scaffoldBackgroundColor);
   }
 }
 

@@ -12,6 +12,7 @@ import 'package:island/pods/userinfo.dart';
 import 'package:island/route.gr.dart';
 import 'package:island/services/responsive.dart';
 import 'package:island/widgets/alert.dart';
+import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_file_collection.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/content/markdown.dart';
@@ -46,6 +47,9 @@ class PostItem extends HookConsumerWidget {
       () => user.hasValue && user.value?.id == item.publisher.accountId,
       [user],
     );
+
+    final hasBackground =
+        ref.watch(backgroundImageFileProvider).valueOrNull != null;
 
     return ContextMenuWidget(
       menuProvider: (_) {
@@ -101,7 +105,7 @@ class PostItem extends HookConsumerWidget {
         );
       },
       child: Material(
-        color: backgroundColor,
+        color: hasBackground ? Colors.transparent : backgroundColor,
         child: Padding(
           padding: renderingPadding,
           child: Column(

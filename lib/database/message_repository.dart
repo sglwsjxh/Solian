@@ -15,6 +15,7 @@ class MessageRepository {
 
   final Map<String, LocalChatMessage> pendingMessages = {};
   final Map<String, Map<int, double>> fileUploadProgress = {};
+  int? _totalCount;
 
   MessageRepository(this.room, this.identity, this._apiClient, this._database);
 
@@ -141,12 +142,27 @@ class MessageRepository {
     int offset = 0,
     int take = 20,
   }) async {
+    // Use cached total count if available, otherwise fetch it
+    if (_totalCount == null) {
+      final response = await _apiClient.get(
+        '/chat/$roomId/messages',
+        queryParameters: {'offset': 0, 'take': 1},
+      );
+      _totalCount = int.parse(response.headers['x-total']?.firstOrNull ?? '0');
+    }
+
+    if (offset >= _totalCount!) {
+      return [];
+    }
+
     final response = await _apiClient.get(
       '/chat/$roomId/messages',
       queryParameters: {'offset': offset, 'take': take},
     );
 
     final List<dynamic> data = response.data;
+    // Update total count from response headers
+    _totalCount = int.parse(response.headers['x-total']?.firstOrNull ?? '0');
 
     final messages =
         data.map((json) {

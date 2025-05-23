@@ -37,6 +37,7 @@ class SettingsScreen extends HookConsumerWidget {
     }, []);
 
     return AppScaffold(
+      noBackground: false,
       appBar: AppBar(title: const Text('Settings')),
       body: SingleChildScrollView(
         child: Column(

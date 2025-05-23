@@ -1477,14 +1477,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
-  responsive_framework:
-    dependency: "direct main"
-    description:
-      name: responsive_framework
-      sha256: a8e1c13d4ba980c60cbf6fa1e9907cd60662bf2585184d7c96ca46c43de91552
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.1"
   riverpod:
     dependency: transitive
     description:
@@ -1826,6 +1818,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.0-dev.6"
+  super_sliver_list:
+    dependency: "direct main"
+    description:
+      name: super_sliver_list
+      sha256: b1e1e64d08ce40e459b9bb5d9f8e361617c26b8c9f3bb967760b0f436b6e3f56
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   sync:
     dependency: transitive
     description:

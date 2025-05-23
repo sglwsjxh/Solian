@@ -25,6 +25,7 @@ import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/response.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:uuid/uuid.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -321,12 +322,16 @@ class ChatRoomScreen extends HookConsumerWidget {
       );
     }
 
+    var isLoading = false;
+
     // Add scroll listener for pagination
     useEffect(() {
       void onScroll() {
         if (scrollController.position.pixels >=
             scrollController.position.maxScrollExtent - 200) {
-          messagesNotifier.loadMore();
+          if (isLoading) return;
+          isLoading = true;
+          messagesNotifier.loadMore().then((_) => isLoading = false);
         }
       }
 
@@ -338,6 +343,7 @@ class ChatRoomScreen extends HookConsumerWidget {
     useEffect(() {
       void onMessage(WebSocketPacket pkt) {
         if (!pkt.type.startsWith('messages')) return;
+        if (['messages.read'].contains(pkt.type)) return;
         final message = SnChatMessage.fromJson(pkt.data!);
         if (message.chatRoomId != chatRoom.value?.id) return;
         switch (pkt.type) {
@@ -384,19 +390,21 @@ class ChatRoomScreen extends HookConsumerWidget {
     void sendMessage() {
       if (messageController.text.trim().isNotEmpty ||
           attachments.value.isNotEmpty) {
-        messagesNotifier.sendMessage(
-          messageController.text.trim(),
-          attachments.value,
-          editingTo: messageEditingTo.value,
-          forwardingTo: messageForwardingTo.value,
-          replyingTo: messageReplyingTo.value,
-          onProgress: (messageId, progress) {
-            attachmentProgress.value = {
-              ...attachmentProgress.value,
-              messageId: progress,
-            };
-          },
-        );
+        messagesNotifier
+            .sendMessage(
+              messageController.text.trim(),
+              attachments.value,
+              editingTo: messageEditingTo.value,
+              forwardingTo: messageForwardingTo.value,
+              replyingTo: messageReplyingTo.value,
+              onProgress: (messageId, progress) {
+                attachmentProgress.value = {
+                  ...attachmentProgress.value,
+                  messageId: progress,
+                };
+              },
+            )
+            .then((_) => sendReadReceipt());
         messageController.clear();
         messageEditingTo.value = null;
         messageReplyingTo.value = null;
@@ -407,7 +415,7 @@ class ChatRoomScreen extends HookConsumerWidget {
 
     final compactHeader = isWideScreen(context);
 
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         leading: !compactHeader ? const Center(child: PageBackButton()) : null,
         automaticallyImplyLeading: false,
@@ -526,7 +534,7 @@ class ChatRoomScreen extends HookConsumerWidget {
                   (messageList) =>
                       messageList.isEmpty
                           ? Center(child: Text('No messages yet'.tr()))
-                          : ListView.builder(
+                          : SuperListView.builder(
                             padding: EdgeInsets.symmetric(vertical: 16),
                             controller: scrollController,
                             reverse: true, // Show newest messages at the bottom
@@ -539,7 +547,12 @@ class ChatRoomScreen extends HookConsumerWidget {
                                       : null;
                               final isLastInGroup =
                                   nextMessage == null ||
-                                  nextMessage.senderId != message.senderId;
+                                  nextMessage.senderId != message.senderId ||
+                                  nextMessage.createdAt
+                                          .difference(message.createdAt)
+                                          .inMinutes
+                                          .abs() >
+                                      3;
 
                               return chatIdentity.when(
                                 skipError: true,

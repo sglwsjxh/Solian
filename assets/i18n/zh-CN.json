@@ -1,1 +1,8 @@
-{}
+{
+  "chat": "聊天",
+  "chatTabAll": "全部",
+  "chatTabDirect": "私聊",
+  "chatTabGroup": "群聊",
+  "chatMessageHint": "在 {} 中发送消息",
+  "chatDirectMessageHint": "发送消息给 {}"
+}

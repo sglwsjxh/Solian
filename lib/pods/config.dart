@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const kTokenPairStoreKey = 'dyn_user_tk';
@@ -145,26 +144,5 @@ class UpdateInfoNotifier extends StateNotifier<(String?, String?)> {
 
   void setUpdate(String newVersion, String newChangelog) {
     state = (newVersion, newChangelog);
-  }
-}
-
-final drawerCollapsedProvider = StateProvider<bool>((ref) => false);
-
-void calcDrawerSize(
-  WidgetRef ref,
-  BuildContext context, {
-  bool withMediaQuery = false,
-}) {
-  bool newDrawerIsCollapsed;
-  if (withMediaQuery) {
-    newDrawerIsCollapsed = MediaQuery.of(context).size.width < 600;
-  } else {
-    final rpb = ResponsiveBreakpoints.of(context);
-    newDrawerIsCollapsed = rpb.smallerOrEqualTo(MOBILE);
-  }
-
-  final current = ref.read(drawerCollapsedProvider);
-  if (newDrawerIsCollapsed != current) {
-    ref.read(drawerCollapsedProvider.notifier).state = newDrawerIsCollapsed;
   }
 }

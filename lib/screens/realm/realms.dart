@@ -40,6 +40,7 @@ class RealmListScreen extends HookConsumerWidget {
     final realmInvites = ref.watch(realmInvitesProvider);
 
     return AppScaffold(
+      noBackground: false,
       appBar: AppBar(
         title: const Text('realms').tr(),
         actions: [

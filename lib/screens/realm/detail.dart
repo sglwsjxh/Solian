@@ -165,8 +165,9 @@ class _RealmActionMenu extends HookConsumerWidget {
                                   final client = ref.watch(apiClientProvider);
                                   client.delete('/realms/$realmSlug');
                                   ref.invalidate(realmsJoinedProvider);
-                                  if (context.mounted)
+                                  if (context.mounted) {
                                     context.router.maybePop(true);
+                                  }
                                 }
                               });
                             },

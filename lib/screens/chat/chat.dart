@@ -85,9 +85,12 @@ class ChatRoomListTile extends HookConsumerWidget {
                   ),
                   Expanded(
                     child: Text(
-                      data.lastMessage.content ?? 'messageNone'.tr(),
+                      (data.lastMessage.content?.isNotEmpty ?? false)
+                          ? data.lastMessage.content!
+                          : 'messageNone'.tr(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   Text(
@@ -182,16 +185,19 @@ class ChatShellScreen extends HookConsumerWidget {
     final isWide = isWideScreen(context);
 
     if (isWide) {
-      return Row(
-        children: [
-          Flexible(flex: 2, child: ChatListScreen(isAside: true)),
-          VerticalDivider(width: 1),
-          Flexible(flex: 4, child: AutoRouter()),
-        ],
+      return AppBackground(
+        isRoot: true,
+        child: Row(
+          children: [
+            Flexible(flex: 2, child: ChatListScreen(isAside: true)),
+            VerticalDivider(width: 1),
+            Flexible(flex: 4, child: AutoRouter()),
+          ],
+        ),
       );
     }
 
-    return AutoRouter();
+    return AppBackground(isRoot: true, child: AutoRouter());
   }
 }
 
@@ -204,11 +210,22 @@ class ChatListScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isWide = isWideScreen(context);
     if (isWide && !isAside) {
-      return Container(color: Theme.of(context).scaffoldBackgroundColor);
+      return const EmptyPageHolder();
     }
 
     final chats = ref.watch(chatroomsJoinedProvider);
     final chatInvites = ref.watch(chatroomInvitesProvider);
+    final tabController = useTabController(initialLength: 3);
+    final selectedTab = useState(
+      0,
+    ); // 0 for All, 1 for Direct Messages, 2 for Group Chats
+
+    useEffect(() {
+      tabController.addListener(() {
+        selectedTab.value = tabController.index;
+      });
+      return null;
+    }, [tabController]);
 
     Future<void> createDirectMessage() async {
       final result = await showModalBottomSheet(
@@ -228,6 +245,14 @@ class ChatListScreen extends HookConsumerWidget {
     return AppScaffold(
       appBar: AppBar(
         title: Text('chat').tr(),
+        bottom: TabBar(
+          controller: tabController,
+          tabs: [
+            Tab(text: 'chatTabAll'.tr()),
+            Tab(text: 'chatTabDirect'.tr()),
+            Tab(text: 'chatTabGroup'.tr()),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Badge(
@@ -301,9 +326,26 @@ class ChatListScreen extends HookConsumerWidget {
                   }),
               child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: items.length,
+                itemCount:
+                    items
+                        .where(
+                          (item) =>
+                              selectedTab.value == 0 ||
+                              (selectedTab.value == 1 && item.type == 1) ||
+                              (selectedTab.value == 2 && item.type != 1),
+                        )
+                        .length,
                 itemBuilder: (context, index) {
-                  final item = items[index];
+                  final filteredItems =
+                      items
+                          .where(
+                            (item) =>
+                                selectedTab.value == 0 ||
+                                (selectedTab.value == 1 && item.type == 1) ||
+                                (selectedTab.value == 2 && item.type != 1),
+                          )
+                          .toList();
+                  final item = filteredItems[index];
                   return ChatRoomListTile(
                     room: item,
                     isDirect: item.type == 1,
