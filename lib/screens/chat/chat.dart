@@ -241,9 +241,30 @@ class ChatListScreen extends HookConsumerWidget {
         bottom: TabBar(
           controller: tabController,
           tabs: [
-            Tab(text: 'chatTabAll'.tr()),
-            Tab(text: 'chatTabDirect'.tr()),
-            Tab(text: 'chatTabGroup'.tr()),
+            Tab(
+              child: Text(
+                'chatTabAll'.tr(),
+                style: TextStyle(
+                  color: Theme.of(context).appBarTheme.foregroundColor!,
+                ),
+              ),
+            ),
+            Tab(
+              child: Text(
+                'chatTabDirect'.tr(),
+                style: TextStyle(
+                  color: Theme.of(context).appBarTheme.foregroundColor!,
+                ),
+              ),
+            ),
+            Tab(
+              child: Text(
+                'chatTabGroup'.tr(),
+                style: TextStyle(
+                  color: Theme.of(context).appBarTheme.foregroundColor!,
+                ),
+              ),
+            ),
           ],
         ),
         actions: [
@@ -310,57 +331,78 @@ class ChatListScreen extends HookConsumerWidget {
         },
         child: const Icon(Symbols.add),
       ),
-      body: chats.when(
-        data:
-            (items) => RefreshIndicator(
-              onRefresh:
-                  () => Future.sync(() {
-                    ref.invalidate(chatroomsJoinedProvider);
-                  }),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount:
-                    items
-                        .where(
-                          (item) =>
-                              selectedTab.value == 0 ||
-                              (selectedTab.value == 1 && item.type == 1) ||
-                              (selectedTab.value == 2 && item.type != 1),
-                        )
-                        .length,
-                itemBuilder: (context, index) {
-                  final filteredItems =
-                      items
-                          .where(
-                            (item) =>
-                                selectedTab.value == 0 ||
-                                (selectedTab.value == 1 && item.type == 1) ||
-                                (selectedTab.value == 2 && item.type != 1),
-                          )
-                          .toList();
-                  final item = filteredItems[index];
-                  return ChatRoomListTile(
-                    room: item,
-                    isDirect: item.type == 1,
-                    onTap: () {
-                      if (context.router.topRoute.name == ChatRoomRoute.name) {
-                        context.router.replace(ChatRoomRoute(id: item.id));
-                      } else {
-                        context.router.push(ChatRoomRoute(id: item.id));
-                      }
+      body: Column(
+        children: [
+          Consumer(
+            builder: (context, ref, _) {
+              final summaryState = ref.watch(chatSummaryProvider);
+              return summaryState.maybeWhen(
+                loading: () => const LinearProgressIndicator(),
+                orElse: () => const SizedBox.shrink(),
+              );
+            },
+          ),
+          Expanded(
+            child: chats.when(
+              data:
+                  (items) => RefreshIndicator(
+                    onRefresh:
+                        () => Future.sync(() {
+                          ref.invalidate(chatroomsJoinedProvider);
+                        }),
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount:
+                          items
+                              .where(
+                                (item) =>
+                                    selectedTab.value == 0 ||
+                                    (selectedTab.value == 1 &&
+                                        item.type == 1) ||
+                                    (selectedTab.value == 2 && item.type != 1),
+                              )
+                              .length,
+                      itemBuilder: (context, index) {
+                        final filteredItems =
+                            items
+                                .where(
+                                  (item) =>
+                                      selectedTab.value == 0 ||
+                                      (selectedTab.value == 1 &&
+                                          item.type == 1) ||
+                                      (selectedTab.value == 2 &&
+                                          item.type != 1),
+                                )
+                                .toList();
+                        final item = filteredItems[index];
+                        return ChatRoomListTile(
+                          room: item,
+                          isDirect: item.type == 1,
+                          onTap: () {
+                            if (context.router.topRoute.name ==
+                                ChatRoomRoute.name) {
+                              context.router.replace(
+                                ChatRoomRoute(id: item.id),
+                              );
+                            } else {
+                              context.router.push(ChatRoomRoute(id: item.id));
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error:
+                  (error, stack) => ResponseErrorWidget(
+                    error: error,
+                    onRetry: () {
+                      ref.invalidate(chatroomsJoinedProvider);
                     },
-                  );
-                },
-              ),
+                  ),
             ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error:
-            (error, stack) => ResponseErrorWidget(
-              error: error,
-              onRetry: () {
-                ref.invalidate(chatroomsJoinedProvider);
-              },
-            ),
+          ),
+        ],
       ),
     );
   }

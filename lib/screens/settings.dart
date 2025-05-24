@@ -178,32 +178,6 @@ class SettingsScreen extends HookConsumerWidget {
             const Divider(),
             ListTile(
               minLeadingWidth: 48,
-              title: Text('settingsRealmCompactView').tr(),
-              contentPadding: const EdgeInsets.only(left: 24, right: 17),
-              leading: const Icon(Symbols.view_compact),
-              trailing: Switch(
-                value: settings.realmCompactView,
-                onChanged: (value) {
-                  ref
-                      .read(appSettingsProvider.notifier)
-                      .setRealmCompactView(value);
-                },
-              ),
-            ),
-            ListTile(
-              minLeadingWidth: 48,
-              title: Text('settingsMixedFeed').tr(),
-              contentPadding: const EdgeInsets.only(left: 24, right: 17),
-              leading: const Icon(Symbols.merge),
-              trailing: Switch(
-                value: settings.mixedFeed,
-                onChanged: (value) {
-                  ref.read(appSettingsProvider.notifier).setMixedFeed(value);
-                },
-              ),
-            ),
-            ListTile(
-              minLeadingWidth: 48,
               title: Text('settingsAutoTranslate').tr(),
               contentPadding: const EdgeInsets.only(left: 24, right: 17),
               leading: const Icon(Symbols.translate),
@@ -213,20 +187,6 @@ class SettingsScreen extends HookConsumerWidget {
                   ref
                       .read(appSettingsProvider.notifier)
                       .setAutoTranslate(value);
-                },
-              ),
-            ),
-            ListTile(
-              minLeadingWidth: 48,
-              title: Text('settingsHideBottomNav').tr(),
-              contentPadding: const EdgeInsets.only(left: 24, right: 17),
-              leading: const Icon(Symbols.navigation),
-              trailing: Switch(
-                value: settings.hideBottomNav,
-                onChanged: (value) {
-                  ref
-                      .read(appSettingsProvider.notifier)
-                      .setHideBottomNav(value);
                 },
               ),
             ),

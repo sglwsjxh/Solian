@@ -53,10 +53,7 @@ final serverUrlProvider = Provider<String>((ref) {
 @freezed
 abstract class AppSettings with _$AppSettings {
   const factory AppSettings({
-    required bool realmCompactView,
-    required bool mixedFeed,
     required bool autoTranslate,
-    required bool hideBottomNav,
     required bool soundEffects,
     required bool aprilFoolFeatures,
     required bool enterToSend,
@@ -69,34 +66,16 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
   AppSettingsNotifier(this.prefs)
     : super(
         AppSettings(
-          realmCompactView: prefs.getBool(kAppRealmCompactView) ?? false,
-          mixedFeed: prefs.getBool(kAppMixedFeed) ?? true,
           autoTranslate: prefs.getBool(kAppAutoTranslate) ?? false,
-          hideBottomNav: prefs.getBool(kAppHideBottomNav) ?? false,
           soundEffects: prefs.getBool(kAppSoundEffects) ?? true,
           aprilFoolFeatures: prefs.getBool(kAppAprilFoolFeatures) ?? true,
           enterToSend: prefs.getBool(kAppEnterToSend) ?? true,
         ),
       );
 
-  void setRealmCompactView(bool value) {
-    prefs.setBool(kAppRealmCompactView, value);
-    state = state.copyWith(realmCompactView: value);
-  }
-
-  void setMixedFeed(bool value) {
-    prefs.setBool(kAppMixedFeed, value);
-    state = state.copyWith(mixedFeed: value);
-  }
-
   void setAutoTranslate(bool value) {
     prefs.setBool(kAppAutoTranslate, value);
     state = state.copyWith(autoTranslate: value);
-  }
-
-  void setHideBottomNav(bool value) {
-    prefs.setBool(kAppHideBottomNav, value);
-    state = state.copyWith(hideBottomNav: value);
   }
 
   void setSoundEffects(bool value) {

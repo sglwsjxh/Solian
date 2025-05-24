@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppSettings {
 
- bool get realmCompactView; bool get mixedFeed; bool get autoTranslate; bool get hideBottomNav; bool get soundEffects; bool get aprilFoolFeatures; bool get enterToSend;
+ bool get autoTranslate; bool get soundEffects; bool get aprilFoolFeatures; bool get enterToSend;
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $AppSettingsCopyWith<AppSettings> get copyWith => _$AppSettingsCopyWithImpl<AppS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.realmCompactView, realmCompactView) || other.realmCompactView == realmCompactView)&&(identical(other.mixedFeed, mixedFeed) || other.mixedFeed == mixedFeed)&&(identical(other.autoTranslate, autoTranslate) || other.autoTranslate == autoTranslate)&&(identical(other.hideBottomNav, hideBottomNav) || other.hideBottomNav == hideBottomNav)&&(identical(other.soundEffects, soundEffects) || other.soundEffects == soundEffects)&&(identical(other.aprilFoolFeatures, aprilFoolFeatures) || other.aprilFoolFeatures == aprilFoolFeatures)&&(identical(other.enterToSend, enterToSend) || other.enterToSend == enterToSend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.autoTranslate, autoTranslate) || other.autoTranslate == autoTranslate)&&(identical(other.soundEffects, soundEffects) || other.soundEffects == soundEffects)&&(identical(other.aprilFoolFeatures, aprilFoolFeatures) || other.aprilFoolFeatures == aprilFoolFeatures)&&(identical(other.enterToSend, enterToSend) || other.enterToSend == enterToSend));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,realmCompactView,mixedFeed,autoTranslate,hideBottomNav,soundEffects,aprilFoolFeatures,enterToSend);
+int get hashCode => Object.hash(runtimeType,autoTranslate,soundEffects,aprilFoolFeatures,enterToSend);
 
 @override
 String toString() {
-  return 'AppSettings(realmCompactView: $realmCompactView, mixedFeed: $mixedFeed, autoTranslate: $autoTranslate, hideBottomNav: $hideBottomNav, soundEffects: $soundEffects, aprilFoolFeatures: $aprilFoolFeatures, enterToSend: $enterToSend)';
+  return 'AppSettings(autoTranslate: $autoTranslate, soundEffects: $soundEffects, aprilFoolFeatures: $aprilFoolFeatures, enterToSend: $enterToSend)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $AppSettingsCopyWith<$Res>  {
   factory $AppSettingsCopyWith(AppSettings value, $Res Function(AppSettings) _then) = _$AppSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool realmCompactView, bool mixedFeed, bool autoTranslate, bool hideBottomNav, bool soundEffects, bool aprilFoolFeatures, bool enterToSend
+ bool autoTranslate, bool soundEffects, bool aprilFoolFeatures, bool enterToSend
 });
 
 
@@ -63,12 +63,9 @@ class _$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? realmCompactView = null,Object? mixedFeed = null,Object? autoTranslate = null,Object? hideBottomNav = null,Object? soundEffects = null,Object? aprilFoolFeatures = null,Object? enterToSend = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? autoTranslate = null,Object? soundEffects = null,Object? aprilFoolFeatures = null,Object? enterToSend = null,}) {
   return _then(_self.copyWith(
-realmCompactView: null == realmCompactView ? _self.realmCompactView : realmCompactView // ignore: cast_nullable_to_non_nullable
-as bool,mixedFeed: null == mixedFeed ? _self.mixedFeed : mixedFeed // ignore: cast_nullable_to_non_nullable
-as bool,autoTranslate: null == autoTranslate ? _self.autoTranslate : autoTranslate // ignore: cast_nullable_to_non_nullable
-as bool,hideBottomNav: null == hideBottomNav ? _self.hideBottomNav : hideBottomNav // ignore: cast_nullable_to_non_nullable
+autoTranslate: null == autoTranslate ? _self.autoTranslate : autoTranslate // ignore: cast_nullable_to_non_nullable
 as bool,soundEffects: null == soundEffects ? _self.soundEffects : soundEffects // ignore: cast_nullable_to_non_nullable
 as bool,aprilFoolFeatures: null == aprilFoolFeatures ? _self.aprilFoolFeatures : aprilFoolFeatures // ignore: cast_nullable_to_non_nullable
 as bool,enterToSend: null == enterToSend ? _self.enterToSend : enterToSend // ignore: cast_nullable_to_non_nullable
@@ -83,13 +80,10 @@ as bool,
 
 
 class _AppSettings implements AppSettings {
-  const _AppSettings({required this.realmCompactView, required this.mixedFeed, required this.autoTranslate, required this.hideBottomNav, required this.soundEffects, required this.aprilFoolFeatures, required this.enterToSend});
+  const _AppSettings({required this.autoTranslate, required this.soundEffects, required this.aprilFoolFeatures, required this.enterToSend});
   
 
-@override final  bool realmCompactView;
-@override final  bool mixedFeed;
 @override final  bool autoTranslate;
-@override final  bool hideBottomNav;
 @override final  bool soundEffects;
 @override final  bool aprilFoolFeatures;
 @override final  bool enterToSend;
@@ -104,16 +98,16 @@ _$AppSettingsCopyWith<_AppSettings> get copyWith => __$AppSettingsCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.realmCompactView, realmCompactView) || other.realmCompactView == realmCompactView)&&(identical(other.mixedFeed, mixedFeed) || other.mixedFeed == mixedFeed)&&(identical(other.autoTranslate, autoTranslate) || other.autoTranslate == autoTranslate)&&(identical(other.hideBottomNav, hideBottomNav) || other.hideBottomNav == hideBottomNav)&&(identical(other.soundEffects, soundEffects) || other.soundEffects == soundEffects)&&(identical(other.aprilFoolFeatures, aprilFoolFeatures) || other.aprilFoolFeatures == aprilFoolFeatures)&&(identical(other.enterToSend, enterToSend) || other.enterToSend == enterToSend));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.autoTranslate, autoTranslate) || other.autoTranslate == autoTranslate)&&(identical(other.soundEffects, soundEffects) || other.soundEffects == soundEffects)&&(identical(other.aprilFoolFeatures, aprilFoolFeatures) || other.aprilFoolFeatures == aprilFoolFeatures)&&(identical(other.enterToSend, enterToSend) || other.enterToSend == enterToSend));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,realmCompactView,mixedFeed,autoTranslate,hideBottomNav,soundEffects,aprilFoolFeatures,enterToSend);
+int get hashCode => Object.hash(runtimeType,autoTranslate,soundEffects,aprilFoolFeatures,enterToSend);
 
 @override
 String toString() {
-  return 'AppSettings(realmCompactView: $realmCompactView, mixedFeed: $mixedFeed, autoTranslate: $autoTranslate, hideBottomNav: $hideBottomNav, soundEffects: $soundEffects, aprilFoolFeatures: $aprilFoolFeatures, enterToSend: $enterToSend)';
+  return 'AppSettings(autoTranslate: $autoTranslate, soundEffects: $soundEffects, aprilFoolFeatures: $aprilFoolFeatures, enterToSend: $enterToSend)';
 }
 
 
@@ -124,7 +118,7 @@ abstract mixin class _$AppSettingsCopyWith<$Res> implements $AppSettingsCopyWith
   factory _$AppSettingsCopyWith(_AppSettings value, $Res Function(_AppSettings) _then) = __$AppSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool realmCompactView, bool mixedFeed, bool autoTranslate, bool hideBottomNav, bool soundEffects, bool aprilFoolFeatures, bool enterToSend
+ bool autoTranslate, bool soundEffects, bool aprilFoolFeatures, bool enterToSend
 });
 
 
@@ -141,12 +135,9 @@ class __$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? realmCompactView = null,Object? mixedFeed = null,Object? autoTranslate = null,Object? hideBottomNav = null,Object? soundEffects = null,Object? aprilFoolFeatures = null,Object? enterToSend = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? autoTranslate = null,Object? soundEffects = null,Object? aprilFoolFeatures = null,Object? enterToSend = null,}) {
   return _then(_AppSettings(
-realmCompactView: null == realmCompactView ? _self.realmCompactView : realmCompactView // ignore: cast_nullable_to_non_nullable
-as bool,mixedFeed: null == mixedFeed ? _self.mixedFeed : mixedFeed // ignore: cast_nullable_to_non_nullable
-as bool,autoTranslate: null == autoTranslate ? _self.autoTranslate : autoTranslate // ignore: cast_nullable_to_non_nullable
-as bool,hideBottomNav: null == hideBottomNav ? _self.hideBottomNav : hideBottomNav // ignore: cast_nullable_to_non_nullable
+autoTranslate: null == autoTranslate ? _self.autoTranslate : autoTranslate // ignore: cast_nullable_to_non_nullable
 as bool,soundEffects: null == soundEffects ? _self.soundEffects : soundEffects // ignore: cast_nullable_to_non_nullable
 as bool,aprilFoolFeatures: null == aprilFoolFeatures ? _self.aprilFoolFeatures : aprilFoolFeatures // ignore: cast_nullable_to_non_nullable
 as bool,enterToSend: null == enterToSend ? _self.enterToSend : enterToSend // ignore: cast_nullable_to_non_nullable
