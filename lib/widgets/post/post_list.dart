@@ -14,12 +14,13 @@ class PostListNotifier extends _$PostListNotifier
     with CursorPagingNotifierMixin<SnPost> {
   static const int _pageSize = 20;
 
-  PostListNotifier({this.pubName});
-
-  final String? pubName;
+  String? pubName;
 
   @override
-  Future<CursorPagingData<SnPost>> build() => fetch(cursor: null);
+  Future<CursorPagingData<SnPost>> build(String? pubName) {
+    this.pubName = pubName;
+    return fetch(cursor: null);
+  }
 
   @override
   Future<CursorPagingData<SnPost>> fetch({required String? cursor}) async {
@@ -55,9 +56,9 @@ class SliverPostList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PagingHelperSliverView(
-      provider: postListNotifierProvider,
-      futureRefreshable: postListNotifierProvider.future,
-      notifierRefreshable: postListNotifierProvider.notifier,
+      provider: postListNotifierProvider(pubName),
+      futureRefreshable: postListNotifierProvider(pubName).future,
+      notifierRefreshable: postListNotifierProvider(pubName).notifier,
       contentBuilder:
           (data, widgetCount, endItemView) => SliverList.builder(
             itemCount: widgetCount,
