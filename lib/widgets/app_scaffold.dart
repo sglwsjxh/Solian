@@ -160,7 +160,12 @@ class AppScaffold extends StatelessWidget {
                     ? content
                     : AppBackground(isRoot: true, child: content),
           ),
-          const _GlobalCallOverlay(),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 8,
+            child: const _GlobalCallOverlay(),
+          ),
         ],
       ),
       appBar: appBar,
@@ -211,13 +216,8 @@ class _GlobalCallOverlay extends HookConsumerWidget {
     final modalRoute = ModalRoute.of(context);
     final isOnCallScreen = modalRoute?.settings.name?.contains('call') ?? false;
     // You may want to store roomId in callState for more robust navigation
-    final roomId =
-        (modalRoute?.settings.arguments is Map &&
-                (modalRoute!.settings.arguments as Map).containsKey('roomId'))
-            ? (modalRoute.settings.arguments as Map)['roomId'] as String
-            : null;
-    if (callState.isConnected && !isOnCallScreen && roomId != null) {
-      return CallOverlayBar(roomId: roomId);
+    if (callState.isConnected && !isOnCallScreen) {
+      return CallOverlayBar();
     }
     return const SizedBox.shrink();
   }

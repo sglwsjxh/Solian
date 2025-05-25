@@ -6,12 +6,12 @@ import 'package:island/route.gr.dart';
 
 /// A floating bar that appears when user is in a call but not on the call screen.
 class CallOverlayBar extends HookConsumerWidget {
-  final String roomId;
-  const CallOverlayBar({super.key, required this.roomId});
+  const CallOverlayBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final callState = ref.watch(callNotifierProvider);
+    final callNotifier = ref.read(callNotifierProvider.notifier);
     // Only show if connected and not on the call screen
     if (!callState.isConnected) return const SizedBox.shrink();
 
@@ -21,7 +21,8 @@ class CallOverlayBar extends HookConsumerWidget {
       bottom: 32,
       child: GestureDetector(
         onTap: () {
-          context.router.push(CallRoute(roomId: roomId));
+          if (callNotifier.roomId == null) return;
+          context.router.push(CallRoute(roomId: callNotifier.roomId!));
         },
         child: Material(
           elevation: 8,
@@ -38,11 +39,19 @@ class CallOverlayBar extends HookConsumerWidget {
                     const SizedBox(width: 12),
                     const Text(
                       'In call',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
-                const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 18),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ],
             ),
           ),

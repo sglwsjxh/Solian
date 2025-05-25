@@ -215,6 +215,7 @@ class CallNotifier extends _$CallNotifier {
   }
 
   String? _roomId;
+  String? get roomId => _roomId;
 
   Future<void> joinRoom(String roomId) async {
     _roomId = roomId;

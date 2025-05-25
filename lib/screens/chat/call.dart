@@ -42,9 +42,32 @@ class CallScreen extends HookConsumerWidget {
       appBar: AppBar(
         leading: PageBackButton(
           onWillPop: () {
-            callNotifier.disconnect().then((_) {
-              callNotifier.dispose();
-            });
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: const Text(
+                    'Do you want to leave the call or leave it in background?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('In Background'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await callNotifier.disconnect();
+                        callNotifier.dispose();
+                      },
+                      child: const Text('Leave'),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
         title: Column(
