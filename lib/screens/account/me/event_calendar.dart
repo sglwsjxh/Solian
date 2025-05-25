@@ -7,7 +7,9 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/models/activity.dart';
 import 'package:island/pods/network.dart';
+import 'package:island/screens/account/profile.dart';
 import 'package:island/widgets/app_scaffold.dart';
+import 'package:island/widgets/content/cloud_files.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -39,8 +41,9 @@ Future<List<SnEventCalendarEntry>> accountEventCalendar(
 }
 
 @RoutePage()
-class MyselfEventCalendarScreen extends HookConsumerWidget {
-  const MyselfEventCalendarScreen({super.key});
+class EventCalanderScreen extends HookConsumerWidget {
+  final String name;
+  const EventCalanderScreen({super.key, @PathParam("name") required this.name});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,150 +52,180 @@ class MyselfEventCalendarScreen extends HookConsumerWidget {
 
     final selectedDay = useState(DateTime.now());
 
+    final user = ref.watch(accountProvider(name));
     final events = ref.watch(
       accountEventCalendarProvider(
         EventCalendarQuery(
-          uname: 'me',
+          uname: name,
           year: selectedYear.value,
           month: selectedMonth.value,
         ),
       ),
     );
 
+    final content = Column(
+      children: [
+        TableCalendar(
+          locale: EasyLocalization.of(context)!.locale.toString(),
+          firstDay: DateTime.now().add(Duration(days: -3650)),
+          lastDay: DateTime.now().add(Duration(days: 3650)),
+          focusedDay: DateTime.utc(
+            selectedYear.value,
+            selectedMonth.value,
+            DateTime.now().day,
+          ),
+          calendarFormat: CalendarFormat.month,
+          selectedDayPredicate: (day) {
+            return isSameDay(selectedDay.value, day);
+          },
+          onDaySelected: (value, _) {
+            selectedDay.value = value;
+          },
+          onPageChanged: (focusedDay) {
+            selectedMonth.value = focusedDay.month;
+            selectedYear.value = focusedDay.year;
+          },
+          eventLoader: (day) {
+            return events.value
+                    ?.where((e) => isSameDay(e.date, day))
+                    .expand((e) => [...e.statuses, e.checkInResult])
+                    .where((e) => e != null)
+                    .toList() ??
+                [];
+          },
+          calendarBuilders: CalendarBuilders(
+            dowBuilder: (context, day) {
+              final text = DateFormat.EEEEE().format(day);
+              return Center(child: Text(text));
+            },
+            markerBuilder: (context, day, events) {
+              var checkInResult =
+                  events.whereType<SnCheckInResult>().firstOrNull;
+              if (checkInResult != null) {
+                return Positioned(
+                  top: 32,
+                  child: Text(
+                    ['大凶', '凶', '中平', '吉', '大吉'][checkInResult.level],
+                    style: TextStyle(
+                      fontSize: 9,
+                      color:
+                          isSameDay(selectedDay.value, day)
+                              ? Theme.of(context).colorScheme.onPrimaryContainer
+                              : isSameDay(DateTime.now(), day)
+                              ? Theme.of(
+                                context,
+                              ).colorScheme.onSecondaryContainer
+                              : Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                );
+              }
+              return null;
+            },
+          ),
+        ),
+        const Divider(height: 1).padding(top: 8),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: Builder(
+            builder: (context) {
+              final event =
+                  events.value
+                      ?.where((e) => isSameDay(e.date, selectedDay.value))
+                      .firstOrNull;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(DateFormat.EEEE().format(selectedDay.value))
+                      .fontSize(16)
+                      .bold()
+                      .textColor(
+                        Theme.of(context).colorScheme.onSecondaryContainer,
+                      ),
+                  Text(DateFormat.yMd().format(selectedDay.value))
+                      .fontSize(12)
+                      .textColor(
+                        Theme.of(context).colorScheme.onSecondaryContainer,
+                      ),
+                  const Gap(16),
+                  if (event?.checkInResult != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'checkInResultLevel${event!.checkInResult!.level}',
+                        ).tr().fontSize(16).bold(),
+                        for (final tip in event.checkInResult!.tips)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 8,
+                            children: [
+                              Icon(
+                                Symbols.circle,
+                                size: 12,
+                                fill: 1,
+                              ).padding(top: 4, right: 4),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(tip.title).bold(),
+                                    Text(tip.content),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ).padding(top: 8),
+                      ],
+                    ),
+                  if (event?.checkInResult == null &&
+                      (event?.statuses.isEmpty ?? true))
+                    Text('eventCalanderEmpty').tr(),
+                ],
+              ).padding(vertical: 24, horizontal: 24);
+            },
+          ),
+        ),
+        if (name != 'me' && user.hasValue)
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1 / MediaQuery.of(context).devicePixelRatio,
+                color: Theme.of(context).dividerColor,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            margin: EdgeInsets.all(16),
+            child: Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              color: Colors.transparent,
+              child: ListTile(
+                leading: ProfilePictureWidget(
+                  fileId: user.value!.profile.pictureId,
+                ),
+                title: Text(user.value!.nick).bold(),
+                subtitle: Text('@${user.value!.name}'),
+              ),
+            ),
+          ),
+      ],
+    );
+
     return AppScaffold(
+      noBackground: false,
       appBar: AppBar(
         leading: const PageBackButton(),
         title: Text('eventCalander').tr(),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            TableCalendar(
-              locale: EasyLocalization.of(context)!.locale.toString(),
-              firstDay: DateTime.now().add(Duration(days: -3650)),
-              lastDay: DateTime.now().add(Duration(days: 3650)),
-              focusedDay: DateTime.utc(
-                selectedYear.value,
-                selectedMonth.value,
-                DateTime.now().day,
-              ),
-              calendarFormat: CalendarFormat.month,
-              selectedDayPredicate: (day) {
-                return isSameDay(selectedDay.value, day);
-              },
-              onDaySelected: (value, _) {
-                selectedDay.value = value;
-              },
-              onPageChanged: (focusedDay) {
-                selectedMonth.value = focusedDay.month;
-                selectedYear.value = focusedDay.year;
-              },
-              eventLoader: (day) {
-                return events.value
-                        ?.where((e) => isSameDay(e.date, day))
-                        .expand((e) => [...e.statuses, e.checkInResult])
-                        .where((e) => e != null)
-                        .toList() ??
-                    [];
-              },
-              calendarBuilders: CalendarBuilders(
-                dowBuilder: (context, day) {
-                  final text = DateFormat.EEEEE().format(day);
-                  return Center(child: Text(text));
-                },
-                markerBuilder: (context, day, events) {
-                  var checkInResult =
-                      events.whereType<SnCheckInResult>().firstOrNull;
-                  if (checkInResult != null) {
-                    return Positioned(
-                      top: 32,
-                      child: Text(
-                        ['大凶', '凶', '中平', '吉', '大吉'][checkInResult.level],
-                        style: TextStyle(
-                          fontSize: 9,
-                          color:
-                              isSameDay(selectedDay.value, day)
-                                  ? Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimaryContainer
-                                  : isSameDay(DateTime.now(), day)
-                                  ? Theme.of(
-                                    context,
-                                  ).colorScheme.onSecondaryContainer
-                                  : Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    );
-                  }
-                  return null;
-                },
-              ),
-            ),
-            const Divider(height: 1).padding(top: 8),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: Builder(
-                builder: (context) {
-                  final event =
-                      events.value
-                          ?.where((e) => isSameDay(e.date, selectedDay.value))
-                          .firstOrNull;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(DateFormat.EEEE().format(selectedDay.value))
-                          .fontSize(16)
-                          .bold()
-                          .textColor(
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                          ),
-                      Text(DateFormat.yMd().format(selectedDay.value))
-                          .fontSize(12)
-                          .textColor(
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                          ),
-                      const Gap(16),
-                      if (event?.checkInResult != null)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              'checkInResultLevel${event!.checkInResult!.level}',
-                            ).tr().fontSize(16).bold(),
-                            for (final tip in event.checkInResult!.tips)
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                spacing: 8,
-                                children: [
-                                  Icon(
-                                    Symbols.circle,
-                                    size: 12,
-                                    fill: 1,
-                                  ).padding(top: 4, right: 4),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(tip.title).bold(),
-                                        Text(tip.content),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ).padding(top: 8),
-                          ],
-                        ),
-                      if (event?.checkInResult == null &&
-                          (event?.statuses.isEmpty ?? true))
-                        Text('eventCalanderEmpty').tr(),
-                    ],
-                  ).padding(vertical: 24, horizontal: 24);
-                },
-              ),
-            ),
-          ],
-        ),
+        child:
+            MediaQuery.of(context).size.width > 480
+                ? ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 480),
+                  child: Card(margin: EdgeInsets.all(16), child: content),
+                ).center()
+                : content,
       ),
     );
   }

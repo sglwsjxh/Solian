@@ -33,6 +33,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:super_clipboard/super_clipboard.dart';
 import 'chat.dart';
+import 'package:island/widgets/chat/call_button.dart';
 
 part 'room.g.dart';
 
@@ -514,12 +515,7 @@ class ChatRoomScreen extends HookConsumerWidget {
               ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Symbols.video_call),
-            onPressed: () {
-              showInfoAlert('Oops', 'Not implemented yet...');
-            },
-          ),
+          AudioCallButton(roomId: id),
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {

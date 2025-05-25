@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/models/user.dart';
 import 'package:island/pods/network.dart';
+import 'package:island/pods/userinfo.dart';
 import 'package:island/widgets/account/badge.dart';
 import 'package:island/widgets/account/leveling_progress.dart';
 import 'package:island/widgets/account/status.dart';
@@ -17,6 +18,12 @@ part 'profile.g.dart';
 
 @riverpod
 Future<SnAccount> account(Ref ref, String uname) async {
+  if (uname == 'me') {
+    final userInfo = ref.watch(userInfoProvider);
+    if (userInfo.hasValue && userInfo.value != null) {
+      return userInfo.value!;
+    }
+  }
   final apiClient = ref.watch(apiClientProvider);
   final resp = await apiClient.get("/accounts/$uname");
   return SnAccount.fromJson(resp.data);

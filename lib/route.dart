@@ -8,15 +8,15 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-    RedirectRoute(path: '/', redirectTo: '/explore'),
     AutoRoute(
       page: ExploreShellRoute.page,
-      path: '/explore',
+      path: '/',
       children: [
         AutoRoute(page: ExploreRoute.page, path: ''),
         AutoRoute(page: PostComposeRoute.page, path: 'posts/compose'),
         AutoRoute(page: PostDetailRoute.page, path: 'posts/:id'),
         AutoRoute(page: PostEditRoute.page, path: 'posts/:id/edit'),
+        AutoRoute(page: PublisherProfileRoute.page, path: 'publishers/:name'),
       ],
     ),
     AutoRoute(
@@ -28,12 +28,11 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: WalletRoute.page, path: 'wallet'),
         AutoRoute(page: RelationshipRoute.page, path: 'relationships'),
         AutoRoute(page: AccountProfileRoute.page, path: ':name'),
-        AutoRoute(page: PublisherProfileRoute.page, path: ':name/calendar'),
-        AutoRoute(page: MyselfEventCalendarRoute.page, path: 'me/calendar'),
         AutoRoute(page: UpdateProfileRoute.page, path: 'me/update'),
         AutoRoute(page: AccountSettingsRoute.page, path: 'settings'),
       ],
     ),
+    AutoRoute(page: EventCalanderRoute.page, path: '/account/:name/calendar'),
     AutoRoute(page: RealmListRoute.page, path: '/realms'),
     AutoRoute(
       page: ChatShellRoute.page,
@@ -41,6 +40,7 @@ class AppRouter extends RootStackRouter {
       children: [
         AutoRoute(page: ChatListRoute.page, path: ''),
         AutoRoute(page: ChatRoomRoute.page, path: ':id'),
+        AutoRoute(page: CallRoute.page, path: ':id/call'),
         AutoRoute(page: NewChatRoute.page, path: 'new'),
         AutoRoute(page: EditChatRoute.page, path: ':id/edit'),
         AutoRoute(page: ChatDetailRoute.page, path: ':id/detail'),

@@ -67,6 +67,7 @@ _SnChatMessage _$SnChatMessageFromJson(Map<String, dynamic> json) =>
               ? null
               : DateTime.parse(json['deleted_at'] as String),
       id: json['id'] as String,
+      type: json['type'] as String? ?? 'text',
       content: json['content'] as String?,
       nonce: json['nonce'] as String?,
       meta: json['meta'] as Map<String, dynamic>? ?? const {},
@@ -102,6 +103,7 @@ Map<String, dynamic> _$SnChatMessageToJson(_SnChatMessage instance) =>
       'updated_at': instance.updatedAt.toIso8601String(),
       'deleted_at': instance.deletedAt?.toIso8601String(),
       'id': instance.id,
+      'type': instance.type,
       'content': instance.content,
       'nonce': instance.nonce,
       'meta': instance.meta,
@@ -241,10 +243,59 @@ Map<String, dynamic> _$MessageSyncResponseToJson(
 _ChatRealtimeJoinResponse _$ChatRealtimeJoinResponseFromJson(
   Map<String, dynamic> json,
 ) => _ChatRealtimeJoinResponse(
+  provider: json['provider'] as String,
+  endpoint: json['endpoint'] as String,
   token: json['token'] as String,
-  config: json['config'] as Map<String, dynamic>,
+  callId: json['call_id'] as String,
+  roomName: json['room_name'] as String,
+  isAdmin: json['is_admin'] as bool,
 );
 
 Map<String, dynamic> _$ChatRealtimeJoinResponseToJson(
   _ChatRealtimeJoinResponse instance,
-) => <String, dynamic>{'token': instance.token, 'config': instance.config};
+) => <String, dynamic>{
+  'provider': instance.provider,
+  'endpoint': instance.endpoint,
+  'token': instance.token,
+  'call_id': instance.callId,
+  'room_name': instance.roomName,
+  'is_admin': instance.isAdmin,
+};
+
+_SnRealtimeCall _$SnRealtimeCallFromJson(Map<String, dynamic> json) =>
+    _SnRealtimeCall(
+      id: json['id'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      updatedAt: DateTime.parse(json['updated_at'] as String),
+      deletedAt:
+          json['deleted_at'] == null
+              ? null
+              : DateTime.parse(json['deleted_at'] as String),
+      endedAt:
+          json['ended_at'] == null
+              ? null
+              : DateTime.parse(json['ended_at'] as String),
+      senderId: json['sender_id'] as String,
+      sender: SnChatMember.fromJson(json['sender'] as Map<String, dynamic>),
+      roomId: json['room_id'] as String,
+      room: SnChatRoom.fromJson(json['room'] as Map<String, dynamic>),
+      upstreamConfig: json['upstream_config'] as Map<String, dynamic>,
+      providerName: json['provider_name'] as String?,
+      sessionId: json['session_id'] as String?,
+    );
+
+Map<String, dynamic> _$SnRealtimeCallToJson(_SnRealtimeCall instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'created_at': instance.createdAt.toIso8601String(),
+      'updated_at': instance.updatedAt.toIso8601String(),
+      'deleted_at': instance.deletedAt?.toIso8601String(),
+      'ended_at': instance.endedAt?.toIso8601String(),
+      'sender_id': instance.senderId,
+      'sender': instance.sender.toJson(),
+      'room_id': instance.roomId,
+      'room': instance.room.toJson(),
+      'upstream_config': instance.upstreamConfig,
+      'provider_name': instance.providerName,
+      'session_id': instance.sessionId,
+    };

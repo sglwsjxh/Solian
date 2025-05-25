@@ -42,11 +42,16 @@ class CheckInWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final todayResult = ref.watch(checkInResultTodayProvider);
 
-    Future<void> checkIn() async {
+    Future<void> checkIn({String? captchatTk}) async {
       final client = ref.read(apiClientProvider);
       try {
-        await client.post('/accounts/me/check-in');
+        await client.post(
+          '/accounts/me/check-in',
+          data: captchatTk == null ? null : jsonEncode(captchatTk),
+        );
         ref.invalidate(checkInResultTodayProvider);
+        final userNotifier = ref.read(userInfoProvider.notifier);
+        userNotifier.fetchUser();
       } catch (err) {
         if (err is DioException) {
           if (err.response?.statusCode == 423 && context.mounted) {
@@ -54,14 +59,7 @@ class CheckInWidget extends HookConsumerWidget {
               context,
             ).push(MaterialPageRoute(builder: (context) => CaptchaScreen()));
             if (captchaTk == null) return;
-            await client.post(
-              '/accounts/me/check-in',
-              data: jsonEncode(captchaTk),
-            );
-            ref.invalidate(checkInResultTodayProvider);
-            final userNotifier = ref.read(userInfoProvider.notifier);
-            userNotifier.fetchUser();
-            return;
+            return await checkIn(captchatTk: captchaTk);
           }
         }
         showErrorAlert(err);
@@ -139,7 +137,7 @@ class CheckInWidget extends HookConsumerWidget {
               if (todayResult.valueOrNull == null) {
                 checkIn();
               } else {
-                context.router.push(MyselfEventCalendarRoute());
+                context.router.push(EventCalanderRoute(name: 'me'));
               }
             },
             icon: AnimatedSwitcher(

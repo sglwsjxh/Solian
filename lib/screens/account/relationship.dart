@@ -96,8 +96,7 @@ class RelationshipListTile extends StatelessWidget {
         relationship.status == 0 && relationship.relatedId == currentUserId;
     final isWaiting =
         relationship.status == 0 && relationship.accountId == currentUserId;
-    final isEstablished =
-        relationship.status >= 100 || relationship.status <= -100;
+    final isEstablished = relationship.status == 1 || relationship.status == 2;
 
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 16, right: 12),

@@ -1,10 +1,13 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:island/pods/call.dart';
 
+@RoutePage()
 class CallScreen extends HookConsumerWidget {
-  const CallScreen({super.key});
+  final String roomId;
+  const CallScreen({super.key, @PathParam('id') required this.roomId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -12,7 +15,7 @@ class CallScreen extends HookConsumerWidget {
     final callNotifier = ref.read(callNotifierProvider.notifier);
 
     useEffect(() {
-      callNotifier.initialize();
+      callNotifier.joinRoom(roomId);
       return null;
     }, []);
 

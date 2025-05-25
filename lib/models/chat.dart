@@ -37,6 +37,7 @@ sealed class SnChatMessage with _$SnChatMessage {
     required DateTime updatedAt,
     DateTime? deletedAt,
     required String id,
+    @Default('text') String type,
     String? content,
     String? nonce,
     @Default({}) Map<String, dynamic> meta,
@@ -139,10 +140,35 @@ sealed class MessageSyncResponse with _$MessageSyncResponse {
 @freezed
 sealed class ChatRealtimeJoinResponse with _$ChatRealtimeJoinResponse {
   const factory ChatRealtimeJoinResponse({
+    required String provider,
+    required String endpoint,
     required String token,
-    required Map<String, dynamic> config,
+    required String callId,
+    required String roomName,
+    required bool isAdmin,
   }) = _ChatRealtimeJoinResponse;
 
   factory ChatRealtimeJoinResponse.fromJson(Map<String, dynamic> json) =>
       _$ChatRealtimeJoinResponseFromJson(json);
+}
+
+@freezed
+sealed class SnRealtimeCall with _$SnRealtimeCall {
+  const factory SnRealtimeCall({
+    required String id,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required DateTime? deletedAt,
+    required DateTime? endedAt,
+    required String senderId,
+    required SnChatMember sender,
+    required String roomId,
+    required SnChatRoom room,
+    required Map<String, dynamic> upstreamConfig,
+    String? providerName,
+    String? sessionId,
+  }) = _SnRealtimeCall;
+
+  factory SnRealtimeCall.fromJson(Map<String, dynamic> json) =>
+      _$SnRealtimeCallFromJson(json);
 }

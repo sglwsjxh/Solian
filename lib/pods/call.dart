@@ -1,7 +1,6 @@
-import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:livekit_client/livekit_client.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:dio/dio.dart';
 import 'package:island/pods/network.dart';
 
 part 'call.g.dart';
@@ -18,61 +17,40 @@ sealed class CallState with _$CallState {
 
 @riverpod
 class CallNotifier extends _$CallNotifier {
-  RTCPeerConnection? _peerConnection;
-  MediaStream? _localStream;
-  final _localRenderer = RTCVideoRenderer();
+  Room? _room;
+  LocalParticipant? _localParticipant;
+  LocalAudioTrack? _localAudioTrack;
 
   @override
   CallState build() {
     return const CallState(isMuted: false, isConnected: false);
   }
 
-  Future<void> initialize() async {
-    try {
-      await _localRenderer.initialize();
-
-      // Get user media (audio)
-      _localStream = await navigator.mediaDevices.getUserMedia({
-        'audio': true,
-        'video': false,
-      });
-
-      // Create peer connection
-      _peerConnection = await createPeerConnection({
-        'iceServers': [
-          {'urls': 'stun:stun.l.google.com:19302'},
-          // Add your Cloudflare TURN servers here
-        ],
-      });
-
-      // Add local stream to peer connection
-      _localStream!.getTracks().forEach((track) {
-        _peerConnection!.addTrack(track, _localStream!);
-      });
-
-      // Handle incoming tracks
-      _peerConnection!.onTrack = (RTCTrackEvent event) {
-        if (event.track.kind == 'audio') {
-          // Handle remote audio track
-        }
-      };
-
-      state = state.copyWith(isConnected: true);
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    }
-  }
-
-  Future<void> createSession() async {
+  Future<void> joinRoom(String roomId) async {
     try {
       final apiClient = ref.read(apiClientProvider);
-      final response = await apiClient.post(
-        'YOUR_CLOUDFLARE_CALLS_ENDPOINT/sessions',
-        options: Options(headers: {'Content-Type': 'application/json'}),
-      );
+      final response = await apiClient.get('/chat/realtime/$roomId/join');
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data;
+        final String endpoint = data['endpoint'];
+        final String token = data['token'];
+        // Connect to LiveKit
+        _room = Room();
+        await _room!.connect(endpoint, token);
+        _localParticipant = _room!.localParticipant;
+        // Create local audio track and publish
+        _localAudioTrack = await LocalAudioTrack.create();
+        await _localParticipant!.publishAudioTrack(_localAudioTrack!);
 
-      if (response.statusCode == 200) {
-        // Handle session creation
+        // Listen for connection updates
+        _room!.addListener(() {
+          state = state.copyWith(
+            isConnected: _room!.connectionState == ConnectionState.connected,
+          );
+        });
+        state = state.copyWith(isConnected: true);
+      } else {
+        state = state.copyWith(error: 'Failed to join room');
       }
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -80,15 +58,26 @@ class CallNotifier extends _$CallNotifier {
   }
 
   void toggleMute() {
-    state = state.copyWith(isMuted: !state.isMuted);
-    _localStream?.getAudioTracks().forEach((track) {
-      track.enabled = !state.isMuted;
-    });
+    final newMuted = !state.isMuted;
+    state = state.copyWith(isMuted: newMuted);
+    if (_localAudioTrack != null) {
+      if (newMuted) {
+        _localAudioTrack!.mute();
+      } else {
+        _localAudioTrack!.unmute();
+      }
+    }
+  }
+
+  Future<void> disconnect() async {
+    if (_room != null) {
+      await _room!.disconnect();
+      state = state.copyWith(isConnected: false);
+    }
   }
 
   void dispose() {
-    _localStream?.dispose();
-    _peerConnection?.dispose();
-    _localRenderer.dispose();
+    _localAudioTrack?.dispose();
+    _room?.dispose();
   }
 }

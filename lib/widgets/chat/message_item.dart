@@ -46,10 +46,6 @@ class MessageItem extends HookConsumerWidget {
         isCurrentUser
             ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5)
             : Theme.of(context).colorScheme.surfaceContainer;
-    final linkColor = Color.alphaBlend(
-      Theme.of(context).colorScheme.primary,
-      containerColor,
-    );
 
     final hasBackground =
         ref.watch(backgroundImageFileProvider).valueOrNull != null;
@@ -196,16 +192,8 @@ class MessageItem extends HookConsumerWidget {
                               textColor: textColor,
                               isReply: false,
                             ).padding(vertical: 4),
-                          if (remoteMessage.content?.isNotEmpty ?? false)
-                            MarkdownTextContent(
-                              content: remoteMessage.content!,
-                              isSelectable: true,
-                              linkStyle: TextStyle(color: linkColor),
-                              textStyle: TextStyle(
-                                color: textColor,
-                                fontSize: 14,
-                              ),
-                            ),
+                          if (_MessageItemContent.hasContent(remoteMessage))
+                            _MessageItemContent(item: remoteMessage),
                           if (remoteMessage.attachments.isNotEmpty)
                             LayoutBuilder(
                               builder: (context, constraints) {
@@ -360,7 +348,10 @@ class MessageQuoteWidget extends HookConsumerWidget {
             : message.toRemoteMessage().forwardedMessageId!,
       ),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        final remoteMessage =
+            snapshot.hasData ? snapshot.data!.toRemoteMessage() : null;
+
+        if (remoteMessage != null) {
           return ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(8)),
             child: Container(
@@ -378,7 +369,7 @@ class MessageQuoteWidget extends HookConsumerWidget {
                       children: [
                         Icon(Symbols.reply, size: 16, color: textColor),
                         Text(
-                          'Replying to ${snapshot.data!.toRemoteMessage().sender.account.nick}',
+                          'Replying to ${remoteMessage.sender.account.nick}',
                         ).textColor(textColor).bold(),
                       ],
                     ).padding(right: 8)
@@ -389,16 +380,12 @@ class MessageQuoteWidget extends HookConsumerWidget {
                       children: [
                         Icon(Symbols.forward, size: 16, color: textColor),
                         Text(
-                          'Forwarded from ${snapshot.data!.toRemoteMessage().sender.account.nick}',
+                          'Forwarded from ${remoteMessage.sender.account.nick}',
                         ).textColor(textColor).bold(),
                       ],
                     ).padding(right: 8),
-                  if (snapshot.data!.toRemoteMessage().content?.isNotEmpty ??
-                      false)
-                    Text(
-                      snapshot.data!.toRemoteMessage().content!,
-                      style: TextStyle(color: textColor),
-                    ),
+                  if (_MessageItemContent.hasContent(remoteMessage))
+                    _MessageItemContent(item: remoteMessage),
                 ],
               ),
             ),
@@ -407,6 +394,65 @@ class MessageQuoteWidget extends HookConsumerWidget {
           return SizedBox.shrink();
         }
       },
+    );
+  }
+}
+
+class _MessageItemContent extends StatelessWidget {
+  final SnChatMessage item;
+  const _MessageItemContent({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (item.type) {
+      case 'call.start':
+      case 'call.ended':
+        return _MessageContentCall(
+          isEnded: item.type == 'call.ended',
+          duration: item.meta['duration']?.toDouble(),
+        );
+      case 'text':
+      default:
+        return MarkdownTextContent(content: item.content!);
+    }
+  }
+
+  static bool hasContent(SnChatMessage item) {
+    return item.type == 'text' && (item.content?.isNotEmpty ?? false);
+  }
+}
+
+class _MessageContentCall extends StatelessWidget {
+  final bool isEnded;
+  final double? duration;
+  const _MessageContentCall({required this.isEnded, this.duration});
+
+  @override
+  Widget build(BuildContext context) {
+    String formatDuration(Duration duration) {
+      final hours = duration.inHours;
+      final minutes = duration.inMinutes.remainder(60);
+      final seconds = duration.inSeconds.remainder(60);
+      return '${hours == 0 ? '' : '$hours hours '}'
+          '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          isEnded ? Symbols.call_end : Symbols.phone_in_talk,
+          size: 16,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        Gap(4),
+        Text(
+          isEnded
+              ? 'Call ended after ${formatDuration(Duration(seconds: duration!.toInt()))}'
+              : 'Call started',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
+      ],
     );
   }
 }

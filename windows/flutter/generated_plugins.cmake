@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
+  connectivity_plus
   file_selector_windows
   firebase_core
   flutter_inappwebview_windows
@@ -11,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_udid
   flutter_webrtc
   irondash_engine_context
+  livekit_client
   media_kit_libs_windows_video
   media_kit_video
   sqlite3_flutter_libs

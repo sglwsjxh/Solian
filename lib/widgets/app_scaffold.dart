@@ -13,6 +13,8 @@ import 'package:island/services/responsive.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:island/widgets/chat/call_overlay.dart';
+import 'package:island/pods/call.dart';
 
 class WindowScaffold extends HookConsumerWidget {
   final Widget child;
@@ -150,11 +152,16 @@ class AppScaffold extends StatelessWidget {
           noBackground
               ? Colors.transparent
               : Theme.of(context).scaffoldBackgroundColor,
-      body: SizedBox.expand(
-        child:
-            noBackground
-                ? content
-                : AppBackground(isRoot: true, child: content),
+      body: Stack(
+        children: [
+          SizedBox.expand(
+            child:
+                noBackground
+                    ? content
+                    : AppBackground(isRoot: true, child: content),
+          ),
+          const _GlobalCallOverlay(),
+        ],
       ),
       appBar: appBar,
       bottomNavigationBar: bottomNavigationBar,
@@ -191,6 +198,28 @@ class PageBackButton extends StatelessWidget {
 }
 
 const kAppBackgroundImagePath = 'island_app_background';
+
+/// Global call overlay bar (appears when in a call but not on the call screen)
+class _GlobalCallOverlay extends HookConsumerWidget {
+  const _GlobalCallOverlay();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final callState = ref.watch(callNotifierProvider);
+    // Find current route name
+    final modalRoute = ModalRoute.of(context);
+    final isOnCallScreen = modalRoute?.settings.name?.contains('call') ?? false;
+    // You may want to store roomId in callState for more robust navigation
+    final roomId =
+        (modalRoute?.settings.arguments is Map &&
+                (modalRoute!.settings.arguments as Map).containsKey('roomId'))
+            ? (modalRoute.settings.arguments as Map)['roomId'] as String
+            : null;
+    if (callState.isConnected && !isOnCallScreen && roomId != null) {
+      return CallOverlayBar(roomId: roomId);
+    }
+    return const SizedBox.shrink();
+  }
+}
 
 final backgroundImageFileProvider = FutureProvider<File?>((ref) async {
   if (kIsWeb) return null;
