@@ -29,9 +29,9 @@ Future<SnPublisher> publisher(Ref ref, String uname) async {
 @riverpod
 Future<List<SnAccountBadge>> publisherBadges(Ref ref, String pubName) async {
   final pub = await ref.watch(publisherProvider(pubName).future);
-  if (pub.type != 0) return [];
+  if (pub.type != 0 || pub.account == null) return [];
   final apiClient = ref.watch(apiClientProvider);
-  final resp = await apiClient.get("/accounts/${pub.name}/badges");
+  final resp = await apiClient.get("/accounts/${pub.account!.name}/badges");
   return List<SnAccountBadge>.from(
     resp.data.map((x) => SnAccountBadge.fromJson(x)),
   );
@@ -177,9 +177,9 @@ class PublisherProfileScreen extends HookConsumerWidget {
                                 ).fontSize(14).opacity(0.85),
                               ],
                             ),
-                            if (data.type == 0)
+                            if (data.type == 0 && data.account != null)
                               AccountStatusWidget(
-                                uname: name,
+                                uname: data.account!.name,
                                 padding: EdgeInsets.zero,
                               ),
                           ],

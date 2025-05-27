@@ -110,6 +110,10 @@ _SnPublisher _$SnPublisherFromJson(Map<String, dynamic> json) => _SnPublisher(
       json['background'] == null
           ? null
           : SnCloudFile.fromJson(json['background'] as Map<String, dynamic>),
+  account:
+      json['account'] == null
+          ? null
+          : SnAccount.fromJson(json['account'] as Map<String, dynamic>),
   accountId: json['account_id'] as String?,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
@@ -131,6 +135,7 @@ Map<String, dynamic> _$SnPublisherToJson(_SnPublisher instance) =>
       'picture': instance.picture?.toJson(),
       'background_id': instance.backgroundId,
       'background': instance.background?.toJson(),
+      'account': instance.account?.toJson(),
       'account_id': instance.accountId,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),

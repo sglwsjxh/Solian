@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:island/models/file.dart';
+import 'package:island/models/user.dart';
 
 part 'post.freezed.dart';
 part 'post.g.dart';
@@ -54,6 +55,7 @@ sealed class SnPublisher with _$SnPublisher {
     required SnCloudFile? picture,
     required String? backgroundId,
     required SnCloudFile? background,
+    required SnAccount? account,
     required String? accountId,
     required DateTime createdAt,
     required DateTime updatedAt,
