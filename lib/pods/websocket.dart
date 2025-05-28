@@ -54,25 +54,18 @@ class WebSocketService {
     _statusStreamController.sink.add(WebSocketState.connecting());
 
     final baseUrl = ref.watch(serverUrlProvider);
-    final atk = await getFreshAtk(
-      ref.watch(tokenPairProvider),
-      baseUrl,
-      onRefreshed: (atk, rtk) {
-        setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-        ref.invalidate(tokenPairProvider);
-      },
-    );
+    final token = await getToken(ref.watch(tokenProvider));
 
     final url = '$baseUrl/ws'.replaceFirst('http', 'ws');
 
     log('[WebSocket] Trying connecting to $url');
     try {
       if (kIsWeb) {
-        _channel = WebSocketChannel.connect(Uri.parse('$url?tk=$atk'));
+        _channel = WebSocketChannel.connect(Uri.parse('$url?tk=$token'));
       } else {
         _channel = IOWebSocketChannel.connect(
           Uri.parse(url),
-          headers: {'Authorization': 'Bearer $atk'},
+          headers: {'Authorization': 'Bearer $token'},
         );
       }
       await _channel!.ready;

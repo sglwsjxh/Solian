@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -68,16 +67,9 @@ final apiClientProvider = Provider<Dio>((ref) {
         RequestInterceptorHandler handler,
       ) async {
         try {
-          final atk = await getFreshAtk(
-            ref.watch(tokenPairProvider),
-            ref.watch(serverUrlProvider),
-            onRefreshed: (atk, rtk) {
-              setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-              ref.invalidate(tokenPairProvider);
-            },
-          );
-          if (atk != null) {
-            options.headers['Authorization'] = 'Bearer $atk';
+          final token = await getToken(ref.watch(tokenProvider));
+          if (token != null) {
+            options.headers['Authorization'] = 'AtField $token';
           }
         } catch (err) {
           // ignore
@@ -95,105 +87,21 @@ final apiClientProvider = Provider<Dio>((ref) {
   return dio;
 });
 
-final tokenPairProvider = Provider<AppTokenPair?>((ref) {
+final tokenProvider = Provider<AppToken?>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
-  final tkPairString = prefs.getString(kTokenPairStoreKey);
-  if (tkPairString == null) return null;
-  return AppTokenPair.fromJson(jsonDecode(tkPairString));
+  final tokenString = prefs.getString(kTokenPairStoreKey);
+  if (tokenString == null) return null;
+  return AppToken.fromJson(jsonDecode(tokenString));
 });
 
-Future<(String, String)?> refreshToken(String baseUrl, String? rtk) async {
-  if (rtk == null) return null;
+// Token refresh functionality removed as per backend changes
 
-  final dio = Dio();
-  dio.options.baseUrl = baseUrl;
-
-  final resp = await dio.post(
-    '/auth/token',
-    data: {'grant_type': 'refresh_token', 'refresh_token': rtk},
-  );
-
-  final String atk = resp.data['access_token'];
-  final String nRtk = resp.data['refresh_token'];
-
-  return (atk, nRtk);
+Future<String?> getToken(AppToken? token) async {
+  return token?.token;
 }
 
-Completer<String?>? _refreshCompleter;
-
-Future<String?> getFreshAtk(
-  AppTokenPair? tkPair,
-  String baseUrl, {
-  Function(String, String)? onRefreshed,
-}) async {
-  var atk = tkPair?.accessToken;
-  var rtk = tkPair?.refreshToken;
-
-  if (_refreshCompleter != null) {
-    return await _refreshCompleter!.future;
-  } else {
-    _refreshCompleter = Completer<String?>();
-  }
-
-  try {
-    if (atk != null) {
-      final atkParts = atk.split('.');
-      if (atkParts.length != 3) {
-        throw Exception('invalid format of access token');
-      }
-
-      var rawPayload = atkParts[1].replaceAll('-', '+').replaceAll('_', '/');
-      switch (rawPayload.length % 4) {
-        case 0:
-          break;
-        case 2:
-          rawPayload += '==';
-          break;
-        case 3:
-          rawPayload += '=';
-          break;
-        default:
-          throw Exception('illegal format of access token payload');
-      }
-
-      final b64 = utf8.fuse(base64Url);
-      final payload = b64.decode(rawPayload);
-      final exp = jsonDecode(payload)['exp'];
-      if (exp <= DateTime.now().millisecondsSinceEpoch ~/ 1000) {
-        log('[Auth] Access token need refresh, doing it at ${DateTime.now()}');
-        final result = await refreshToken(baseUrl, rtk);
-        if (result == null) {
-          atk = null;
-        } else {
-          onRefreshed?.call(result.$1, result.$2);
-          atk = result.$1;
-        }
-      }
-
-      if (atk != null) {
-        _refreshCompleter!.complete(atk);
-        return atk;
-      } else {
-        log('[Auth] Access token refresh failed...');
-        _refreshCompleter!.complete(null);
-      }
-    }
-  } catch (err) {
-    log('[Auth] Failed to authenticate user... $err');
-    _refreshCompleter!.completeError(err);
-  } finally {
-    _refreshCompleter = null;
-  }
-
-  return null;
-}
-
-Future<void> setTokenPair(
-  SharedPreferences prefs,
-  String atk,
-  String rtk,
-) async {
-  final tkPair = AppTokenPair(accessToken: atk, refreshToken: rtk);
-  final tkPairString = jsonEncode(tkPair);
-  prefs.setString(kTokenPairStoreKey, tkPairString);
+Future<void> setToken(SharedPreferences prefs, String token) async {
+  final appToken = AppToken(token: token);
+  final tokenString = jsonEncode(appToken);
+  prefs.setString(kTokenPairStoreKey, tokenString);
 }

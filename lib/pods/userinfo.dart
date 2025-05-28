@@ -13,7 +13,7 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<SnAccount?>> {
 
   Future<String?> getAccessToken() async {
     final prefs = _ref.read(sharedPreferencesProvider);
-    return prefs.getString('dyn_user_atk');
+    return prefs.getString(kTokenPairStoreKey);
   }
 
   Future<void> fetchUser() async {

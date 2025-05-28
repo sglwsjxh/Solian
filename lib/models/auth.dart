@@ -4,14 +4,11 @@ part 'auth.freezed.dart';
 part 'auth.g.dart';
 
 @freezed
-sealed class AppTokenPair with _$AppTokenPair {
-  const factory AppTokenPair({
-    required String accessToken,
-    required String refreshToken,
-  }) = _AppTokenPair;
+sealed class AppToken with _$AppToken {
+  const factory AppToken({required String token}) = _AppToken;
 
-  factory AppTokenPair.fromJson(Map<String, dynamic> json) =>
-      _$AppTokenPairFromJson(json);
+  factory AppToken.fromJson(Map<String, dynamic> json) =>
+      _$AppTokenFromJson(json);
 }
 
 @freezed

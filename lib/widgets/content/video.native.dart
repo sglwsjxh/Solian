@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:media_kit/media_kit.dart';
@@ -38,18 +37,10 @@ class _UniversalVideoState extends ConsumerState<UniversalVideo> {
     final inCacheInfo = await DefaultCacheManager().getFileFromCache(url);
     if (inCacheInfo == null) {
       log('[MediaPlayer] Miss cache: $url');
-      final baseUrl = ref.watch(serverUrlProvider);
-      final atk = await getFreshAtk(
-        ref.watch(tokenPairProvider),
-        baseUrl,
-        onRefreshed: (atk, rtk) {
-          setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-          ref.invalidate(tokenPairProvider);
-        },
-      );
+      final token = await getToken(ref.watch(tokenProvider));
       final fileStream = DefaultCacheManager().getFileStream(
         url,
-        headers: {'Authorization': 'Bearer $atk'},
+        headers: {'Authorization': 'Bearer $token'},
         withProgress: true,
       );
       await for (var fileInfo in fileStream) {

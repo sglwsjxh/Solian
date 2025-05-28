@@ -117,19 +117,12 @@ class MessagesNotifier extends _$MessagesNotifier {
         messageRepositoryProvider(_roomId).future,
       );
       final baseUrl = ref.read(serverUrlProvider);
-      final atk = await getFreshAtk(
-        ref.watch(tokenPairProvider),
-        baseUrl,
-        onRefreshed: (atk, rtk) {
-          setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-          ref.invalidate(tokenPairProvider);
-        },
-      );
-      if (atk == null) throw ArgumentError('Access token is null');
+      final token = await getToken(ref.watch(tokenProvider));
+      if (token == null) throw ArgumentError('Access token is null');
 
       final currentMessages = state.value ?? [];
       await repository.sendMessage(
-        atk,
+        token,
         baseUrl,
         _roomId,
         content,

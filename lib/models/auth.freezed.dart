@@ -14,42 +14,42 @@ part of 'auth.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$AppTokenPair {
+mixin _$AppToken {
 
- String get accessToken; String get refreshToken;
-/// Create a copy of AppTokenPair
+ String get token;
+/// Create a copy of AppToken
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$AppTokenPairCopyWith<AppTokenPair> get copyWith => _$AppTokenPairCopyWithImpl<AppTokenPair>(this as AppTokenPair, _$identity);
+$AppTokenCopyWith<AppToken> get copyWith => _$AppTokenCopyWithImpl<AppToken>(this as AppToken, _$identity);
 
-  /// Serializes this AppTokenPair to a JSON map.
+  /// Serializes this AppToken to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppTokenPair&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppToken&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,refreshToken);
+int get hashCode => Object.hash(runtimeType,token);
 
 @override
 String toString() {
-  return 'AppTokenPair(accessToken: $accessToken, refreshToken: $refreshToken)';
+  return 'AppToken(token: $token)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $AppTokenPairCopyWith<$Res>  {
-  factory $AppTokenPairCopyWith(AppTokenPair value, $Res Function(AppTokenPair) _then) = _$AppTokenPairCopyWithImpl;
+abstract mixin class $AppTokenCopyWith<$Res>  {
+  factory $AppTokenCopyWith(AppToken value, $Res Function(AppToken) _then) = _$AppTokenCopyWithImpl;
 @useResult
 $Res call({
- String accessToken, String refreshToken
+ String token
 });
 
 
@@ -57,19 +57,18 @@ $Res call({
 
 }
 /// @nodoc
-class _$AppTokenPairCopyWithImpl<$Res>
-    implements $AppTokenPairCopyWith<$Res> {
-  _$AppTokenPairCopyWithImpl(this._self, this._then);
+class _$AppTokenCopyWithImpl<$Res>
+    implements $AppTokenCopyWith<$Res> {
+  _$AppTokenCopyWithImpl(this._self, this._then);
 
-  final AppTokenPair _self;
-  final $Res Function(AppTokenPair) _then;
+  final AppToken _self;
+  final $Res Function(AppToken) _then;
 
-/// Create a copy of AppTokenPair
+/// Create a copy of AppToken
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,}) {
   return _then(_self.copyWith(
-accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -80,47 +79,46 @@ as String,
 /// @nodoc
 @JsonSerializable()
 
-class _AppTokenPair implements AppTokenPair {
-  const _AppTokenPair({required this.accessToken, required this.refreshToken});
-  factory _AppTokenPair.fromJson(Map<String, dynamic> json) => _$AppTokenPairFromJson(json);
+class _AppToken implements AppToken {
+  const _AppToken({required this.token});
+  factory _AppToken.fromJson(Map<String, dynamic> json) => _$AppTokenFromJson(json);
 
-@override final  String accessToken;
-@override final  String refreshToken;
+@override final  String token;
 
-/// Create a copy of AppTokenPair
+/// Create a copy of AppToken
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$AppTokenPairCopyWith<_AppTokenPair> get copyWith => __$AppTokenPairCopyWithImpl<_AppTokenPair>(this, _$identity);
+_$AppTokenCopyWith<_AppToken> get copyWith => __$AppTokenCopyWithImpl<_AppToken>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$AppTokenPairToJson(this, );
+  return _$AppTokenToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppTokenPair&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppToken&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,refreshToken);
+int get hashCode => Object.hash(runtimeType,token);
 
 @override
 String toString() {
-  return 'AppTokenPair(accessToken: $accessToken, refreshToken: $refreshToken)';
+  return 'AppToken(token: $token)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$AppTokenPairCopyWith<$Res> implements $AppTokenPairCopyWith<$Res> {
-  factory _$AppTokenPairCopyWith(_AppTokenPair value, $Res Function(_AppTokenPair) _then) = __$AppTokenPairCopyWithImpl;
+abstract mixin class _$AppTokenCopyWith<$Res> implements $AppTokenCopyWith<$Res> {
+  factory _$AppTokenCopyWith(_AppToken value, $Res Function(_AppToken) _then) = __$AppTokenCopyWithImpl;
 @override @useResult
 $Res call({
- String accessToken, String refreshToken
+ String token
 });
 
 
@@ -128,19 +126,18 @@ $Res call({
 
 }
 /// @nodoc
-class __$AppTokenPairCopyWithImpl<$Res>
-    implements _$AppTokenPairCopyWith<$Res> {
-  __$AppTokenPairCopyWithImpl(this._self, this._then);
+class __$AppTokenCopyWithImpl<$Res>
+    implements _$AppTokenCopyWith<$Res> {
+  __$AppTokenCopyWithImpl(this._self, this._then);
 
-  final _AppTokenPair _self;
-  final $Res Function(_AppTokenPair) _then;
+  final _AppToken _self;
+  final $Res Function(_AppToken) _then;
 
-/// Create a copy of AppTokenPair
+/// Create a copy of AppToken
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,}) {
-  return _then(_AppTokenPair(
-accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,}) {
+  return _then(_AppToken(
+token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

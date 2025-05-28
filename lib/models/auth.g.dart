@@ -6,17 +6,12 @@ part of 'auth.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_AppTokenPair _$AppTokenPairFromJson(Map<String, dynamic> json) =>
-    _AppTokenPair(
-      accessToken: json['access_token'] as String,
-      refreshToken: json['refresh_token'] as String,
-    );
+_AppToken _$AppTokenFromJson(Map<String, dynamic> json) =>
+    _AppToken(token: json['token'] as String);
 
-Map<String, dynamic> _$AppTokenPairToJson(_AppTokenPair instance) =>
-    <String, dynamic>{
-      'access_token': instance.accessToken,
-      'refresh_token': instance.refreshToken,
-    };
+Map<String, dynamic> _$AppTokenToJson(_AppToken instance) => <String, dynamic>{
+  'token': instance.token,
+};
 
 _SnAuthChallenge _$SnAuthChallengeFromJson(Map<String, dynamic> json) =>
     _SnAuthChallenge(

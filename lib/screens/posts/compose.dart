@@ -125,21 +125,14 @@ class PostComposeScreen extends HookConsumerWidget {
       final attachment = attachments.value[index];
       if (attachment is SnCloudFile) return;
       final baseUrl = ref.watch(serverUrlProvider);
-      final atk = await getFreshAtk(
-        ref.watch(tokenPairProvider),
-        baseUrl,
-        onRefreshed: (atk, rtk) {
-          setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-          ref.invalidate(tokenPairProvider);
-        },
-      );
-      if (atk == null) throw ArgumentError('Access token is null');
+      final token = await getToken(ref.watch(tokenProvider));
+      if (token == null) throw ArgumentError('Token is null');
       try {
         attachmentProgress.value = {...attachmentProgress.value, index: 0};
         final cloudFile =
             await putMediaToCloud(
               fileData: attachment.data,
-              atk: atk,
+              atk: token,
               baseUrl: baseUrl,
               filename: attachment.data.name ?? 'Post media',
               mimetype:
@@ -394,49 +387,32 @@ class PostComposeScreen extends HookConsumerWidget {
                             final isWide = isWideScreen(context);
                             return isWide
                                 ? Wrap(
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: [
-                                      for (var idx = 0; idx < attachments.value.length; idx++)
-                                        SizedBox(
-                                          width: constraints.maxWidth / 2 - 4,
-                                          child: AttachmentPreview(
-                                            item: attachments.value[idx],
-                                            progress: attachmentProgress.value[idx],
-                                            onRequestUpload: () => uploadAttachment(idx),
-                                            onDelete: () => deleteAttachment(idx),
-                                            onMove: (delta) {
-                                              if (idx + delta < 0 ||
-                                                  idx + delta >= attachments.value.length) {
-                                                return;
-                                              }
-                                              final clone = List.of(attachments.value);
-                                              clone.insert(
-                                                idx + delta,
-                                                clone.removeAt(idx),
-                                              );
-                                              attachments.value = clone;
-                                            },
-                                          ),
-                                        ),
-                                    ],
-                                  )
-                                : Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    spacing: 8,
-                                    children: [
-                                      for (var idx = 0; idx < attachments.value.length; idx++)
-                                        AttachmentPreview(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    for (
+                                      var idx = 0;
+                                      idx < attachments.value.length;
+                                      idx++
+                                    )
+                                      SizedBox(
+                                        width: constraints.maxWidth / 2 - 4,
+                                        child: AttachmentPreview(
                                           item: attachments.value[idx],
-                                          progress: attachmentProgress.value[idx],
-                                          onRequestUpload: () => uploadAttachment(idx),
+                                          progress:
+                                              attachmentProgress.value[idx],
+                                          onRequestUpload:
+                                              () => uploadAttachment(idx),
                                           onDelete: () => deleteAttachment(idx),
                                           onMove: (delta) {
                                             if (idx + delta < 0 ||
-                                                idx + delta >= attachments.value.length) {
+                                                idx + delta >=
+                                                    attachments.value.length) {
                                               return;
                                             }
-                                            final clone = List.of(attachments.value);
+                                            final clone = List.of(
+                                              attachments.value,
+                                            );
                                             clone.insert(
                                               idx + delta,
                                               clone.removeAt(idx),
@@ -444,8 +420,42 @@ class PostComposeScreen extends HookConsumerWidget {
                                             attachments.value = clone;
                                           },
                                         ),
-                                    ],
-                                  );
+                                      ),
+                                  ],
+                                )
+                                : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  spacing: 8,
+                                  children: [
+                                    for (
+                                      var idx = 0;
+                                      idx < attachments.value.length;
+                                      idx++
+                                    )
+                                      AttachmentPreview(
+                                        item: attachments.value[idx],
+                                        progress: attachmentProgress.value[idx],
+                                        onRequestUpload:
+                                            () => uploadAttachment(idx),
+                                        onDelete: () => deleteAttachment(idx),
+                                        onMove: (delta) {
+                                          if (idx + delta < 0 ||
+                                              idx + delta >=
+                                                  attachments.value.length) {
+                                            return;
+                                          }
+                                          final clone = List.of(
+                                            attachments.value,
+                                          );
+                                          clone.insert(
+                                            idx + delta,
+                                            clone.removeAt(idx),
+                                          );
+                                          attachments.value = clone;
+                                        },
+                                      ),
+                                  ],
+                                );
                           },
                         ),
                       ],

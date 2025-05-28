@@ -522,19 +522,12 @@ class EditChatScreen extends HookConsumerWidget {
       submitting.value = true;
       try {
         final baseUrl = ref.watch(serverUrlProvider);
-        final atk = await getFreshAtk(
-          ref.watch(tokenPairProvider),
-          baseUrl,
-          onRefreshed: (atk, rtk) {
-            setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-            ref.invalidate(tokenPairProvider);
-          },
-        );
-        if (atk == null) throw ArgumentError('Access token is null');
+        final token = await getToken(ref.watch(tokenProvider));
+        if (token == null) throw ArgumentError('Token is null');
         final cloudFile =
             await putMediaToCloud(
               fileData: result,
-              atk: atk,
+              atk: token,
               baseUrl: baseUrl,
               filename: result.name,
               mimetype: result.mimeType ?? 'image/jpeg',

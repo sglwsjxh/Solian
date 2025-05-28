@@ -142,10 +142,9 @@ class _LoginCheckScreen extends HookConsumerWidget {
           '/auth/token',
           data: {'grant_type': 'authorization_code', 'code': result.id},
         );
-        final atk = tokenResp.data['access_token'];
-        final rtk = tokenResp.data['refresh_token'];
-        setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-        ref.invalidate(tokenPairProvider);
+        final token = tokenResp.data['token'];
+        setToken(ref.watch(sharedPreferencesProvider), token);
+        ref.invalidate(tokenProvider);
         if (!context.mounted) return;
         final userNotifier = ref.read(userInfoProvider.notifier);
         userNotifier.fetchUser().then((_) {

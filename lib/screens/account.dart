@@ -254,8 +254,8 @@ class AccountScreen extends HookConsumerWidget {
                 contentPadding: EdgeInsets.symmetric(horizontal: 24),
                 title: Text('Copy access token'),
                 onTap: () async {
-                  final tk = ref.watch(tokenPairProvider);
-                  Clipboard.setData(ClipboardData(text: tk!.accessToken));
+                  final tk = ref.watch(tokenProvider);
+                  Clipboard.setData(ClipboardData(text: tk!.token));
                 },
               ),
             if (kDebugMode)

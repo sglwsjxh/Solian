@@ -186,7 +186,7 @@ class MessageRepository {
   }
 
   Future<LocalChatMessage> sendMessage(
-    String atk,
+    String token,
     String baseUrl,
     String roomId,
     String content,
@@ -232,7 +232,7 @@ class MessageRepository {
         final cloudFile =
             await putMediaToCloud(
               fileData: attachments[idx].data,
-              atk: atk,
+              atk: token,
               baseUrl: baseUrl,
               filename: attachments[idx].data.name ?? 'Post media',
               mimetype:

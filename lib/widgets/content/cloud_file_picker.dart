@@ -43,15 +43,8 @@ class CloudFilePicker extends HookConsumerWidget {
       if (files.value.isEmpty) return;
 
       final baseUrl = ref.read(serverUrlProvider);
-      final atk = await getFreshAtk(
-        ref.watch(tokenPairProvider),
-        baseUrl,
-        onRefreshed: (atk, rtk) {
-          setTokenPair(ref.watch(sharedPreferencesProvider), atk, rtk);
-          ref.invalidate(tokenPairProvider);
-        },
-      );
-      if (atk == null) throw Exception("Unauthorized");
+      final token = await getToken(ref.watch(tokenProvider));
+      if (token == null) throw Exception("Unauthorized");
 
       List<SnCloudFile> result = List.empty(growable: true);
 
@@ -64,7 +57,7 @@ class CloudFilePicker extends HookConsumerWidget {
           final cloudFile =
               await putMediaToCloud(
                 fileData: file.data,
-                atk: atk,
+                atk: token,
                 baseUrl: baseUrl,
                 filename: file.data.name ?? 'Post media',
                 mimetype:
