@@ -17,6 +17,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_paging_utils/riverpod_paging_utils.dart';
 import 'package:island/pods/network.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 part 'explore.g.dart';
 
@@ -131,10 +132,16 @@ class _ActivityListView extends HookConsumerWidget {
 
             switch (item.type) {
               case 'posts.new':
+              case 'posts.new.replies':
+                final isReply = item.type == 'posts.new.replies';
                 itemWidget = PostItem(
                   backgroundColor:
                       isWideScreen(context) ? Colors.transparent : null,
                   item: SnPost.fromJson(item.data),
+                  padding:
+                      isReply
+                          ? EdgeInsets.only(left: 16, right: 16, bottom: 16)
+                          : null,
                   onRefresh: (_) {
                     activitiesNotifier.forceRefresh();
                   },
@@ -145,6 +152,21 @@ class _ActivityListView extends HookConsumerWidget {
                     );
                   },
                 );
+                if (isReply) {
+                  itemWidget = Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Symbols.reply),
+                          const Gap(8),
+                          Text('Replying your post'),
+                        ],
+                      ).padding(horizontal: 20, vertical: 8),
+                      itemWidget,
+                    ],
+                  );
+                }
                 break;
               case 'accounts.check-in':
                 itemWidget = CheckInActivityWidget(item: item);
