@@ -103,6 +103,7 @@ dependencies:
   flutter_webrtc: ^0.14.1
   livekit_client: ^2.4.7
   pasteboard: ^0.4.0
+  flutter_colorpicker: ^1.1.0
 
 dev_dependencies:
   flutter_test:

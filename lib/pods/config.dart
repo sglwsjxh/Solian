@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:island/pods/theme.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'config.freezed.dart';
+part 'config.g.dart';
 
 const kTokenPairStoreKey = 'dyn_user_tk';
 
@@ -14,13 +17,8 @@ const kAppbarTransparentStoreKey = 'app_bar_transparent';
 const kAppBackgroundStoreKey = 'app_has_background';
 const kAppColorSchemeStoreKey = 'app_color_scheme';
 const kAppNotifyWithHaptic = 'app_notify_with_haptic';
-const kAppExpandPostLink = 'app_expand_post_link';
-const kAppExpandChatLink = 'app_expand_chat_link';
-const kAppRealmCompactView = 'app_realm_compact_view';
 const kAppCustomFonts = 'app_custom_fonts';
-const kAppMixedFeed = 'app_mixed_feed';
 const kAppAutoTranslate = 'app_auto_translate';
-const kAppHideBottomNav = 'app_hide_bottom_nav';
 const kAppSoundEffects = 'app_sound_effects';
 const kAppAprilFoolFeatures = 'app_april_fool_features';
 const kAppWindowSize = 'app_window_size';
@@ -57,48 +55,73 @@ sealed class AppSettings with _$AppSettings {
     required bool soundEffects,
     required bool aprilFoolFeatures,
     required bool enterToSend,
+    required bool appBarTransparent,
+    required String? customFonts,
+    required int? appColorScheme, // The color stored via the int type
   }) = _AppSettings;
 }
 
-class AppSettingsNotifier extends StateNotifier<AppSettings> {
-  final SharedPreferences prefs;
-
-  AppSettingsNotifier(this.prefs)
-    : super(
-        AppSettings(
-          autoTranslate: prefs.getBool(kAppAutoTranslate) ?? false,
-          soundEffects: prefs.getBool(kAppSoundEffects) ?? true,
-          aprilFoolFeatures: prefs.getBool(kAppAprilFoolFeatures) ?? true,
-          enterToSend: prefs.getBool(kAppEnterToSend) ?? true,
-        ),
-      );
+@riverpod
+class AppSettingsNotifier extends _$AppSettingsNotifier {
+  @override
+  AppSettings build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return AppSettings(
+      autoTranslate: prefs.getBool(kAppAutoTranslate) ?? false,
+      soundEffects: prefs.getBool(kAppSoundEffects) ?? true,
+      aprilFoolFeatures: prefs.getBool(kAppAprilFoolFeatures) ?? true,
+      enterToSend: prefs.getBool(kAppEnterToSend) ?? true,
+      appBarTransparent: prefs.getBool(kAppbarTransparentStoreKey) ?? false,
+      customFonts: prefs.getString(kAppCustomFonts),
+      appColorScheme: prefs.getInt(kAppColorSchemeStoreKey),
+    );
+  }
 
   void setAutoTranslate(bool value) {
+    final prefs = ref.read(sharedPreferencesProvider);
     prefs.setBool(kAppAutoTranslate, value);
     state = state.copyWith(autoTranslate: value);
   }
 
   void setSoundEffects(bool value) {
+    final prefs = ref.read(sharedPreferencesProvider);
     prefs.setBool(kAppSoundEffects, value);
     state = state.copyWith(soundEffects: value);
   }
 
   void setAprilFoolFeatures(bool value) {
+    final prefs = ref.read(sharedPreferencesProvider);
     prefs.setBool(kAppAprilFoolFeatures, value);
     state = state.copyWith(aprilFoolFeatures: value);
   }
 
   void setEnterToSend(bool value) {
+    final prefs = ref.read(sharedPreferencesProvider);
     prefs.setBool(kAppEnterToSend, value);
     state = state.copyWith(enterToSend: value);
   }
-}
 
-final appSettingsProvider =
-    StateNotifierProvider<AppSettingsNotifier, AppSettings>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return AppSettingsNotifier(prefs);
-    });
+  void setAppBarTransparent(bool value) {
+    final prefs = ref.read(sharedPreferencesProvider);
+    prefs.setBool(kAppbarTransparentStoreKey, value);
+    state = state.copyWith(appBarTransparent: value);
+    ref.read(themeProvider.notifier).reloadTheme();
+  }
+
+  void setCustomFonts(String? value) {
+    final prefs = ref.read(sharedPreferencesProvider);
+    prefs.setString(kAppCustomFonts, value ?? '');
+    state = state.copyWith(customFonts: value);
+    ref.read(themeProvider.notifier).reloadTheme();
+  }
+
+  void setAppColorScheme(int? value) {
+    final prefs = ref.read(sharedPreferencesProvider);
+    prefs.setInt(kAppColorSchemeStoreKey, value ?? 0);
+    state = state.copyWith(appColorScheme: value);
+    ref.read(themeProvider.notifier).reloadTheme();
+  }
+}
 
 final updateInfoProvider =
     StateNotifierProvider<UpdateInfoNotifier, (String?, String?)>((ref) {

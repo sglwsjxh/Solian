@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,7 +29,7 @@ class SettingsScreen extends HookConsumerWidget {
     final serverUrl = ref.watch(serverUrlProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
     final controller = TextEditingController(text: serverUrl);
-    final settings = ref.watch(appSettingsProvider);
+    final settings = ref.watch(appSettingsNotifierProvider);
     final isDesktop =
         !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
     final isWide = isWideScreen(context);
@@ -88,6 +89,107 @@ class SettingsScreen extends HookConsumerWidget {
         ),
       ),
 
+      // Custom fonts settings
+      ListTile(
+        isThreeLine: true,
+        minLeadingWidth: 48,
+        title: Text('settingsCustomFonts').tr(),
+        contentPadding: const EdgeInsets.only(left: 24, right: 17),
+        leading: const Icon(Symbols.font_download),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: TextField(
+            controller: TextEditingController(text: settings.customFonts),
+            decoration: InputDecoration(
+              hintText: 'Nunito, Arial, sans-serif',
+              helperText: 'settingsCustomFontsHelper'.tr(),
+              suffixIcon: IconButton(
+                icon: const Icon(Symbols.restart_alt),
+                onPressed: () {
+                  ref
+                      .read(appSettingsNotifierProvider.notifier)
+                      .setCustomFonts(null);
+                  showSnackBar(context, 'settingsApplied'.tr());
+                },
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              isDense: true,
+            ),
+            onSubmitted: (value) {
+              ref
+                  .read(appSettingsNotifierProvider.notifier)
+                  .setCustomFonts(value.isEmpty ? null : value);
+              showSnackBar(context, 'settingsApplied'.tr());
+            },
+          ),
+        ),
+      ),
+
+      // Color scheme settings
+      ListTile(
+        minLeadingWidth: 48,
+        title: Text('settingsColorScheme').tr(),
+        contentPadding: const EdgeInsets.only(left: 24, right: 17),
+        leading: const Icon(Symbols.palette),
+        trailing: GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                Color selectedColor =
+                    settings.appColorScheme != null
+                        ? Color(settings.appColorScheme!)
+                        : Colors.indigo;
+
+                return AlertDialog(
+                  title: Text('settingsColorScheme').tr(),
+                  content: SingleChildScrollView(
+                    child: ColorPicker(
+                      pickerColor: selectedColor,
+                      onColorChanged: (color) {
+                        selectedColor = color;
+                      },
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('Cancel').tr(),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        ref
+                            .read(appSettingsNotifierProvider.notifier)
+                            .setAppColorScheme(selectedColor.value);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Confirm').tr(),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color:
+                  settings.appColorScheme != null
+                      ? Color(settings.appColorScheme!)
+                      : Colors.indigo,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+      ),
+
       // Background image settings (only for non-web platforms)
       if (!kIsWeb && docBasepath.value != null)
         ListTile(
@@ -128,13 +230,15 @@ class SettingsScreen extends HookConsumerWidget {
       // Clear background image option
       if (!kIsWeb && docBasepath.value != null)
         FutureBuilder<bool>(
-          future: File('${docBasepath.value}/app_background_image').exists(),
+          future:
+              File('${docBasepath.value}/$kAppBackgroundImagePath').exists(),
           builder: (context, snapshot) {
             if (!snapshot.hasData || !snapshot.data!) {
               return const SizedBox.shrink();
             }
 
             return ListTile(
+              minLeadingWidth: 48,
               title: Text('settingsBackgroundImageClear').tr(),
               contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               leading: const Icon(Symbols.texture),
@@ -207,7 +311,9 @@ class SettingsScreen extends HookConsumerWidget {
         trailing: Switch(
           value: settings.autoTranslate,
           onChanged: (value) {
-            ref.read(appSettingsProvider.notifier).setAutoTranslate(value);
+            ref
+                .read(appSettingsNotifierProvider.notifier)
+                .setAutoTranslate(value);
           },
         ),
       ),
@@ -221,7 +327,9 @@ class SettingsScreen extends HookConsumerWidget {
         trailing: Switch(
           value: settings.soundEffects,
           onChanged: (value) {
-            ref.read(appSettingsProvider.notifier).setSoundEffects(value);
+            ref
+                .read(appSettingsNotifierProvider.notifier)
+                .setSoundEffects(value);
           },
         ),
       ),
@@ -235,7 +343,9 @@ class SettingsScreen extends HookConsumerWidget {
         trailing: Switch(
           value: settings.aprilFoolFeatures,
           onChanged: (value) {
-            ref.read(appSettingsProvider.notifier).setAprilFoolFeatures(value);
+            ref
+                .read(appSettingsNotifierProvider.notifier)
+                .setAprilFoolFeatures(value);
           },
         ),
       ),
@@ -253,7 +363,25 @@ class SettingsScreen extends HookConsumerWidget {
         trailing: Switch(
           value: settings.enterToSend,
           onChanged: (value) {
-            ref.read(appSettingsProvider.notifier).setEnterToSend(value);
+            ref
+                .read(appSettingsNotifierProvider.notifier)
+                .setEnterToSend(value);
+          },
+        ),
+      ),
+
+      // Transparent app bar settings
+      ListTile(
+        minLeadingWidth: 48,
+        title: Text('settingsTransparentAppBar').tr(),
+        contentPadding: const EdgeInsets.only(left: 24, right: 17),
+        leading: const Icon(Symbols.blur_on),
+        trailing: Switch(
+          value: settings.appBarTransparent,
+          onChanged: (value) {
+            ref
+                .read(appSettingsNotifierProvider.notifier)
+                .setAppBarTransparent(value);
           },
         ),
       ),
