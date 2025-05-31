@@ -45,8 +45,8 @@ class NotificationService: UNNotificationServiceExtension {
     }
     
     private func processNotification(request: UNNotificationRequest, content: UNMutableNotificationContent) throws {
-        switch content.categoryIdentifier {
-        case "messaging.message", "messaging.callStart":
+        switch content.userInfo["type"] as? String {
+        case "messages.new":
             try handleMessagingNotification(request: request, content: content)
         default:
             try handleDefaultNotification(content: content)
@@ -54,11 +54,11 @@ class NotificationService: UNNotificationServiceExtension {
     }
     
     private func handleMessagingNotification(request: UNNotificationRequest, content: UNMutableNotificationContent) throws {
-        guard let metadata = content.userInfo["metadata"] as? [AnyHashable: Any] else {
-            throw ParseNotificationPayloadError.missingMetadata("The notification has no metadata.")
+        guard let meta = content.userInfo["meta"] as? [AnyHashable: Any] else {
+            throw ParseNotificationPayloadError.missingMetadata("The notification has no meta.")
         }
         
-        guard let pfpIdentifier = metadata["pfp"] as? String else {
+        guard let pfpIdentifier = meta["pfp"] as? String else {
             throw ParseNotificationPayloadError.missingAvatarUrl("The notification has no pfp.")
         }
         
@@ -78,7 +78,7 @@ class NotificationService: UNNotificationServiceExtension {
         UNUserNotificationCenter.current().setNotificationCategories([replyableMessageCategory])
         content.categoryIdentifier = replyableMessageCategory.identifier
         
-        let metadataCopy = metadata as? [String: String] ?? [:]
+        let metaCopy = meta as? [String: String] ?? [:]
         let pfpUrl = getAttachmentUrl(for: pfpIdentifier)
         
         let targetSize = 512
@@ -93,17 +93,17 @@ class NotificationService: UNNotificationServiceExtension {
                 print("Unable to get pfp url: \(error)")
             }
             
-            let handle = INPersonHandle(value: "\(metadataCopy["user_id"] ?? "")", type: .unknown)
+            let handle = INPersonHandle(value: "\(metaCopy["user_id"] ?? "")", type: .unknown)
             let sender = INPerson(
                 personHandle: handle,
-                nameComponents: PersonNameComponents(nickname: "\(metadataCopy["sender_name"] ?? "")"),
+                nameComponents: PersonNameComponents(nickname: "\(metaCopy["sender_name"] ?? "")"),
                 displayName: content.title,
                 image: image == nil ? nil : INImage(imageData: image!),
                 contactIdentifier: nil,
                 customIdentifier: nil
             )
             
-            let intent = self.createMessageIntent(with: sender, metadata: metadataCopy, body: content.body)
+            let intent = self.createMessageIntent(with: sender, meta: metaCopy, body: content.body)
             self.donateInteraction(for: intent)
             let updatedContent = try? request.content.updating(from: intent)
             self.contentHandler?(updatedContent ?? content)
@@ -111,15 +111,15 @@ class NotificationService: UNNotificationServiceExtension {
     }
     
     private func handleDefaultNotification(content: UNMutableNotificationContent) throws {
-        guard let metadata = content.userInfo["metadata"] as? [AnyHashable: Any] else {
-            throw ParseNotificationPayloadError.missingMetadata("The notification has no metadata.")
+        guard let meta = content.userInfo["meta"] as? [AnyHashable: Any] else {
+            throw ParseNotificationPayloadError.missingMetadata("The notification has no meta.")
         }
         
-        if let imageIdentifier = metadata["image"] as? String {
+        if let imageIdentifier = meta["image"] as? String {
             attachMedia(to: content, withIdentifier: [imageIdentifier], fileType: UTType.webP, doScaleDown: true)
-        } else if let pfpIdentifier = metadata["pfp"] as? String {
+        } else if let pfpIdentifier = meta["pfp"] as? String {
             attachMedia(to: content, withIdentifier: [pfpIdentifier], fileType: UTType.webP, doScaleDown: true)
-        } else if let imagesIdentifier = metadata["images"] as? Array<String> {
+        } else if let imagesIdentifier = meta["images"] as? Array<String> {
             attachMedia(to: content, withIdentifier: imagesIdentifier, fileType: UTType.webP, doScaleDown: true)
         } else {
             contentHandler?(content)
@@ -136,7 +136,7 @@ class NotificationService: UNNotificationServiceExtension {
             return
         }
 
-        let targetSize = 800
+        let targetSize = 512
         let scaleProcessor = ResizingImageProcessor(referenceSize: CGSize(width: targetSize, height: targetSize), mode: .aspectFit)
 
         for attachmentUrl in attachmentUrls {
@@ -202,13 +202,13 @@ class NotificationService: UNNotificationServiceExtension {
         self.contentHandler?(content)
     }
     
-    private func createMessageIntent(with sender: INPerson, metadata: [AnyHashable: Any], body: String) -> INSendMessageIntent {
+    private func createMessageIntent(with sender: INPerson, meta: [AnyHashable: Any], body: String) -> INSendMessageIntent {
         INSendMessageIntent(
             recipients: nil,
             outgoingMessageType: .outgoingMessageText,
             content: body,
-            speakableGroupName: metadata["room_name"] != nil ? INSpeakableString(spokenPhrase: metadata["room_name"] as! String) : nil,
-            conversationIdentifier: "\(metadata["room_id"] ?? "")",
+            speakableGroupName: meta["room_name"] != nil ? INSpeakableString(spokenPhrase: meta["room_name"] as! String) : nil,
+            conversationIdentifier: "\(meta["room_id"] ?? "")",
             serviceName: nil,
             sender: sender,
             attachments: nil

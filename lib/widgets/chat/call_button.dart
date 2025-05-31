@@ -14,6 +14,7 @@ part 'call_button.g.dart';
 
 @riverpod
 Future<SnRealtimeCall?> ongoingCall(Ref ref, String roomId) async {
+  if (roomId.isEmpty) return null;
   try {
     final apiClient = ref.watch(apiClientProvider);
     final resp = await apiClient.get('/chat/realtime/$roomId');

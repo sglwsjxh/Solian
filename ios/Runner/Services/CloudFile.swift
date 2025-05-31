@@ -8,7 +8,7 @@
 import Foundation
 
 func getAttachmentUrl(for identifier: String) -> String {
-    let serverBaseUrl = "https://api.sn.solsynth.dev"
+    let serverBaseUrl = "https://nt.solian.app"
     
-    return identifier.starts(with: "http") ? identifier : "\(serverBaseUrl)/cgi/uc/attachments/\(identifier)"
+    return identifier.starts(with: "http") ? identifier : "\(serverBaseUrl)/files/\(identifier)"
 }
