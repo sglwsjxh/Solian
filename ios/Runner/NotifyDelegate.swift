@@ -16,17 +16,12 @@ class NotifyDelegate: UIResponder, UNUserNotificationCenterDelegate {
                 return
             }
             
-            var token: String = ""
-            if let tokenJson = UserDefaults.standard.string(forKey: "dyn_user_tk"),
-               let tokenData = tokenJson.data(using: String.Encoding.utf8),
-               let tokenDict = try? JSONSerialization.jsonObject(with: tokenData) as? [String: Any],
-               let tokenValue = tokenDict["token"] as? String {
-                token = tokenValue
-            } else {
+            var token: String? = UserDefaults.standard.getFlutterToken()
+            if token == nil {
                 return
             }
             
-            let serverUrl = "https://nt.solian.app"
+            let serverUrl = UserDefaults.standard.getServerUrl()
             let url = "\(serverUrl)/chat/\(metadata["room_id"] ?? "")/messages"
             
             let parameters: [String: Any?] = [
@@ -35,7 +30,7 @@ class NotifyDelegate: UIResponder, UNUserNotificationCenterDelegate {
             ]
             
             AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: HTTPHeaders(
-                [HTTPHeader(name: "Authorization", value: "AtField \(token)")]
+                [HTTPHeader(name: "Authorization", value: "AtField \(token!)")]
             ))
                 .validate()
                 .responseString { response in
