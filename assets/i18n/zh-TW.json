@@ -99,6 +99,14 @@
   "permissionMember": "成員",
   "reply": "回覆",
   "forward": "轉發",
+  "repliedTo": "回覆了",
+  "forwarded": "轉發了",
+  "hasAttachments": {
+    "other": "{}個附件"
+  },
+  "postHasAttachments": {
+    "other": "{}個附件"
+  },
   "edited": "已編輯",
   "addVideo": "新增影片",
   "addPhoto": "新增照片",

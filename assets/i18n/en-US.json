@@ -99,6 +99,16 @@
   "permissionMember": "Member",
   "reply": "Reply",
   "forward": "Forward",
+  "repliedTo": "Replied to",
+  "forwarded": "Forwarded",
+  "hasAttachments": {
+    "one": "{} attachment",
+    "other": "{} attachments"
+  },
+  "postHasAttachments": {
+    "one": "{} attachment",
+    "other": "{} attachments"
+  },
   "edited": "Edited",
   "addVideo": "Add video",
   "addPhoto": "Add photo",

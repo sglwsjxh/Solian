@@ -99,6 +99,14 @@
   "permissionMember": "成员",
   "reply": "回复",
   "forward": "转发",
+  "repliedTo": "回复了",
+  "forwarded": "转发了",
+  "hasAttachments": {
+    "other": "{}个附件"
+  },
+  "postHasAttachments": {
+    "other": "{}个附件"
+  },
   "edited": "已编辑",
   "addVideo": "添加视频",
   "addPhoto": "添加照片",

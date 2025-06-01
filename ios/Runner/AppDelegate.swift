@@ -1,8 +1,6 @@
 import Flutter
 import UIKit
 
-import shared_preferences_foundation
-
 @main
 @objc class AppDelegate: FlutterAppDelegate {
     let notifyDelegate = NotifyDelegate()

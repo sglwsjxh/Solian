@@ -25,6 +25,7 @@ class PostItem extends HookConsumerWidget {
   final SnPost item;
   final EdgeInsets? padding;
   final bool isOpenable;
+  final bool showReferencePost;
   final Function? onRefresh;
   final Function(SnPost)? onUpdate;
   const PostItem({
@@ -33,6 +34,7 @@ class PostItem extends HookConsumerWidget {
     this.backgroundColor,
     this.padding,
     this.isOpenable = true,
+    this.showReferencePost = true,
     this.onRefresh,
     this.onUpdate,
   });
@@ -134,6 +136,10 @@ class PostItem extends HookConsumerWidget {
                           Text(item.publisher.nick).bold(),
                           if (item.content?.isNotEmpty ?? false)
                             MarkdownTextContent(content: item.content!),
+                          if ((item.repliedPost != null ||
+                                  item.forwardedPost != null) &&
+                              showReferencePost)
+                            _buildReferencePost(context, item),
                           if (item.attachments.isNotEmpty)
                             CloudFileList(
                               files: item.attachments,
@@ -176,6 +182,102 @@ class PostItem extends HookConsumerWidget {
       ),
     );
   }
+}
+
+Widget _buildReferencePost(BuildContext context, SnPost item) {
+  final referencePost = item.repliedPost ?? item.forwardedPost;
+  if (referencePost == null) return const SizedBox.shrink();
+
+  final isReply = item.repliedPost != null;
+
+  return Container(
+    margin: const EdgeInsets.only(top: 8, bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              isReply ? Symbols.reply : Symbols.forward,
+              size: 16,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              isReply ? 'repliedTo'.tr() : 'forwarded'.tr(),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProfilePictureWidget(
+              fileId: referencePost.publisher.picture?.id,
+              radius: 16,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    referencePost.publisher.nick,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  if (referencePost.content?.isNotEmpty ?? false)
+                    MarkdownTextContent(
+                      content: referencePost.content!,
+                      textStyle: const TextStyle(fontSize: 14),
+                      isSelectable: false,
+                    ).padding(bottom: 4),
+                  if (referencePost.attachments.isNotEmpty)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Symbols.attach_file,
+                          size: 12,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'postHasAttachments'.plural(
+                            referencePost.attachments.length,
+                          ),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ).padding(vertical: 2),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ).gestures(
+    onTap: () => context.router.push(PostDetailRoute(id: referencePost.id)),
+  );
 }
 
 class PostReactionList extends HookConsumerWidget {
