@@ -14,8 +14,6 @@ class PostListNotifier extends _$PostListNotifier
     with CursorPagingNotifierMixin<SnPost> {
   static const int _pageSize = 20;
 
-  String? pubName;
-
   @override
   Future<CursorPagingData<SnPost>> build(String? pubName) {
     this.pubName = pubName;

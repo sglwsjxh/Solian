@@ -215,7 +215,10 @@ class EditRealmScreen extends HookConsumerWidget {
         if (token == null) throw ArgumentError('Access token is null');
         final cloudFile =
             await putMediaToCloud(
-              fileData: result,
+              fileData: UniversalFile(
+                data: result,
+                type: UniversalFileType.image,
+              ),
               atk: token,
               baseUrl: baseUrl,
               filename: result.name,

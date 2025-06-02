@@ -39,7 +39,7 @@ Future<XFile?> cropImage(
 }
 
 Completer<SnCloudFile?> putMediaToCloud({
-  required dynamic fileData, // Can be XFile or List<int> (Uint8List)
+  required UniversalFile fileData,
   required String atk,
   required String baseUrl,
   String? filename,
@@ -51,21 +51,27 @@ Completer<SnCloudFile?> putMediaToCloud({
   String actualMimetype = mimetype ?? '';
   Uint8List? byteData;
 
-  if (fileData is XFile) {
-    file = fileData;
-    actualFilename = filename ?? fileData.name;
-    actualMimetype = mimetype ?? fileData.mimeType ?? '';
-  } else if (fileData is List<int> || fileData is Uint8List) {
-    byteData = fileData is List<int> ? Uint8List.fromList(fileData) : fileData;
+  // Handle the data based on what's in the UniversalFile
+  final data = fileData.data;
+
+  if (data is XFile) {
+    file = data;
+    actualFilename = filename ?? data.name;
+    actualMimetype = mimetype ?? data.mimeType ?? '';
+  } else if (data is List<int> || data is Uint8List) {
+    byteData = data is List<int> ? Uint8List.fromList(data) : data;
     actualFilename = filename ?? 'uploaded_file';
     actualMimetype = mimetype ?? 'application/octet-stream';
     if (mimetype == null) {
       throw ArgumentError('Mimetype is required when providing raw bytes.');
     }
     file = XFile.fromData(byteData!, mimeType: actualMimetype);
+  } else if (data is SnCloudFile) {
+    // If the file is already on the cloud, just return it
+    return Completer<SnCloudFile?>()..complete(data);
   } else {
     throw ArgumentError(
-      'Invalid fileData type. Expected XFile or List<int> (Uint8List).',
+      'Invalid fileData type. Expected data to be XFile, List<int>, Uint8List, or SnCloudFile.',
     );
   }
 

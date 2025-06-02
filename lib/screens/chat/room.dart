@@ -17,12 +17,12 @@ import 'package:island/pods/database.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/pods/websocket.dart';
 import 'package:island/route.gr.dart';
-import 'package:island/screens/posts/compose.dart';
 import 'package:island/services/responsive.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/chat/call_overlay.dart';
 import 'package:island/widgets/chat/message_item.dart';
+import 'package:island/widgets/content/attachment_preview.dart';
 import 'package:island/widgets/content/cloud_files.dart';
 import 'package:island/widgets/response.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -514,7 +514,7 @@ class ChatRoomScreen extends HookConsumerWidget {
                       ),
           loading: () => const Text('Loading...'),
           error:
-              (err, __) => ResponseErrorWidget(
+              (err, _) => ResponseErrorWidget(
                 error: err,
                 onRetry: () => messagesNotifier.loadInitial(),
               ),
@@ -615,7 +615,7 @@ class ChatRoomScreen extends HookConsumerWidget {
                                           progress: null,
                                           showAvatar: false,
                                         ),
-                                    error: (_, __) => const SizedBox.shrink(),
+                                    error: (_, _) => const SizedBox.shrink(),
                                   );
                                 },
                               ),
@@ -680,7 +680,7 @@ class ChatRoomScreen extends HookConsumerWidget {
                         attachments.value = newAttachments;
                       },
                     ),
-                error: (_, __) => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
                 loading: () => const SizedBox.shrink(),
               ),
             ],
@@ -788,7 +788,7 @@ class _ChatInput extends ConsumerWidget {
                     onMove: (delta) => onMoveAttachment(idx, delta),
                   );
                 },
-                separatorBuilder: (_, __) => const Gap(8),
+                separatorBuilder: (_, _) => const Gap(8),
               ),
             ).padding(top: 12),
           if (messageReplyingTo != null ||

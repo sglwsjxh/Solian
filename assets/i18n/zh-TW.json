@@ -286,5 +286,10 @@
   "settingsHideBottomNav": "隱藏底部導航",
   "settingsSoundEffects": "音效",
   "settingsAprilFoolFeatures": "愚人節功能",
-  "settingsEnterToSend": "按下 Enter 傳送"
+  "settingsEnterToSend": "按下 Enter 傳送",
+  "postVisibility": "可見性",
+  "postVisibilityPublic": "公開",
+  "postVisibilityFriends": "僅好友可見",
+  "postVisibilityUnlisted": "不公開",
+  "postVisibilityPrivate": "私密"
 }

@@ -103,6 +103,20 @@ class PostItem extends HookConsumerWidget {
                 );
               },
             ),
+            MenuAction(
+              title: 'reply'.tr(),
+              image: MenuImage.icon(Symbols.reply),
+              callback: () {
+                context.router.push(PostComposeRoute(repliedPost: item));
+              },
+            ),
+            MenuAction(
+              title: 'forward'.tr(),
+              image: MenuImage.icon(Symbols.forward),
+              callback: () {
+                context.router.push(PostComposeRoute(forwardedPost: item));
+              },
+            ),
           ],
         );
       },
@@ -134,6 +148,46 @@ class PostItem extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(item.publisher.nick).bold(),
+                          // Add visibility indicator if not public (visibility != 0)
+                          if (item.visibility != 0)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _getVisibilityIcon(item.visibility),
+                                  size: 14,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _getVisibilityText(item.visibility).tr(),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ],
+                            ).padding(top: 2, bottom: 2),
+                          if (item.title?.isNotEmpty ?? false)
+                            Text(
+                              item.title!,
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          if (item.description?.isNotEmpty ?? false)
+                            Text(
+                              item.description!,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                              ),
+                            ).padding(bottom: 8),
                           if (item.content?.isNotEmpty ?? false)
                             MarkdownTextContent(content: item.content!),
                           if ((item.repliedPost != null ||
@@ -241,6 +295,45 @@ Widget _buildReferencePost(BuildContext context, SnPost item) {
                       fontSize: 14,
                     ),
                   ),
+                  // Add visibility indicator for referenced post if not public
+                  if (referencePost.visibility != 0)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _getVisibilityIcon(referencePost.visibility),
+                          size: 12,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _getVisibilityText(referencePost.visibility).tr(),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ],
+                    ).padding(top: 2, bottom: 2),
+                  if (referencePost.title?.isNotEmpty ?? false)
+                    Text(
+                      referencePost.title!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ).padding(top: 2, bottom: 2),
+                  if (referencePost.description?.isNotEmpty ?? false)
+                    Text(
+                      referencePost.description!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ).padding(bottom: 2),
                   if (referencePost.content?.isNotEmpty ?? false)
                     MarkdownTextContent(
                       content: referencePost.content!,
@@ -488,5 +581,33 @@ class _PostReactionSheet extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+// Helper method to get the appropriate icon for each visibility status
+IconData _getVisibilityIcon(int visibility) {
+  switch (visibility) {
+    case 1: // Friends
+      return Symbols.group;
+    case 2: // Unlisted
+      return Symbols.link_off;
+    case 3: // Private
+      return Symbols.lock;
+    default: // Public (0) or unknown
+      return Symbols.public;
+  }
+}
+
+// Helper method to get the translation key for each visibility status
+String _getVisibilityText(int visibility) {
+  switch (visibility) {
+    case 1: // Friends
+      return 'postVisibilityFriends';
+    case 2: // Unlisted
+      return 'postVisibilityUnlisted';
+    case 3: // Private
+      return 'postVisibilityPrivate';
+    default: // Public (0) or unknown
+      return 'postVisibilityPublic';
   }
 }

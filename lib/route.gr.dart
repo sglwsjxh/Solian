@@ -1071,10 +1071,17 @@ class PostComposeRoute extends _i27.PageRouteInfo<PostComposeRouteArgs> {
   PostComposeRoute({
     _i28.Key? key,
     _i30.SnPost? originalPost,
+    _i30.SnPost? repliedPost,
+    _i30.SnPost? forwardedPost,
     List<_i27.PageRouteInfo>? children,
   }) : super(
          PostComposeRoute.name,
-         args: PostComposeRouteArgs(key: key, originalPost: originalPost),
+         args: PostComposeRouteArgs(
+           key: key,
+           originalPost: originalPost,
+           repliedPost: repliedPost,
+           forwardedPost: forwardedPost,
+         ),
          initialChildren: children,
        );
 
@@ -1089,32 +1096,50 @@ class PostComposeRoute extends _i27.PageRouteInfo<PostComposeRouteArgs> {
       return _i18.PostComposeScreen(
         key: args.key,
         originalPost: args.originalPost,
+        repliedPost: args.repliedPost,
+        forwardedPost: args.forwardedPost,
       );
     },
   );
 }
 
 class PostComposeRouteArgs {
-  const PostComposeRouteArgs({this.key, this.originalPost});
+  const PostComposeRouteArgs({
+    this.key,
+    this.originalPost,
+    this.repliedPost,
+    this.forwardedPost,
+  });
 
   final _i28.Key? key;
 
   final _i30.SnPost? originalPost;
 
+  final _i30.SnPost? repliedPost;
+
+  final _i30.SnPost? forwardedPost;
+
   @override
   String toString() {
-    return 'PostComposeRouteArgs{key: $key, originalPost: $originalPost}';
+    return 'PostComposeRouteArgs{key: $key, originalPost: $originalPost, repliedPost: $repliedPost, forwardedPost: $forwardedPost}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! PostComposeRouteArgs) return false;
-    return key == other.key && originalPost == other.originalPost;
+    return key == other.key &&
+        originalPost == other.originalPost &&
+        repliedPost == other.repliedPost &&
+        forwardedPost == other.forwardedPost;
   }
 
   @override
-  int get hashCode => key.hashCode ^ originalPost.hashCode;
+  int get hashCode =>
+      key.hashCode ^
+      originalPost.hashCode ^
+      repliedPost.hashCode ^
+      forwardedPost.hashCode;
 }
 
 /// generated route for

@@ -325,5 +325,10 @@
   "accountSettingsHelpContent": "This page allows you to manage your account security, privacy, and other settings. If you need assistance, please contact support.",
   "unauthorized": "Unauthorized",
   "unauthorizedHint": "You're not signed in or session expired, please sign in again.",
-  "publisherVisitAccountPage": "Visit the profile of {}"
+  "publisherVisitAccountPage": "Visit the profile of {}",
+  "postVisibility": "Visibility",
+  "postVisibilityPublic": "Public",
+  "postVisibilityFriends": "Friends Only",
+  "postVisibilityUnlisted": "Unlisted",
+  "postVisibilityPrivate": "Private"
 }

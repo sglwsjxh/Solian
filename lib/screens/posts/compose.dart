@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
@@ -21,6 +19,7 @@ import 'package:island/services/responsive.dart';
 import 'package:island/widgets/alert.dart';
 import 'package:island/widgets/app_scaffold.dart';
 import 'package:island/widgets/content/cloud_files.dart';
+import 'package:island/widgets/content/attachment_preview.dart';
 import 'package:island/widgets/post/publishers_modal.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:pasteboard/pasteboard.dart';
@@ -53,7 +52,14 @@ class PostEditScreen extends HookConsumerWidget {
 @RoutePage()
 class PostComposeScreen extends HookConsumerWidget {
   final SnPost? originalPost;
-  const PostComposeScreen({super.key, this.originalPost});
+  final SnPost? repliedPost;
+  final SnPost? forwardedPost;
+  const PostComposeScreen({
+    super.key,
+    this.originalPost,
+    this.repliedPost,
+    this.forwardedPost,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,8 +96,13 @@ class PostComposeScreen extends HookConsumerWidget {
       text: originalPost?.description,
     );
     final contentController = useTextEditingController(
-      text: originalPost?.content,
+      text:
+          originalPost?.content ??
+          (forwardedPost != null ? '> ${forwardedPost!.content}\n\n' : null),
     );
+
+    // Add visibility state with default value from original post or 0 (public)
+    final visibility = useState<int>(originalPost?.visibility ?? 0);
 
     final submitting = useState(false);
 
@@ -188,12 +199,18 @@ class PostComposeScreen extends HookConsumerWidget {
         await client.request(
           originalPost == null ? '/posts' : '/posts/${originalPost!.id}',
           data: {
+            'title': titleController.text,
+            'description': descriptionController.text,
             'content': contentController.text,
+            'visibility':
+                visibility.value, // Add visibility field to API request
             'attachments':
                 attachments.value
                     .where((e) => e.isOnCloud)
                     .map((e) => e.data.id)
                     .toList(),
+            if (repliedPost != null) 'replied_post_id': repliedPost!.id,
+            if (forwardedPost != null) 'forwarded_post_id': forwardedPost!.id,
           },
           options: Options(
             headers: {'X-Pub': currentPublisher.value?.name},
@@ -210,7 +227,7 @@ class PostComposeScreen extends HookConsumerWidget {
       }
     }
 
-    Future<void> _handlePaste() async {
+    Future<void> handlePaste() async {
       final clipboard = await Pasteboard.image;
       if (clipboard == null) return;
 
@@ -223,14 +240,93 @@ class PostComposeScreen extends HookConsumerWidget {
       ];
     }
 
-    void _handleKeyPress(RawKeyEvent event) {
+    void handleKeyPress(RawKeyEvent event) {
       if (event is! RawKeyDownEvent) return;
 
       final isPaste = event.logicalKey == LogicalKeyboardKey.keyV;
       final isModifierPressed = event.isMetaPressed || event.isControlPressed;
 
       if (isPaste && isModifierPressed) {
-        _handlePaste();
+        handlePaste();
+      }
+    }
+
+    void showVisibilityModal() {
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: Text('postVisibility'.tr()),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(Symbols.public),
+                    title: Text('postVisibilityPublic'.tr()),
+                    onTap: () {
+                      visibility.value = 0;
+                      Navigator.pop(context);
+                    },
+                    selected: visibility.value == 0,
+                  ),
+                  ListTile(
+                    leading: Icon(Symbols.group),
+                    title: Text('postVisibilityFriends'.tr()),
+                    onTap: () {
+                      visibility.value = 1;
+                      Navigator.pop(context);
+                    },
+                    selected: visibility.value == 1,
+                  ),
+                  ListTile(
+                    leading: Icon(Symbols.link_off),
+                    title: Text('postVisibilityUnlisted'.tr()),
+                    onTap: () {
+                      visibility.value = 2;
+                      Navigator.pop(context);
+                    },
+                    selected: visibility.value == 2,
+                  ),
+                  ListTile(
+                    leading: Icon(Symbols.lock),
+                    title: Text('postVisibilityPrivate'.tr()),
+                    onTap: () {
+                      visibility.value = 3;
+                      Navigator.pop(context);
+                    },
+                    selected: visibility.value == 3,
+                  ),
+                ],
+              ),
+            ),
+      );
+    }
+
+    // Helper method to get the appropriate icon for each visibility status
+    IconData getVisibilityIcon(int visibilityValue) {
+      switch (visibilityValue) {
+        case 1: // Friends
+          return Symbols.group;
+        case 2: // Unlisted
+          return Symbols.link_off;
+        case 3: // Private
+          return Symbols.lock;
+        default: // Public (0) or unknown
+          return Symbols.public;
+      }
+    }
+
+    // Helper method to get the translation key for each visibility status
+    String getVisibilityText(int visibilityValue) {
+      switch (visibilityValue) {
+        case 1: // Friends
+          return 'postVisibilityFriends';
+        case 2: // Unlisted
+          return 'postVisibilityUnlisted';
+        case 3: // Private
+          return 'postVisibilityPrivate';
+        default: // Public (0) or unknown
+          return 'postVisibilityPublic';
       }
     }
 
@@ -296,6 +392,48 @@ class PostComposeScreen extends HookConsumerWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (repliedPost != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Theme.of(
+                context,
+              ).colorScheme.surfaceVariant.withOpacity(0.5),
+              child: Row(
+                children: [
+                  const Icon(Symbols.reply, size: 16),
+                  const Gap(8),
+                  Expanded(
+                    child: Text(
+                      '${'reply'.tr()}: ${repliedPost!.publisher.nick}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (forwardedPost != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Theme.of(
+                context,
+              ).colorScheme.surfaceVariant.withOpacity(0.5),
+              child: Row(
+                children: [
+                  const Icon(Symbols.forward, size: 16),
+                  const Gap(8),
+                  Expanded(
+                    child: Text(
+                      '${'forward'.tr()}: ${forwardedPost!.publisher.nick}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Expanded(
             child: Row(
               spacing: 12,
@@ -324,7 +462,52 @@ class PostComposeScreen extends HookConsumerWidget {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            OutlinedButton(
+                              onPressed: () {
+                                showVisibilityModal();
+                              },
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                side: BorderSide(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primary.withOpacity(0.5),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                visualDensity: const VisualDensity(
+                                  vertical: -2,
+                                  horizontal: -4,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    getVisibilityIcon(visibility.value),
+                                    size: 16,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    getVisibilityText(visibility.value).tr(),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ).padding(bottom: 6),
                         TextField(
                           controller: titleController,
                           decoration: InputDecoration.collapsed(
@@ -348,7 +531,7 @@ class PostComposeScreen extends HookConsumerWidget {
                         const Gap(8),
                         RawKeyboardListener(
                           focusNode: FocusNode(),
-                          onKey: _handleKeyPress,
+                          onKey: handleKeyPress,
                           child: TextField(
                             controller: contentController,
                             style: TextStyle(fontSize: 14),
@@ -470,207 +653,6 @@ class PostComposeScreen extends HookConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AttachmentPreview extends StatelessWidget {
-  final UniversalFile item;
-  final double? progress;
-  final Function(int)? onMove;
-  final Function? onDelete;
-  final Function? onRequestUpload;
-  const AttachmentPreview({
-    super.key,
-    required this.item,
-    this.progress,
-    this.onRequestUpload,
-    this.onMove,
-    this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio:
-          (item.isOnCloud ? (item.data.fileMeta?['ratio'] ?? 1) : 1).toDouble(),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(
-              color: Theme.of(context).colorScheme.surfaceContainerHigh,
-              child: Builder(
-                builder: (context) {
-                  if (item.isOnCloud) {
-                    return CloudFileWidget(item: item.data);
-                  } else if (item.data is XFile) {
-                    if (item.type == UniversalFileType.image) {
-                      return Image.file(File(item.data.path));
-                    } else {
-                      return Center(
-                        child: Text(
-                          'Preview is not supported for ${item.type}',
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-                  } else if (item is List<int> || item is Uint8List) {
-                    if (item.type == UniversalFileType.image) {
-                      return Image.memory(item.data);
-                    } else {
-                      return Center(
-                        child: Text(
-                          'Preview is not supported for ${item.type}',
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-                  }
-                  return Placeholder();
-                },
-              ),
-            ),
-            if (progress != null)
-              Positioned.fill(
-                child: Container(
-                  color: Colors.black.withOpacity(0.3),
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (progress != null)
-                        Text(
-                          '${progress!.toStringAsFixed(2)}%',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      else
-                        Text(
-                          'uploading'.tr(),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      Gap(6),
-                      Center(child: LinearProgressIndicator(value: progress)),
-                    ],
-                  ),
-                ),
-              ),
-            Positioned(
-              left: 8,
-              top: 8,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (onDelete != null)
-                          InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            child: const Icon(
-                              Symbols.delete,
-                              size: 14,
-                              color: Colors.white,
-                            ).padding(horizontal: 8, vertical: 6),
-                            onTap: () {
-                              onDelete?.call();
-                            },
-                          ),
-                        if (onDelete != null && onMove != null)
-                          SizedBox(
-                            height: 26,
-                            child: const VerticalDivider(
-                              width: 0.3,
-                              color: Colors.white,
-                              thickness: 0.3,
-                            ),
-                          ).padding(horizontal: 2),
-                        if (onMove != null)
-                          InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            child: const Icon(
-                              Symbols.keyboard_arrow_up,
-                              size: 14,
-                              color: Colors.white,
-                            ).padding(horizontal: 8, vertical: 6),
-                            onTap: () {
-                              onMove?.call(-1);
-                            },
-                          ),
-                        if (onMove != null)
-                          InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            child: const Icon(
-                              Symbols.keyboard_arrow_down,
-                              size: 14,
-                              color: Colors.white,
-                            ).padding(horizontal: 8, vertical: 6),
-                            onTap: () {
-                              onMove?.call(1);
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            if (onRequestUpload != null)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => onRequestUpload?.call(),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.5),
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      child:
-                          (item.isOnCloud)
-                              ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Symbols.cloud,
-                                    size: 16,
-                                    color: Colors.white,
-                                  ),
-                                  const Gap(8),
-                                  Text(
-                                    'On-cloud',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              )
-                              : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Symbols.cloud_off,
-                                    size: 16,
-                                    color: Colors.white,
-                                  ),
-                                  const Gap(8),
-                                  Text(
-                                    'On-device',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }

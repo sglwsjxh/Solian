@@ -8,9 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:island/models/file.dart';
 import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
-import 'package:island/screens/posts/compose.dart';
 import 'package:island/services/file.dart';
 import 'package:island/widgets/alert.dart';
+import 'package:island/widgets/content/attachment_preview.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:styled_widget/styled_widget.dart';
 

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:island/models/file.dart';
 import 'package:island/pods/config.dart';
 import 'package:island/pods/network.dart';
 import 'package:island/pods/userinfo.dart';
@@ -63,7 +64,10 @@ class UpdateProfileScreen extends HookConsumerWidget {
         if (token == null) throw ArgumentError('Token is null');
         final cloudFile =
             await putMediaToCloud(
-              fileData: result,
+              fileData: UniversalFile(
+                data: result,
+                type: UniversalFileType.image,
+              ),
               atk: token,
               baseUrl: baseUrl,
               filename: result.name,

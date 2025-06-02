@@ -414,7 +414,7 @@ class _MessageItemContent extends StatelessWidget {
         );
       case 'text':
       default:
-        return MarkdownTextContent(content: item.content!);
+        return MarkdownTextContent(content: item.content!, isSelectable: true);
     }
   }
 
