@@ -9,9 +9,9 @@
 AppName=Solian
 AppVersion={#AppVersion}
 AppPublisher=Solsynth
-AppPublisherURL=https://solsynth.dev
-AppSupportURL=https://kb.solsynth.dev/zh/solar-network
-AppUpdatesURL=https://github.com/Solsynth/Solian/releases
+AppPublisherURL=https://akiromusic.art
+AppSupportURL=https://akiromusic.art/zh/solar-network
+AppUpdatesURL=https://github.com/sglwsjxh/Solian/releases
 AppCopyright=Copyright © 2025 Solsynth
 VersionInfoVersion={#FullVersion}
 UninstallDisplayName=Solian
