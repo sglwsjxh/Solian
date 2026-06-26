@@ -67,7 +67,7 @@ new WebAuthClient(config?: WebAuthConfig)
 |----------|------|---------|-------------|
 | `baseUrl` | string | `'http://127.0.0.1'` | Local server base URL |
 | `defaultPort` | number | `40000` | Default port to connect to |
-| `webUrl` | string | `'https://app.solian.fr'` | Solar Network web URL |
+| `webUrl` | string | `'https://akiromusic.art'` | Solar Network web URL |
 
 ### Methods
 
@@ -77,7 +77,7 @@ Get the authentication URL for web-based auth flows.
 
 ```typescript
 const url = client.getAuthenticationUrl(40000);
-// Returns: 'https://app.solian.fr/auth/web?port=40000'
+// Returns: 'https://akiromusic.art/auth/web?port=40000'
 ```
 
 #### `waitForAuth(options: WaitForAuthOptions): Promise<WebAuthResult>`

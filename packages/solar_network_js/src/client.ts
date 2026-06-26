@@ -48,7 +48,7 @@ import type {
 const DEFAULT_CONFIG: Required<WebAuthConfig> = {
   baseUrl: 'http://127.0.0.1',
   defaultPort: 40000,
-  webUrl: 'https://app.solian.fr',
+  webUrl: 'https://akiromusic.art',
 };
 
 /**

@@ -28,7 +28,7 @@ import 'package:solar_network_sdk/solar_network_sdk.dart';
 
 final tokenStorage = SharedPreferencesTokenStorage(key: 'solar_token');
 final sdk = SolarNetworkSDK.create(
-  serverUrl: 'https://api.solian.app',
+  serverUrl: 'https://akiromusic.art',
   tokenStorage: tokenStorage,
 );
 ```
@@ -38,7 +38,7 @@ final sdk = SolarNetworkSDK.create(
 ```dart
 final server = WebAuthServer(
   getToken: () => tokenStorage.getToken(),
-  webUrl: 'https://app.solian.fr',
+  webUrl: 'https://akiromusic.art',
   getDio: () => sdk.apiClient,
 );
 
@@ -49,7 +49,7 @@ final authUrl = 'https://app.solian.fr/auth/web?port=$port';
 final result = await WebAuthClient(
   baseUrl: 'http://127.0.0.1',
   port: port,
-  webUrl: 'https://app.solian.fr',
+  webUrl: 'https://akiromusic.art',
 ).waitForAuth();
 ```
 
@@ -62,7 +62,7 @@ to request a challenge and exchange a signed challenge with redirect callbacks.
 final client = WebAuthClient(
   baseUrl: 'http://127.0.0.1',
   port: port,
-  webUrl: 'https://app.solian.fr',
+  webUrl: 'https://akiromusic.art',
 );
 
 // Step 1: request challenge (opens Solian app)

@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   final _client = WebAuthClient(
     baseUrl: 'http://127.0.0.1',
     port: 40000,
-    webUrl: 'https://app.solian.fr',
+    webUrl: 'https://akiromusic.art',
   );
 
   Future<void> _requestAuth() async {
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://api.solian.app/passport/accounts/me'),
+        Uri.parse('https://akiromusic.art/passport/accounts/me'),
         headers: {'Authorization': 'Bearer $_token'},
       );
 
