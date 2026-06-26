@@ -3672,7 +3672,7 @@
   "settingsIdleStatus": "空閒狀態",
   "settingsIpOverride": "IP 覆蓋",
   "settingsIpOverrideDomains": "混合域名",
-  "settingsIpOverrideDomainsHelper": "每行輸入一個域名。可使用完整主機名或字尾（如 `.solian.app`）。",
+  "settingsIpOverrideDomainsHelper": "每行輸入一個域名。可使用完整主機名或字尾（如 `.akiromusic.art`）。",
   "settingsIpOverrideDomainsSaved": "覆蓋域名已儲存。",
   "settingsIpOverrideEntries": "IP 覆蓋條目",
   "settingsIpOverrideEntriesEmpty": "尚未設定覆蓋條目。",

@@ -3341,7 +3341,7 @@
   "settingsIdleStatus": "Idle Status",
   "settingsIpOverride": "IP Override",
   "settingsIpOverrideDomains": "Mixed Domains",
-  "settingsIpOverrideDomainsHelper": "Enter one domain per line. Use exact host names or suffixes like `.solian.app`.",
+  "settingsIpOverrideDomainsHelper": "Enter one domain per line. Use exact host names or suffixes like `.akiromusic.art`.",
   "settingsIpOverrideDomainsSaved": "Override domains saved.",
   "settingsIpOverrideEntries": "IP Override Entries",
   "settingsIpOverrideEntriesEmpty": "No overrides set yet.",
