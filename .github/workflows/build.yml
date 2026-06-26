@@ -15,6 +15,7 @@ on:
           - all
           - windows
           - linux
+          - android
 
 jobs:
   build-exe:
@@ -29,7 +30,7 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter build windows --dart-define=SENTRY_DSN="${{ secrets.SENTRY_DSN }}"
+      - run: flutter build windows --dart-define=SENTRY_DSN="${{ secrets.SENTRY_DSN }}" --dart-define=API_BASE_URL=https://api.akiromusic.art
       - name: Extract Version
         id: extract_version
         run: |
@@ -77,7 +78,7 @@ jobs:
           sudo apt-get install -y gstreamer-1.0
           sudo apt-get install -y libsecret-1-dev
       - run: flutter pub get
-      - run: flutter build linux --no-tree-shake-icons --dart-define=SENTRY_DSN="${{ secrets.SENTRY_DSN }}"
+      - run: flutter build linux --no-tree-shake-icons --dart-define=SENTRY_DSN="${{ secrets.SENTRY_DSN }}" --dart-define=API_BASE_URL=https://api.akiromusic.art
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -90,51 +91,67 @@ jobs:
         with:
           name: build-output-linux-appimage
           path: "./*.AppImage*"
+  build-android:
+    if: github.event_name == 'push' || github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build apk --dart-define=API_BASE_URL=https://api.akiromusic.art
+      - name: Archive Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-android
+          path: build/app/outputs/flutter-apk/*.apk
 
-  upload-to-s3:
-    needs: [build-exe, build-linux]
+  release:
+    needs: [build-exe, build-linux, build-android]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - if: needs.build-exe.result == 'success'
-        name: Download Windows installer artifact
+      - name: Download Windows installer artifact
+        if: needs.build-exe.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: build-output-windows-installer
           path: ./artifacts/windows
-      - if: needs.build-linux.result == 'success'
-        name: Download AppImage artifact
+      - name: Download Windows release artifact
+        if: needs.build-exe.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output-windows
+          path: ./artifacts/windows-release
+      - name: Download Linux AppImage artifact
+        if: needs.build-linux.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: build-output-linux-appimage
           path: ./artifacts/linux
-      - if: needs.build-exe.result == 'success'
-        name: Zip Windows installer
-        run: |
-          cd ./artifacts/windows
-          zip -r ../build-output-windows-installer.zip .
-      - if: needs.build-linux.result == 'success'
-        name: Zip Linux AppImage
-        run: |
-          cd ./artifacts/linux
-          zip -r ../build-output-linux-appimage.zip .
-      - if: needs.build-exe.result == 'success'
-        name: Upload Windows to R2
-        uses: ryand56/r2-upload-action@latest
+      - name: Download Linux release artifact
+        if: needs.build-linux.result == 'success'
+        uses: actions/download-artifact@v4
         with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-          r2-bucket: ${{ secrets.S3_BUCKET_NAME }}
-          source-dir: ./artifacts/build-output-windows-installer.zip
-          destination-dir: solian
-      - if: needs.build-linux.result == 'success'
-        name: Upload Linux to R2
-        uses: ryand56/r2-upload-action@latest
+          name: build-output-linux
+          path: ./artifacts/linux-release
+      - name: Download Android artifact
+        if: needs.build-android.result == 'success'
+        uses: actions/download-artifact@v4
         with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-          r2-bucket: ${{ secrets.S3_BUCKET_NAME }}
-          source-dir: ./artifacts/build-output-linux-appimage.zip
-          destination-dir: solian
+          name: build-output-android
+          path: ./artifacts/android
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./artifacts/windows/*.exe
+            ./artifacts/windows/*.zip
+            ./artifacts/linux/*.AppImage*
+            ./artifacts/android/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
