@@ -1,4 +1,8 @@
 #!/bin/bash
+# DISABLED for self-hosted deployment
+# This script pushes to official Solsynth repositories/registries.
+# To re-enable for official deployment, remove the exit below.
+exit 0
 
 # Exit immediately if a command exits with a non-zero status
 set -e
@@ -52,13 +56,14 @@ else
 fi
 
 # 3. Upload split APKs to S3 using rclone
-APK_DIR="build/app/outputs/flutter-apk"
-echo "Uploading split APKs to S3 via rclone..."
-for apk in "$APK_DIR"/app-*-release.apk; do
-  [ -f "$apk" ] || continue
-  apk_name=$(basename "$apk")
-  echo "  Uploading $apk_name..."
-  rclone copyto "$apk" "${RCLONE_REMOTE}:${S3_BUCKET}/$apk_name" --progress
-done
+# DISABLED for self-hosting — configure your own upload endpoint
+# APK_DIR="build/app/outputs/flutter-apk"
+# echo "Uploading split APKs to S3 via rclone..."
+# for apk in "$APK_DIR"/app-*-release.apk; do
+#   [ -f "$apk" ] || continue
+#   apk_name=$(basename "$apk")
+#   echo "  Uploading $apk_name..."
+#   rclone copyto "$apk" "${RCLONE_REMOTE}:${S3_BUCKET}/$apk_name" --progress
+# done
 
-echo "Done! Split APKs uploaded to ${S3_BUCKET}/"
+# echo "Done! Split APKs uploaded to ${S3_BUCKET}/"

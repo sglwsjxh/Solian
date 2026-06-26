@@ -1,4 +1,8 @@
 #!/bin/bash
+# DISABLED for self-hosted deployment
+# This script pushes to official Solsynth repositories/registries.
+# To re-enable for official deployment, remove the exit below.
+exit 0
 
 # Exit immediately if a command exits with a non-zero status
 set -e
@@ -8,7 +12,7 @@ APP_NAME="Solian"
 CASK_NAME="solian"
 RCLONE_REMOTE="r2" # Name of your rclone remote
 
-S3_BUCKET="solsynth-files/solian" # Change to your actual bucket and path
+# S3_BUCKET="solsynth-files/solian" # DISABLED for self-hosting — use your own S3/rclone config
 
 # Load environment variables from .env
 if [ -f ".env" ]; then
@@ -134,11 +138,13 @@ SHA256=$(shasum -a 256 "$ARCHIVE_NAME" | awk '{print $1}')
 echo "Hash: $SHA256"
 
 # 6. Upload to S3 using rclone
-echo "☁️ Uploading archive to S3 via rclone..."
-rclone copyto "$ARCHIVE_NAME" "${RCLONE_REMOTE}:${S3_BUCKET}/$ARCHIVE_NAME" --progress
+# DISABLED for self-hosting — configure your own upload endpoint
+# echo "☁️ Uploading archive to S3 via rclone..."
+# rclone copyto "$ARCHIVE_NAME" "${RCLONE_REMOTE}:${S3_BUCKET}/$ARCHIVE_NAME" --progress
 
 # Get the public S3 URL
-DOWNLOAD_URL="https://raw.solsynth.dev/solian/$ARCHIVE_NAME"
+# DISABLED for self-hosting
+# DOWNLOAD_URL="https://raw.solsynth.dev/solian/$ARCHIVE_NAME"
 
 # 7. Update local Homebrew Cask file
 echo "📝 Updating Homebrew Cask file..."
