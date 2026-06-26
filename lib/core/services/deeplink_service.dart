@@ -99,7 +99,7 @@ String? parseWalletTransferRequestId(String rawValue) {
       segments[0] == 'transfer' &&
       segments[1] == 'requests';
   final isWebWalletTransferRequest =
-      (uri.host == 'solian.app' || uri.host.endsWith('.solian.app')) &&
+      (uri.host == 'akiromusic.art' || uri.host.endsWith('.akiromusic.art')) &&
       segments.length >= 3 &&
       segments[0] == 'wallet' &&
       segments[1] == 'transfer' &&
@@ -132,7 +132,7 @@ String? parseAuthQrChallengeId(String rawValue) {
       segments.length == 2 &&
       segments[0] == 'qr';
   final isWebQrLogin =
-      (uri.host == 'solian.app' || uri.host.endsWith('.solian.app')) &&
+      (uri.host == 'akiromusic.art' || uri.host.endsWith('.akiromusic.art')) &&
       segments.length >= 3 &&
       segments[0] == 'auth' &&
       segments[1] == 'qr';

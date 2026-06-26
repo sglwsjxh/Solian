@@ -24,7 +24,7 @@ String localeToLanguageCode(Locale locale) {
 
 const kTokenPairStoreKey = 'dyn_user_tk';
 
-const kNetworkServerDefault = 'https://api.solian.app';
+const kNetworkServerDefault = 'https://api.akiromusic.art';
 const kNetworkServerStoreKey = 'app_server_url';
 const kNotificationTenantAppId = 'dev.solsynth.solian';
 
