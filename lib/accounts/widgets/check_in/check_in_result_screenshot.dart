@@ -410,7 +410,7 @@ class _CheckInScreenshotFooter extends StatelessWidget {
           ),
           QrImageView(
             data:
-                'https://solian.app/accounts/${user.name}/fortune/$dateString',
+                'https://akiromusic.art/accounts/${user.name}/fortune/$dateString',
             version: QrVersions.auto,
             size: 60,
             errorCorrectionLevel: QrErrorCorrectLevel.M,

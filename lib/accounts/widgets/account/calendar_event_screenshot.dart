@@ -416,7 +416,7 @@ class _ScreenshotFooter extends StatelessWidget {
           ),
           if (account != null)
             QrImageView(
-              data: 'https://solian.app/accounts/${account.name}',
+              data: 'https://akiromusic.art/accounts/${account.name}',
               version: QrVersions.auto,
               size: 52,
               errorCorrectionLevel: QrErrorCorrectLevel.M,

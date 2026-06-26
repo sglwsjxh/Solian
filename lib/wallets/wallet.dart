@@ -197,7 +197,7 @@ String buildWalletTransferRequestDeepLink(String id) {
 String buildWalletTransferRequestShareUrl(String id) {
   return Uri(
     scheme: 'https',
-    host: 'solian.app',
+    host: 'akiromusic.art',
     path: '/wallet/transfer/requests/$id',
   ).toString();
 }
@@ -216,7 +216,7 @@ WalletTransferQrPayload? parseWalletTransferQrPayload(String rawValue) {
       pathSegments.length == 1 &&
       pathSegments.first == 'transfer';
   final isWebWalletTransfer =
-      (uri.host == 'solian.app' || uri.host.endsWith('.solian.app')) &&
+      (uri.host == 'akiromusic.art' || uri.host.endsWith('.akiromusic.art')) &&
       pathSegments.length >= 2 &&
       pathSegments[0] == 'wallet' &&
       pathSegments[1] == 'transfer';

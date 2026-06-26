@@ -165,7 +165,7 @@ class UpdateService {
   static const _proxyBaseUrl = 'https://ghfast.top/';
 
   static const _releasesLatestApi =
-      'https://api.github.com/repos/solsynth/solian/releases/latest';
+      'https://api.github.com/repos/sglwsjxh/Solian/releases/latest';
 
   /// Checks GitHub for the latest release and compares against the current app version.
   /// If update is available, shows a bottom sheet with changelog and an action to open release page.
@@ -284,17 +284,17 @@ class UpdateService {
 
     // Prioritize arm64, then armeabi, then x86_64
     if (arm64 != null) {
-      return 'https://fs.solsynth.dev/d/public/r2/solian/${arm64.name}';
+      return 'https://fs.akiromusic.art/d/public/r2/solian/${arm64.name}';
     } else if (armeabi != null) {
-      return 'https://fs.solsynth.dev/d/public/r2/solian/${armeabi.name}';
+      return 'https://fs.akiromusic.art/d/public/r2/solian/${armeabi.name}';
     } else if (x86_64 != null) {
-      return 'https://fs.solsynth.dev/d/public/r2/solian/${x86_64.name}';
+      return 'https://fs.akiromusic.art/d/public/r2/solian/${x86_64.name}';
     }
     return null;
   }
 
   String _getWindowsUpdateUrl() {
-    return 'https://fs.solsynth.dev/d/public/r2/solian/build-output-windows-installer.zip';
+    return 'https://fs.akiromusic.art/d/public/r2/solian/build-output-windows-installer.zip';
   }
 
   bool _isAndroidUpdateApk(String fileName) {
@@ -337,7 +337,7 @@ class UpdateService {
 
     AzhonAppUpdate.dispose();
     final downloadUrl = useProxy
-        ? 'https://fs.solsynth.dev/d/rainyun02/solian/${Uri.encodeComponent(url.split('/').last)}'
+        ? 'https://fs.akiromusic.art/d/rainyun02/solian/${Uri.encodeComponent(url.split('/').last)}'
         : url;
     final model = UpdateModel(
       downloadUrl,

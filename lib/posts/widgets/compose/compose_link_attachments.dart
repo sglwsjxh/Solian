@@ -381,7 +381,7 @@ class _ManualCloudFileLinkForm extends ConsumerWidget {
           InkWell(
             child: Text('fileIdLinkHint').tr().fontSize(13).opacity(0.85),
             onTap: () {
-              launchUrlString('https://fs.solian.app');
+              launchUrlString('https://fs.akiromusic.art');
             },
           ).padding(horizontal: 14),
           const Gap(16),

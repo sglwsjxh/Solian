@@ -192,13 +192,13 @@ class AboutContent extends HookConsumerWidget {
                     context,
                     icon: Symbols.privacy_tip,
                     title: 'aboutScreenPrivacyPolicyTitle'.tr(),
-                    onTap: () => launchURL('https://solsynth.dev/terms/privacy-policy'),
+                    onTap: () => launchURL('https://akiromusic.art/terms/privacy-policy'),
                   ),
                   _buildListTile(
                     context,
                     icon: Symbols.description,
                     title: 'aboutScreenTermsOfServiceTitle'.tr(),
-                    onTap: () => launchURL('https://solsynth.dev/terms/user-agreement'),
+                    onTap: () => launchURL('https://akiromusic.art/terms/user-agreement'),
                   ),
                   _buildListTile(
                     context,
@@ -223,15 +223,15 @@ class AboutContent extends HookConsumerWidget {
                     context,
                     icon: Symbols.email,
                     title: 'aboutScreenContactUsTitle'.tr(),
-                    subtitle: 'lily@solsynth.dev',
-                    onTap: () => launchURL('mailto:lily@solsynth.dev'),
+                    subtitle: 'admin@akiromusic.art',
+                    onTap: () => launchURL('mailto:admin@akiromusic.art'),
                   ),
                   _buildListTile(
                     context,
                     icon: Symbols.copyright,
                     title: 'aboutScreenLicenseTitle'.tr(),
                     subtitle: 'aboutScreenLicenseContent'.tr(),
-                    onTap: () => launchURL('https://github.com/Solsynth/Solian/blob/v3/LICENSE.txt'),
+                    onTap: () => launchURL('https://github.com/sglwsjxh/Solian/blob/v3/LICENSE.txt'),
                   ),
                   if (kIsWeb || !(Platform.isMacOS || Platform.isIOS))
                     _buildListTile(

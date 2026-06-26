@@ -678,7 +678,7 @@ class StellarProgramTab extends HookConsumerWidget {
                 const Gap(8),
                 InkWell(
                   onTap: () => launchUrlString(
-                    'https://solsynth.dev/terms/user-agreement',
+                    'https://akiromusic.art/terms/user-agreement',
                     mode: LaunchMode.externalApplication,
                   ),
                   borderRadius: BorderRadius.circular(999),

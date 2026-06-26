@@ -108,7 +108,7 @@ class PostItemCreator extends HookConsumerWidget {
               image: MenuImage.icon(Symbols.link),
               callback: () {
                 Clipboard.setData(
-                  ClipboardData(text: 'https://solian.app/posts/${item.id}'),
+                  ClipboardData(text: 'https://akiromusic.art/posts/${item.id}'),
                 );
               },
             ),

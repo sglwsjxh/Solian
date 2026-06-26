@@ -2985,7 +2985,7 @@ void _showIpOverrideDomainsEditor(BuildContext context, WidgetRef ref) {
                   textAlignVertical: TextAlignVertical.top,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'io.solian.app\nmedia.solian.app',
+                    hintText: 'io.akiromusic.art\nmedia.akiromusic.art',
                     alignLabelWithHint: true,
                   ),
                 ),

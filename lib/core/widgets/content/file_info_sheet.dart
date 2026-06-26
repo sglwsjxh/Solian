@@ -145,13 +145,13 @@ class FileInfoSheet extends ConsumerWidget {
               ListTile(
                 leading: const Icon(Symbols.launch),
                 title: Text('openInBrowser').tr(),
-                subtitle: Text('https://solian.app/files/${item.id}'),
+                subtitle: Text('https://akiromusic.art/files/${item.id}'),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: tileHorizontalPadding,
                 ),
                 onTap: () {
                   launchUrlString(
-                    'https://solian.app/files/${item.id}',
+                    'https://akiromusic.art/files/${item.id}',
                     mode: LaunchMode.externalApplication,
                   );
                 },

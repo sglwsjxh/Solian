@@ -6,7 +6,6 @@ import 'package:island/accounts/widgets/account/account_devices.dart';
 import 'package:island/accounts/widgets/account/account_authorized_apps.dart';
 import 'package:island/accounts/account_pod.dart';
 import 'package:island/accounts/screens/me/settings_auth_factors.dart';
-import 'package:island/accounts/screens/me/settings_connections.dart';
 import 'package:island/accounts/screens/me/settings_contacts.dart';
 import 'package:island/accounts/screens/me/settings_webdav.dart';
 import 'package:island/auth/captcha.dart';
@@ -203,88 +202,8 @@ class AccountSettingsScreen extends HookConsumerWidget {
           );
         },
       ),
-      ExpansionTile(
-        leading: const Icon(
-          Symbols.link,
-        ).alignment(Alignment.centerLeft).width(48),
-        title: Text('accountConnections').tr(),
-        subtitle: Text('accountConnectionsDescription').tr().fontSize(12),
-        tilePadding: const EdgeInsets.only(left: 24, right: 17),
-        children: [
-          ref
-              .watch(accountConnectionsProvider)
-              .when(
-                data: (connections) => Column(
-                  children: [
-                    for (final connection in connections)
-                      ListTile(
-                        minLeadingWidth: 48,
-                        contentPadding: const EdgeInsets.only(
-                          left: 16,
-                          right: 17,
-                          top: 2,
-                          bottom: 4,
-                        ),
-                        title: Text(
-                          getLocalizedProviderName(connection.provider),
-                        ).tr(),
-                        subtitle: connection.meta['email'] != null
-                            ? Text(connection.meta['email'])
-                            : Text(connection.providedIdentifier),
-                        leading: CircleAvatar(
-                          child: getProviderIcon(
-                            connection.provider,
-                            size: 16,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
-                          ),
-                        ).padding(top: 4),
-                        trailing: const Icon(Symbols.chevron_right),
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) =>
-                                AccountConnectionSheet(connection: connection),
-                          ).then((value) {
-                            if (value == true) {
-                              ref.invalidate(accountConnectionsProvider);
-                            }
-                          });
-                        },
-                      ),
-                    if (connections.isNotEmpty) const Divider(height: 1),
-                    ListTile(
-                      minLeadingWidth: 48,
-                      contentPadding: const EdgeInsets.only(
-                        left: 24,
-                        right: 17,
-                      ),
-                      title: Text('accountConnectionAdd').tr(),
-                      leading: const Icon(Symbols.add),
-                      trailing: const Icon(Symbols.chevron_right),
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) =>
-                              const AccountConnectionNewSheet(),
-                        ).then((value) {
-                          if (value == true) {
-                            ref.invalidate(accountConnectionsProvider);
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                error: (err, _) => ResponseErrorWidget(
-                  error: err,
-                  onRetry: () => ref.invalidate(accountConnectionsProvider),
-                ),
-                loading: () => const ResponseLoadingWidget(),
-              ),
-        ],
-      ),
+      // DISABLED for self-hosting: Account Connections (OAuth linking)
+      // ExpansionTile(...),
       ExpansionTile(
         leading: const Icon(
           Symbols.security,

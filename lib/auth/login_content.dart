@@ -14,7 +14,7 @@ import 'package:island/core/config.dart';
 import 'package:island/core/network.dart';
 import 'package:island/accounts/account_pod.dart';
 import 'package:island/core/websocket.dart';
-import 'package:island/accounts/screens/me/settings_connections.dart';
+// DISABLED for self-hosting: import 'package:island/accounts/screens/me/settings_connections.dart';
 import 'package:island/core/services/event_bus.dart';
 import 'package:island/core/services/nfc_scan_service.dart';
 import 'package:island/core/services/notify.dart';
@@ -26,7 +26,7 @@ import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/types.dart';
 import 'package:pinput/pinput.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+// DISABLED for self-hosting: import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:solar_network_sdk/solar_network_sdk.dart';
@@ -1002,79 +1002,11 @@ class _LoginLookupScreen extends HookConsumerWidget {
       }
     }
 
-    Future<void> withApple() async {
-      final client = ref.watch(solarNetworkClientProvider);
-      try {
-        final credential = await SignInWithApple.getAppleIDCredential(
-          scopes: [AppleIDAuthorizationScopes.email],
-          webAuthenticationOptions: WebAuthenticationOptions(
-            clientId: 'dev.solsynth.solarpass',
-            redirectUri: Uri.parse('https://nt.solian.app/auth/callback/apple'),
-          ),
-        );
+    // DISABLED for self-hosting: Apple Sign-In
+    // Future<void> withApple() async { ... }
 
-        if (context.mounted) showLoadingModal(context);
-        final resp = await client.dio.post(
-          '/padlock/auth/login/apple/mobile',
-          data: {
-            'identity_token': credential.identityToken!,
-            'authorization_code': credential.authorizationCode,
-            'device_id': await getUdid(),
-            'device_name': await getDeviceName(),
-          },
-        );
-
-        final token = resp.data['token'];
-        setToken(
-          ref.watch(sharedPreferencesProvider),
-          token,
-          refreshToken: resp.data['refresh_token'] as String?,
-          expiresIn: (resp.data['expires_in'] as num?)?.toInt(),
-          refreshExpiresIn: (resp.data['refresh_expires_in'] as num?)?.toInt(),
-        );
-        ref.invalidate(tokenProvider);
-        if (!context.mounted) return;
-
-        // Do post login tasks
-        await performPostLogin(context, ref);
-      } catch (err) {
-        if (err is SignInWithAppleAuthorizationException) return;
-        showErrorAlert(err);
-      } finally {
-        if (context.mounted) hideLoadingModal(context);
-      }
-    }
-
-    Future<void> withOidc(String provider) async {
-      waitingForOidc.value = true;
-      final serverUrl = ref.watch(serverUrlProvider);
-      final token = ref.watch(tokenProvider);
-      final deviceId = await getUdid();
-      final queryParams = <String, String>{
-        'returnUrl': 'solian://auth/callback',
-        'deviceId': deviceId,
-        'flow': 'login',
-      };
-      if (token?.token != null) {
-        queryParams['token'] = token!.token;
-      }
-      final url = Uri.parse(
-        '$serverUrl/padlock/auth/login/${provider.toLowerCase()}',
-      ).replace(queryParameters: queryParams).toString();
-      final isLaunched = await launchUrlString(
-        url,
-        mode: kIsWeb
-            ? LaunchMode.platformDefault
-            : LaunchMode.externalApplication,
-        webOnlyWindowName: token?.token != null
-            ? 'auth-${token!.token}'
-            : 'auth',
-      );
-      if (!isLaunched) {
-        waitingForOidc.value = false;
-        showErrorAlert('failedToLaunchBrowser'.tr());
-      }
-    }
+    // DISABLED for self-hosting: OIDC (Google/GitHub/Microsoft)
+    // Future<void> withOidc(String provider) async { ... }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1130,38 +1062,11 @@ class _LoginLookupScreen extends HookConsumerWidget {
               ),
               tooltip: 'qrCode'.tr(),
             ),
+            /* DISABLED for self-hosting: OAuth buttons (GitHub/Google/Apple)
             if (!kIsWeb) ...[
-              IconButton.filledTonal(
-                onPressed: () => withOidc('github'),
-                padding: EdgeInsets.zero,
-                icon: getProviderIcon(
-                  "github",
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                tooltip: 'GitHub',
-              ),
-              IconButton.filledTonal(
-                onPressed: () => withOidc('google'),
-                padding: EdgeInsets.zero,
-                icon: getProviderIcon(
-                  "google",
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                tooltip: 'Google',
-              ),
-              IconButton.filledTonal(
-                onPressed: withApple,
-                padding: EdgeInsets.zero,
-                icon: getProviderIcon(
-                  "apple",
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                tooltip: 'Apple Account',
-              ),
+              // ... removed
             ],
+            */
           ],
         ).padding(horizontal: 8, vertical: 8),
         Align(
@@ -1233,7 +1138,7 @@ class _LoginLookupScreen extends HookConsumerWidget {
                         ],
                       ),
                       onTap: () {
-                        launchUrlString('https://solsynth.dev/terms');
+                        launchUrlString('https://akiromusic.art/terms');
                       },
                     ),
                   ),

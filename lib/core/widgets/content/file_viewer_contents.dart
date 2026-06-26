@@ -180,7 +180,7 @@ class GenericFileContent extends HookConsumerWidget {
   const GenericFileContent({required this.item, super.key});
 
   void _openWebPreview(BuildContext context) {
-    final url = 'https://solian.app/files/${item.id}';
+    final url = 'https://akiromusic.art/files/${item.id}';
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

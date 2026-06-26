@@ -335,7 +335,7 @@ class PostActionButtons extends HookConsumerWidget {
         onPressed: () {
           showShareSheetLink(
             context: context,
-            link: 'https://solian.app/posts/${post.id}',
+            link: 'https://akiromusic.art/posts/${post.id}',
             title: 'sharePost'.tr(),
             toSystem: true,
           );
@@ -1413,7 +1413,7 @@ class _PostDetailLargeScreenLayout extends HookConsumerWidget {
         case 'copyLink':
           return () {
             Clipboard.setData(
-              ClipboardData(text: 'https://solian.app/posts/${post.id}'),
+              ClipboardData(text: 'https://akiromusic.art/posts/${post.id}'),
             );
           };
         case 'reply':
@@ -1493,7 +1493,7 @@ class _PostDetailLargeScreenLayout extends HookConsumerWidget {
           return () {
             showShareSheetLink(
               context: context,
-              link: 'https://solian.app/posts/${post.id}',
+              link: 'https://akiromusic.art/posts/${post.id}',
               title: 'sharePost'.tr(),
               toSystem: true,
             );
@@ -1953,7 +1953,7 @@ class PostDetailScreen extends HookConsumerWidget {
                 return () {
                   Clipboard.setData(
                     ClipboardData(
-                      text: 'https://solian.app/posts/${postItem.id}',
+                      text: 'https://akiromusic.art/posts/${postItem.id}',
                     ),
                   );
                 };
@@ -2043,7 +2043,7 @@ class PostDetailScreen extends HookConsumerWidget {
                 return () {
                   showShareSheetLink(
                     context: context,
-                    link: 'https://solian.app/posts/${postItem.id}',
+                    link: 'https://akiromusic.art/posts/${postItem.id}',
                     title: 'sharePost'.tr(),
                     toSystem: true,
                   );

@@ -55,7 +55,7 @@ class AccountQrScreen extends HookConsumerWidget {
     }
 
     final account = user.value!;
-    final profileUrl = 'https://solian.app/accounts/${account.name}';
+    final profileUrl = 'https://akiromusic.art/accounts/${account.name}';
     final transferWallet = wallet.value;
     final requestData = activeTransferRequest.value;
     final transferQrData = requestData != null
@@ -1055,7 +1055,7 @@ String? _resolveScannedAccountName(String rawValue) {
   if (uri != null) {
     final segments = uri.pathSegments;
     final isSolianHost =
-        uri.host == 'solian.app' || uri.host.endsWith('.solian.app');
+        uri.host == 'akiromusic.art' || uri.host.endsWith('.akiromusic.art');
     if (isSolianHost && segments.length >= 2 && segments.first == 'accounts') {
       final name = segments[1].trim();
       return name.isEmpty ? null : name;

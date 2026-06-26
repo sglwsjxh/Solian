@@ -190,48 +190,12 @@ class _CreateAccountEmailScreen extends HookConsumerWidget {
           onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           onSubmitted: isBusy.value ? null : (_) => performNext(),
         ).padding(horizontal: 7),
-        if (!kIsWeb)
-          Row(
-            spacing: 6,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text("orCreateWith").tr().fontSize(11).opacity(0.85),
-              const Gap(8),
-              Spacer(),
-              IconButton.filledTonal(
-                onPressed: () => onOidc('github'),
-                padding: EdgeInsets.zero,
-                icon: getProviderIcon(
-                  "github",
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                tooltip: 'GitHub',
-              ),
-              IconButton.filledTonal(
-                onPressed: () => onOidc('google'),
-                padding: EdgeInsets.zero,
-                icon: getProviderIcon(
-                  "google",
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                tooltip: 'Google',
-              ),
-              IconButton.filledTonal(
-                onPressed: () => onOidc('apple'),
-                padding: EdgeInsets.zero,
-                icon: getProviderIcon(
-                  "apple",
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                tooltip: 'Apple Account',
-              ),
-            ],
-          ).padding(horizontal: 8, top: 12)
-        else
-          const Gap(12),
+        // DISABLED for self-hosting: OAuth buttons (GitHub/Google/Apple)
+        // if (!kIsWeb)
+        //   Row(...)
+        // else
+        //   const Gap(12),
+        const Gap(12),
         const Gap(12),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -529,7 +493,7 @@ class _CreateAccountTermsScreen extends HookConsumerWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        launchUrlString('https://solsynth.dev/terms');
+                        launchUrlString('https://akiromusic.art/terms');
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

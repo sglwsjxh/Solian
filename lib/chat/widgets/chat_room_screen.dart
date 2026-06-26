@@ -807,11 +807,13 @@ class ChatRoomScreen extends HookConsumerWidget {
               ),
             ),
             actions: [
-              chatRoom.when(
-                data: (data) => AudioCallButton(room: data!),
-                error: (_, _) => const SizedBox.shrink(),
-                loading: () => const SizedBox.shrink(),
-              ),
+              // DISABLED for self-hosting: LiveKit call button
+              // chatRoom.when(
+              //   data: (data) => AudioCallButton(room: data!),
+              //   error: (_, _) => const SizedBox.shrink(),
+              //   loading: () => const SizedBox.shrink(),
+              // ),
+              const SizedBox.shrink(),
               IconButton(
                 icon: const Icon(Icons.more_vert),
                 onPressed: () async {

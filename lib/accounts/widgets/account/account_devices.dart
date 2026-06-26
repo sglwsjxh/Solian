@@ -371,7 +371,7 @@ class _DeviceDetailSheet extends HookConsumerWidget {
                           urlTemplate:
                               'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName:
-                              'Solian/1.0 (+https://solian.app, contact: lily@solsynth.dev)',
+                              'Solian/1.0 (+https://akiromusic.art, contact: admin@akiromusic.art)',
                         ),
                         RichAttributionWidget(
                           popupInitialDisplayDuration: const Duration(

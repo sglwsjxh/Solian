@@ -95,7 +95,7 @@ class NetworkStatusSheet extends HookConsumerWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              launchUrlString("https://status.solsynth.dev");
+                              launchUrlString("https://status.akiromusic.art");
                             },
                             child: Text(
                               'Check Service Status',
